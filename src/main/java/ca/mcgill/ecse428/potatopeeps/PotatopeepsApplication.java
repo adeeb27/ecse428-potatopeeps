@@ -10,5 +10,9 @@ public class PotatopeepsApplication {
 		SpringApplication.run(PotatopeepsApplication.class, args);
 	}
 
+	@RequestMapping("/")
+	public String greeting(){
+		return "Hello world!";
+	}
 }
 
