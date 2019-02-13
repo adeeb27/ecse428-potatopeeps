@@ -12,6 +12,8 @@ import java.util.Set;
 @Entity
 public class MenuItem implements Serializable {
 
+    private static final long serialVersionUID = 1132661429342356177L;
+
     public MenuItem() {
     }
 
@@ -26,16 +28,16 @@ public class MenuItem implements Serializable {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
     private Double price;
 
-    @Column(name = "inventory")
+    @Column(name = "inventory", nullable = false)
     private Integer inventory;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
     @OneToMany(mappedBy = "menuItem")
@@ -47,4 +49,5 @@ public class MenuItem implements Serializable {
             joinColumns = @JoinColumn(name = "menu_item_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     Set<Tag> tags;
+
 }

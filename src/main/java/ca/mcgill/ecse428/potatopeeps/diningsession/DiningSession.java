@@ -12,6 +12,7 @@ import java.util.Set;
 @Entity
 public class DiningSession implements Serializable {
 
+    private static final long serialVersionUID = 1132661429342356175L;
 
     public DiningSession() {
     }
