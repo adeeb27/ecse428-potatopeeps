@@ -21,7 +21,12 @@ public class DatabaseLoader implements CommandLineRunner {
     // stored directly to the connected database.
     @Override
     public void run(String... strings) throws Exception {
-        this.menuItemRepository.save(new MenuItem("Calamari", 9.99, 20, "A generous portion of fresh, tender squid served in a blend of Italian tomatoes, virgin olive oil and spices."));
+        try{
+            this.menuItemRepository.save(new MenuItem("Calamari", 9.99, 20, "A generous portion of fresh, tender squid served in a blend of Italian tomatoes, virgin olive oil and spices."));
+        } catch(Exception e){
+            // Already exists in your database.
+        }
+
     }
 
 }
