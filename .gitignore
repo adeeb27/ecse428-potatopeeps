@@ -25,3 +25,9 @@
 /nbdist/
 /.nb-gradle/
 /build/
+
+### React JS ###
+bower_components
+node_modules
+node
+built

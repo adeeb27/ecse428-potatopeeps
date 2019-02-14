@@ -19,5 +19,6 @@ public class PotatopeepsApplication {
 	public String greeting(){
 		return "Hello world!";
 	}
+
 }
 
