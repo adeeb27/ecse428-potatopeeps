@@ -44,7 +44,7 @@ class App extends React.Component {
         }).done(menuItemCollection => {
             this.setState({
                 menuItems: menuItemCollection.entity._embedded.menuItems,
-                attributes: Object.keys(this.schema.properties),
+                attributes: Object.keys(this.schema.properties).filter(attribute => attribute !== 'tags' && attribute !== 'orders'),
                 pageSize: pageSize,
                 links: menuItemCollection.entity._links});
         });
