@@ -17,14 +17,14 @@ public class DiningSession implements Serializable {
     public DiningSession() {
     }
 
-    public DiningSession(Integer tableNumber) {
-        this.tableNumber = tableNumber;
-    }
-
-
     enum DiningSessionStatus {
         ONGOING, COMPLETED;
     }
+    public DiningSession(Integer tableNumber) {
+        this.tableNumber = tableNumber;
+        this.status = DiningSessionStatus.ONGOING;
+    }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

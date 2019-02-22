@@ -19,17 +19,18 @@ public class Order {
         this.menuItem = menuItem;
     }
 
+    enum OrderStatus {
+        ONGOING, COMPLETED;
+    }
+
     public Order(Double price, Integer quantity, MenuItem item, DiningSession session) {
         this.price = price;
         this.quantity = quantity;
         this.menuItem = item;
         this.diningSession = session;
+        this.status = OrderStatus.ONGOING;
     }
 
-    enum OrderStatus {
-        ONGOING, COMPLETED;
-    }
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
