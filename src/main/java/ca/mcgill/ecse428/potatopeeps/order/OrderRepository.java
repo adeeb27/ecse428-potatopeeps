@@ -12,5 +12,7 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Long>
     List<Order> findAllByMenuItem(MenuItem menuItem);
 
     List<Order> findAllByDiningSession(DiningSession diningSession);
+    
+
 
 }
