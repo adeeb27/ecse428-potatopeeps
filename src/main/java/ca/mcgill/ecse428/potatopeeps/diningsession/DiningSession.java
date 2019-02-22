@@ -21,6 +21,11 @@ public class DiningSession implements Serializable {
         this.tableNumber = tableNumber;
     }
 
+
+    enum DiningSessionStatus {
+        ONGOING, COMPLETED;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,15 +39,15 @@ public class DiningSession implements Serializable {
     @Column(name="table_number")
     private Integer tableNumber;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="status")
-    private String status;
+    private DiningSessionStatus status;
 
     @OneToMany(mappedBy="diningSession")
     private Set<Order> orders;
     
-    public void addOrder(Order o) {
-    	//TODO validate order
-    	orders.add(o);
-    }
+//    public void addOrder(Order o) {
+//    	orders.add(o);
+//    }
     
 }

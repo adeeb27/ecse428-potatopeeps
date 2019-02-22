@@ -13,16 +13,21 @@ public class Order {
     public Order() {
     }
 
-    public Order(Double price, Integer quantity) {
+    public Order(Double price, Integer quantity, MenuItem menuItem) {
         this.price = price;
         this.quantity = quantity;
+        this.menuItem = menuItem;
     }
 
     public Order(Double price, Integer quantity, MenuItem item, DiningSession session) {
         this.price = price;
         this.quantity = quantity;
-        menuItem = item;
-        diningSession = session;
+        this.menuItem = item;
+        this.diningSession = session;
+    }
+
+    enum OrderStatus {
+        ONGOING, COMPLETED;
     }
     
     @Id
@@ -32,8 +37,9 @@ public class Order {
     @Column(name = "price")
     private Double price;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private OrderStatus status;
 
     @Column(name = "quantity")
     private Integer quantity;
