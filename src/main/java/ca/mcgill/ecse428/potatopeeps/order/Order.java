@@ -18,6 +18,13 @@ public class Order {
         this.quantity = quantity;
     }
 
+    public Order(Double price, Integer quantity, MenuItem item, DiningSession session) {
+        this.price = price;
+        this.quantity = quantity;
+        menuItem = item;
+        diningSession = session;
+    }
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

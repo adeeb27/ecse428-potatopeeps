@@ -39,4 +39,10 @@ public class DiningSession implements Serializable {
 
     @OneToMany(mappedBy="diningSession")
     private Set<Order> orders;
+    
+    public void addOrder(Order o) {
+    	//TODO validate order
+    	orders.add(o);
+    }
+    
 }
