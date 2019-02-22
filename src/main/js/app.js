@@ -25,6 +25,7 @@ class App extends React.Component {
         this.state = {menuItems: [], tags: [], attributes: [], pagesize: 2, links: {}};
         this.updatePageSize = this.updatePageSize.bind(this);
         this.onCreate = this.onCreate.bind(this);
+        this.onUpdate = this.onUpdate.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onNavigate = this.onNavigate.bind(this);
     }
@@ -41,6 +42,14 @@ class App extends React.Component {
                 this.schema = schema.entity;
                 return menuItemCollection;
             });
+        }).then(menuItemCollection => {
+            this.page = menuItemCollection.entity.page;
+            return menuItemCollection.entity._embedded.menuitems.map(menuItem =>
+                client({
+                    method: 'GET',
+                    path: menuItem._links.self.href
+                })
+            );
         }).done(menuItemCollection => {
             this.setState({
                 menuItems: menuItemCollection.entity._embedded.menuItems,
@@ -70,6 +79,28 @@ class App extends React.Component {
         });
     }
     // end::create[]
+
+    onUpdate(menuItem, updatedMenuItem) {
+        client({ //TODO: can switch to POST & MenuITemCollection
+            method: 'PUT',
+            path: menuItem.entity._links.self.href,
+            entity: updatedMenuItem,
+            headers: {
+                'Content-Type': 'application/json',
+                'If-Match': menuItem.headers.Etag
+            }
+        }).then(response => {
+            return follow(client, root, [
+                {rel: 'menuItems', params: {'size': this.state.pageSize}}]);
+        }).done(response => {
+            if (typeof response.entity._links.last !== "undefined") {
+                this.onNavigate(response.entity._links.last.href);
+            } else {
+                this.onNavigate(response.entity._links.self.href);
+            }
+        });
+    }
+    // end::update[]
 
     // tag::delete[]
     onDelete(menuItem) {
@@ -113,6 +144,7 @@ class App extends React.Component {
                               links={this.state.links}
                               pageSize={this.state.pageSize}
                               onNavigate={this.onNavigate}
+                              onUpdate={this.onUpdate}
                               onDelete={this.onDelete}
                               updatePageSize={this.updatePageSize}/>
             </div>
@@ -173,6 +205,54 @@ class CreateDialog extends React.Component {
     }
 
 }
+class UpdateDialog extends React.Component { //TODO might need to move after menuitem class
+
+    constructor(props) {
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        const updatedMenuItem = {};
+        this.props.attributes.forEach(attribute => {
+            updatedMenuItem[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
+        });
+        this.props.onUpdate(this.props.menuItem, updatedMenuItem);
+        window.location = "#";
+    }
+
+    render() {
+        const inputs = this.props.attributes.map(attribute =>
+            <p key={this.props.menuItem.entity[attribute]}>
+                <input type="text" placeholder={attribute}
+                       defaultValue={this.props.menuItem.entity[attribute]}
+                       ref={attribute} className="field"/>
+            </p>
+        );
+
+        const dialogId = "updateMenuItem-" + this.props.menuItem.entity._links.self.href;
+
+        return (
+            <div key={this.props.menuItem.entity._links.self.href}>
+                <a href={"#" + dialogId}>Update</a>
+                <div id={dialogId} className="modalDialog">
+                    <div>
+                        <a href="#" title="Close" className="close">X</a>
+
+                        <h2>Update a menuItem</h2>
+
+                        <form>
+                            {inputs}
+                            <button onClick={this.handleSubmit}>Update</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+};
 
 class MenuItemList extends React.Component {
 
@@ -223,7 +303,7 @@ class MenuItemList extends React.Component {
     // tag::menuItem-list-render[]
     render() {
         const menuItems = this.props.menuItems.map(menuItem =>
-            <MenuItem key={menuItem._links.self.href} menuItem={menuItem} onDelete={this.props.onDelete}/>
+            <MenuItem key={menuItem._links.self.href} menuItem={menuItem} onUpdate={this.props.onUpdate} onDelete={this.props.onDelete}/>
         );
 
         const navLinks = [];
@@ -283,6 +363,11 @@ class MenuItem extends React.Component {
                 <td>{this.props.menuItem.price}</td>
                 <td>{this.props.menuItem.inventory}</td>
                 <td>{this.props.menuItem.description}</td>
+                <td>
+                    <UpdateDialog menuItem={this.props.menuItem}
+                                  attributes={this.props.attributes}
+                                  onUpdate={this.props.onUpdate}/>
+                </td>
                 <td>
                     <button onClick={this.handleDelete}>Delete</button>
                 </td>
