@@ -13,16 +13,31 @@ public class Order {
     public Order() {
     }
 
-    public Order(Double price, Integer quantity, MenuItem menuItem) {
-        this.price = price;
-        this.quantity = quantity;
-        this.menuItem = menuItem;
-    }
-
     enum OrderStatus {
         ONGOING, COMPLETED;
     }
 
+    /***
+     * Creates a dining session and adds the order to it
+     * Note: this constructor should be used in the case of no existing ONGOING dining session.
+     *       React logic should be able to parse and determine which constructor to use.
+     * @param tableNumber required for creating DiningSession
+     * @see DiningSession
+     */
+    public Order(Double price, Integer quantity, MenuItem menuItem, Integer tableNumber) {
+        this.price = price;
+        this.quantity = quantity;
+        this.menuItem = menuItem;
+        this.status = OrderStatus.ONGOING;
+        this.diningSession = new DiningSession(tableNumber);
+
+    }
+
+
+    /***
+     * Adds an order to an existing dining session.
+     * @param session
+     */
     public Order(Double price, Integer quantity, MenuItem item, DiningSession session) {
         this.price = price;
         this.quantity = quantity;
