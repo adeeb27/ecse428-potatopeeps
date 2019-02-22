@@ -20,6 +20,10 @@ public class DiningSession implements Serializable {
     enum DiningSessionStatus {
         ONGOING, COMPLETED;
     }
+
+    /**
+     * @param tableNumber will be parsed via React. Method TBD but should be able to track tableNumber
+     */
     public DiningSession(Integer tableNumber) {
         this.tableNumber = tableNumber;
         this.status = DiningSessionStatus.ONGOING;
