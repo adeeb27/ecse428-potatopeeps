@@ -15,6 +15,7 @@ public class Order {
     public Order() {
     }
 
+
     /***
      * This is used for saving created dining sessions to the database explicitly
      * @see Order
