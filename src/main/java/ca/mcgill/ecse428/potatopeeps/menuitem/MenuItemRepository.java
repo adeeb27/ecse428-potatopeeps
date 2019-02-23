@@ -1,6 +1,5 @@
 package ca.mcgill.ecse428.potatopeeps.menuitem;
 
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.Optional;
