@@ -15,14 +15,6 @@ public class Order {
     public Order() {
     }
 
-
-    /***
-     * This is used for saving created dining sessions to the database explicitly
-     * @see Order
-     */
-    @Autowired
-    private DiningSessionRepository diningSessionRepository;
-
     enum OrderStatus {
         ONGOING, COMPLETED;
     }
@@ -39,9 +31,13 @@ public class Order {
         this.quantity = quantity;
         this.menuItem = menuItem;
         this.status = OrderStatus.ONGOING;
-        DiningSession dsession = new DiningSession(tableNumber);
-        this.diningSessionRepository.save(dsession);
-        this.diningSession = dsession;
+        /* TODO: creation of dining session
+         *  Can either implement here, however running into issues saving to the other table
+         *  or have react create a diningsession and pass it in to the other constructor
+         */
+//        DiningSession dsession = new DiningSession(tableNumber);
+//        this.diningSessionRepository.save(dsession);
+//        this.diningSession = dsession;
     }
 
 
