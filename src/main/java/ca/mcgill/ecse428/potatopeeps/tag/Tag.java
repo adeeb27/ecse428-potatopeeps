@@ -5,6 +5,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -27,6 +29,6 @@ public class Tag implements Serializable {
     @Column(name = "name", unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "tags")
-    Set<MenuItem> menuItems;
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
+    private List<MenuItem> menuItems = new ArrayList<>();
 }

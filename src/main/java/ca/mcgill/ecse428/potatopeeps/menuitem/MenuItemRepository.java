@@ -9,4 +9,7 @@ public interface MenuItemRepository extends PagingAndSortingRepository<MenuItem,
 
     Optional<MenuItem> findByName(String name);
 
+    Boolean existsByName(String name);
+
+
 }
