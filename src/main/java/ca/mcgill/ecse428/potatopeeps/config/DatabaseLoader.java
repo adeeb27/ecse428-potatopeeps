@@ -33,6 +33,9 @@ public class DatabaseLoader implements CommandLineRunner {
     public void run(String... strings) throws Exception {
         try{
             this.menuItemRepository.save(new MenuItem("Calamari", 9.99, 20, "A generous portion of fresh, tender squid served in a blend of Italian tomatoes, virgin olive oil and spices."));
+            this.menuItemRepository.save(new MenuItem("Snap Peas", 3.50, 100, "Roasted snap peas with sea salt."));
+            this.menuItemRepository.save(new MenuItem("Popcorn Shrimp", 4.99, 100, "Deep fried small shrimp"));
+            this.menuItemRepository.save(new MenuItem("Chicken Curry", 10.99, 100, "Mild Chicken Curry on rice"));
             this.tagRepository.save(new Tag("Seafood"));
             this.tagRepository.save(new Tag("Vegetarian"));
             this.tagRepository.save(new Tag("Meat"));
