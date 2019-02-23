@@ -1,7 +1,7 @@
 @import "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
 body {
 	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-	background-image: url(daniel-hehn-656295-unsplash.jpg);
+	background-image: url(../img/MountFuji.jpg);
 	background-size: 100%;
 }
 
@@ -13,7 +13,7 @@ body {
 	position: absolute;
 	transform: translate(-50%, -50%);
 	text-align: center;
-	background-image: url(kuba-boski-133988-unsplash.jpg);
+	background-image: url(../img/Sushi.jpg);
 	background-size: 100%;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
