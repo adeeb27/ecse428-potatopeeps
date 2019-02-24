@@ -1,0 +1,74 @@
+@import "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
+body {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	background-image: url(../img/MountFuji.jpg);
+	background-size: 100%;
+}
+
+.loginbox {
+	width: 660px;
+	height: 400px;
+	top: 50%;
+	left: 50%;
+	position: absolute;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	background-image: url(../img/Sushi.jpg);
+	background-size: 100%;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.content {
+	width: 350px;
+	height: 400px;
+	margin-left: auto;
+  	margin-right: auto;
+  	float: right;
+  	background-color: rgba(179, 230, 255, 0.5);
+}
+
+h1 {
+	margin: 0;
+	padding: 0 0 20px;
+	font-size: 35px;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+form {
+	position: relative;
+  	top: 50%;
+  	transform: translateY(-50%);
+}
+
+.input-group input {
+	height: 30px;
+	width: 50%;
+	padding: 5px 10px;
+	margin: 0 0 10px;
+	border: none;
+	outline: none;
+	background: none;
+	color: white;
+	font-size: 20px;
+	border-bottom: 1px solid rgb(0, 122, 153);
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+.btn {
+	padding: 10px;
+	color: white;
+	border-radius: 5px;
+}
+
+button {
+	height: 30px;
+	width: 40%;
+	border: none;
+	background-color: rgb(0, 122, 153);
+	border-radius: 10px;
+	font-size: 20px;
+	letter-spacing: 2px;
+	color: white;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
