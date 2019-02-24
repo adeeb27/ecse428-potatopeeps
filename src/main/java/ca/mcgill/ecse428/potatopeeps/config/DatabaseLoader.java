@@ -57,7 +57,7 @@ public class DatabaseLoader implements CommandLineRunner {
 
             // FILL MENU_ITEM TABLE
             MenuItem[] menuItems = new MenuItem[26];
-            menuItems[0] = new MenuItem("snap peas", 3.5, 100, "roasted snap peas with sea salt", new ArrayList<Tag>(Arrays.asList(repositoryTags[0])));
+            menuItems[0] = new MenuItem("snap peas", 3.5, 100, "roasted snap peas with sea salt", new ArrayList<Tag>(Arrays.asList(repositoryTags[0], repositoryTags[5])));
             menuItems[1] = new MenuItem("spring roll", 4.0, 100, "--", new ArrayList<Tag>(Arrays.asList(repositoryTags[0], repositoryTags[5], repositoryTags[6])));
             menuItems[2] = new MenuItem("imperial roll", 4.0, 100, "--", new ArrayList<Tag>(Arrays.asList(repositoryTags[0])));
             menuItems[3] = new MenuItem("popcorn shrimp", 5.0, 100, "deep fried small shrimp", new ArrayList<Tag>(Arrays.asList(repositoryTags[0])));
@@ -69,7 +69,7 @@ public class DatabaseLoader implements CommandLineRunner {
             menuItems[9] = new MenuItem("chicken ramen", 11.0, 100, "ramen in chicken broth", new ArrayList<Tag>(Arrays.asList(repositoryTags[2])));
             menuItems[10] = new MenuItem("vegetarian ramen", 10.0, 100, "miso ramen, vegetable broth", new ArrayList<Tag>(Arrays.asList(repositoryTags[2], repositoryTags[5])));
             menuItems[11] = new MenuItem("spicy salmon roll", 6.0, 100, "spicy salmon rolls, 6 pcs", new ArrayList<Tag>(Arrays.asList(repositoryTags[6])));
-            menuItems[12] = new MenuItem("california roll", 5.0, 100, "cucumber, imitation crab and avocado roll, 6 pcs", new ArrayList<Tag>(Arrays.asList(repositoryTags[0])));
+            menuItems[12] = new MenuItem("california roll", 5.0, 100, "cucumber, imitation crab and avocado roll, 6 pcs", new ArrayList<Tag>(Arrays.asList(repositoryTags[5])));
             menuItems[13] = new MenuItem("dynamite roll", 6.0, 100, "shrimp tempura, avocado, cucumber, masago roll, 4 pcs", new ArrayList<Tag>(Arrays.asList(repositoryTags[1])));
             menuItems[14] = new MenuItem("salmon sashimi", 6.0, 100, "fresh, raw salmon piece", new ArrayList<Tag>(Arrays.asList(repositoryTags[1])));
             menuItems[15] = new MenuItem("tuna sashimi", 10.0, 100, "fresh, raw tuna piece", new ArrayList<Tag>(Arrays.asList(repositoryTags[1])));
