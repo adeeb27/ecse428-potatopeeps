@@ -9,4 +9,6 @@ public interface TagRepository  extends PagingAndSortingRepository<Tag, Long> {
 
     Optional<Tag> findByName(String name);
 
+    Boolean existsByName(String name);
+
 }
