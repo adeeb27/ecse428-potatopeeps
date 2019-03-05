@@ -1,9 +1,5 @@
 @import "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
-body {
-	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-	background-image: url(../img/MountFuji.jpg);
-	background-size: 100%;
-}
+
 
 .loginbox {
 	width: 660px;
@@ -71,4 +67,22 @@ button {
 	color: white;
 	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#login-page {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	background-image: url(../img/MountFuji.jpg) !important;
+	background-size: cover;
+	height: 100%;
+	background-repeat: no-repeat;
+}
+
+
+
+
+.login-page {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	background-image: url(../img/MountFuji.jpg) !important;
+	background-size: cover;
+	background-repeat: no-repeat;
 }

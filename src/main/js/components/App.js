@@ -1,16 +1,27 @@
 'use strict';
-const React = require('react');
-const ReactDOM = require('react-dom');
-const client = require('./client');
-
-const follow = require('./follow'); // function to hop multiple links by "rel"
 
 const root = '/api';
+import React from "react";
+import ReactDOM from "react-dom";
+import client from "../client";
+import follow from "../follow";
+import {Route, NavLink, Switch} from "react-router-dom";
+import {CSSTransition, TransitionGroup} from "react-transition-group";
+
+
+
+import {Login} from "./Login";
+import {Customer} from "./Customer";
+import {Manager} from "./Manager";
+import {Staff} from "./Staff";
+
+import "../../resources/static/css/style.css";
+import "../../resources/static/css/route-transition.css";
+// import "https://use.fontawesome.com/releases/v5.7.2/css/all.css";
 
 /*
 * This file is the React JS equivalent of Java's 'main' method, and
 * is the entry point of the application.
-*
 *
 * Note to everyone on the team - the majority of the components
 * displayed below are unlikely to stay within this file, these are simply
@@ -18,103 +29,117 @@ const root = '/api';
 * as reference for future code additions.
 * */
 
-class App extends React.Component {
+export class App extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {menuItems: [], tags: [], attributes: [], pagesize: 2, links: {}};
-        this.updatePageSize = this.updatePageSize.bind(this);
-        this.onCreate = this.onCreate.bind(this);
-        this.onDelete = this.onDelete.bind(this);
-        this.onNavigate = this.onNavigate.bind(this);
-    }
-
-    loadFromServer(pageSize) {
-        follow(client, root, [
-            {rel: 'menuItems', params: {size: pageSize}}]
-        ).then(menuItemCollection => {
-            return client({
-                method: 'GET',
-                path: menuItemCollection.entity._links.profile.href,
-                headers: {'Accept': 'application/schema+json'}
-            }).then(schema => {
-                this.schema = schema.entity;
-                return menuItemCollection;
-            });
-        }).done(menuItemCollection => {
-            this.setState({
-                menuItems: menuItemCollection.entity._embedded.menuItems,
-                attributes: Object.keys(this.schema.properties).filter(attribute => attribute !== 'tags' && attribute !== 'orders'),
-                pageSize: pageSize,
-                links: menuItemCollection.entity._links});
-        });
-    }
-
-    onCreate(newMenuItem) {
-        follow(client, root, ['menuItems']).then(menuItemCollection => {
-            return client({
-                method: 'POST',
-                path: menuItemCollection.entity._links.self.href,
-                entity: newMenuItem,
-                headers: {'Content-Type': 'application/json'}
-            })
-        }).then(response => {
-            return follow(client, root, [
-                {rel: 'menuItems', params: {'size': this.state.pageSize}}]);
-        }).done(response => {
-            if (typeof response.entity._links.last !== "undefined") {
-                this.onNavigate(response.entity._links.last.href);
-            } else {
-                this.onNavigate(response.entity._links.self.href);
-            }
-        });
-    }
-    // end::create[]
-
-    // tag::delete[]
-    onDelete(menuItem) {
-        client({method: 'DELETE', path: menuItem._links.self.href}).done(response => {
-            this.loadFromServer(this.state.pageSize);
-        });
-    }
-    // end::delete[]
-
-    // tag::navigate[]
-    onNavigate(navUri) {
-        client({method: 'GET', path: navUri}).done(menuItemCollection => {
-            this.setState({
-                menuItems: menuItemCollection.entity._embedded.menuItems,
-                attributes: this.state.attributes,
-                pageSize: this.state.pageSize,
-                links: menuItemCollection.entity._links
-            });
-        });
-    }
-    // end::navigate[]
-
-    // tag::update-page-size[]
-    updatePageSize(pageSize) {
-        if (pageSize !== this.state.pageSize) {
-            this.loadFromServer(pageSize);
-        }
-    }
-    // end::update-page-size[]
-
-    // tag::follow-1[]
-    componentDidMount() {
-        this.loadFromServer(this.state.pageSize);
-    }
+    // constructor(props) {
+    //     super(props);
+    //     this.state = {menuItems: [], tags: [], attributes: [], pagesize: 2, links: {}};
+    //     this.updatePageSize = this.updatePageSize.bind(this);
+    //     this.onCreate = this.onCreate.bind(this);
+    //     this.onDelete = this.onDelete.bind(this);
+    //     this.onNavigate = this.onNavigate.bind(this);
+    // }
+    //
+    // loadFromServer(pageSize) {
+    //     follow(client, root, [
+    //         {rel: 'menuItems', params: {size: pageSize}}]
+    //     ).then(menuItemCollection => {
+    //         return client({
+    //             method: 'GET',
+    //             path: menuItemCollection.entity._links.profile.href,
+    //             headers: {'Accept': 'application/schema+json'}
+    //         }).then(schema => {
+    //             this.schema = schema.entity;
+    //             return menuItemCollection;
+    //         });
+    //     }).done(menuItemCollection => {
+    //         this.setState({
+    //             menuItems: menuItemCollection.entity._embedded.menuItems,
+    //             attributes: Object.keys(this.schema.properties).filter(attribute => attribute !== 'tags' && attribute !== 'orders'),
+    //             pageSize: pageSize,
+    //             links: menuItemCollection.entity._links});
+    //     });
+    // }
+    //
+    // onCreate(newMenuItem) {
+    //     follow(client, root, ['menuItems']).then(menuItemCollection => {
+    //         return client({
+    //             method: 'POST',
+    //             path: menuItemCollection.entity._links.self.href,
+    //             entity: newMenuItem,
+    //             headers: {'Content-Type': 'application/json'}
+    //         })
+    //     }).then(response => {
+    //         return follow(client, root, [
+    //             {rel: 'menuItems', params: {'size': this.state.pageSize}}]);
+    //     }).done(response => {
+    //         if (typeof response.entity._links.last !== "undefined") {
+    //             this.onNavigate(response.entity._links.last.href);
+    //         } else {
+    //             this.onNavigate(response.entity._links.self.href);
+    //         }
+    //     });
+    // }
+    // // end::create[]
+    //
+    // // tag::delete[]
+    // onDelete(menuItem) {
+    //     client({method: 'DELETE', path: menuItem._links.self.href}).done(response => {
+    //         this.loadFromServer(this.state.pageSize);
+    //     });
+    // }
+    // // end::delete[]
+    //
+    // // tag::navigate[]
+    // onNavigate(navUri) {
+    //     client({method: 'GET', path: navUri}).done(menuItemCollection => {
+    //         this.setState({
+    //             menuItems: menuItemCollection.entity._embedded.menuItems,
+    //             attributes: this.state.attributes,
+    //             pageSize: this.state.pageSize,
+    //             links: menuItemCollection.entity._links
+    //         });
+    //     });
+    // }
+    // // end::navigate[]
+    //
+    // // tag::update-page-size[]
+    // updatePageSize(pageSize) {
+    //     if (pageSize !== this.state.pageSize) {
+    //         this.loadFromServer(pageSize);
+    //     }
+    // }
+    // // end::update-page-size[]
+    //
+    // // tag::follow-1[]
+    // componentDidMount() {
+    //     this.loadFromServer(this.state.pageSize);
+    // }
 
     render() {
         return (
-            <div>
-                <CreateDialog attributes={this.state.attributes} onCreate={this.onCreate}/>
-                <MenuItemList menuItems={this.state.menuItems}
-                              links={this.state.links}
-                              pageSize={this.state.pageSize}
-                              onNavigate={this.onNavigate}
-                              onDelete={this.onDelete}
-                              updatePageSize={this.updatePageSize}/>
+            <div className="App">
+                <div className="nav">
+                    <div className="nav">
+                        <NavLink exact to="/login">Login</NavLink>
+                        <NavLink to="/staff">Staff</NavLink>
+                        <NavLink to="/manager">Manager</NavLink>
+                        <NavLink to="/customer">Customer</NavLink>
+                    </div>
+                </div>
+
+                <Route render={({location}) => (
+                    <TransitionGroup>
+                        <CSSTransition key={location.pathname} timeout={30000} classNames="fade" >
+                            <Switch location={location}>
+                                <Route exact path={"/login"} component={Login}/>
+                                <Route path={"/customer"} component={Customer}/>
+                                <Route path={"/manager"} component={Manager}/>
+                                <Route path={"/staff"} component={Staff}/>
+                            </Switch>
+                        </CSSTransition>
+                    </TransitionGroup>
+                )}/>
             </div>
         )
     }
@@ -322,7 +347,7 @@ class Tag extends React.Component{
     }
 }
 
-ReactDOM.render(
-    <App />,
-    document.getElementById('react')
-)
+// ReactDOM.render(
+//     <App />,
+//     document.getElementById('react')
+// )
