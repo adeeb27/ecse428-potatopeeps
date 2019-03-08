@@ -31,3 +31,4 @@ bower_components
 node_modules
 node
 built
+package-lock.json

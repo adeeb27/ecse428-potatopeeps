@@ -6,6 +6,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -17,11 +19,12 @@ public class MenuItem implements Serializable {
     public MenuItem() {
     }
 
-    public MenuItem(String name, Double price, Integer inventory, String description) {
+    public MenuItem(String name, Double price, Integer inventory, String description, List tags) {
         this.name = name;
         this.price = price;
         this.inventory = inventory;
         this.description = description;
+        this.tags = tags;
     }
 
     @Id
@@ -43,11 +46,11 @@ public class MenuItem implements Serializable {
     @OneToMany(mappedBy = "menuItem")
     private Set<Order> orders;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name="menu_item_tags",
             joinColumns = @JoinColumn(name = "menu_item_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    Set<Tag> tags;
+    private List<Tag> tags = new ArrayList<>();
 
 }

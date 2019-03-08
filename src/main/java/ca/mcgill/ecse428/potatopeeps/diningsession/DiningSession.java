@@ -17,9 +17,18 @@ public class DiningSession implements Serializable {
     public DiningSession() {
     }
 
+    enum DiningSessionStatus {
+        ONGOING, COMPLETED;
+    }
+
+    /**
+     * @param tableNumber will be parsed via React. Method TBD but should be able to track tableNumber
+     */
     public DiningSession(Integer tableNumber) {
         this.tableNumber = tableNumber;
+        this.status = DiningSessionStatus.ONGOING;
     }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,9 +43,15 @@ public class DiningSession implements Serializable {
     @Column(name="table_number")
     private Integer tableNumber;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="status")
-    private String status;
+    private DiningSessionStatus status;
 
     @OneToMany(mappedBy="diningSession")
     private Set<Order> orders;
+    
+//    public void addOrder(Order o) {
+//    	orders.add(o);
+//    }
+    
 }
