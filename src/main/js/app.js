@@ -92,7 +92,7 @@ class App extends React.Component {
             entity: updatedMenuItem,
             headers: {
                 'Content-Type': 'application/json',
-                'If-Match': menuItem.headers.Etag
+                //'If-Match': menuItem.headers.Etag
             }
         }).done(response => {
             this.loadFromServer(this.state.pageSize);
