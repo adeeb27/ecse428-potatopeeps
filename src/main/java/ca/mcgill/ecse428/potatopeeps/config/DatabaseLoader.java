@@ -75,8 +75,8 @@ public class DatabaseLoader implements CommandLineRunner {
             menuItems[15] = new MenuItem("tuna sashimi", 10.0, 100, "fresh, raw tuna piece", new ArrayList<Tag>(Arrays.asList(repositoryTags[1])));
             menuItems[16] = new MenuItem("white tuna sashimi", 12.0, 100, "fresh, raw white tuna piece", new ArrayList<Tag>(Arrays.asList(repositoryTags[1])));
             menuItems[17] = new MenuItem("deep fried banana piece", 2.0, 100, "deep fried banana piece covered with syrup", new ArrayList<Tag>(Arrays.asList(repositoryTags[3])));
-            menuItems[18] = new MenuItem("green tea ice cream", 2.0, 100, "green tea ice cream", new ArrayList<Tag>(Arrays.asList(repositoryTags[3])));
-            menuItems[19] = new MenuItem("mango ice cream", 2.0, 100, "mango ice cream", new ArrayList<Tag>(Arrays.asList(repositoryTags[3])));
+            menuItems[18] = new MenuItem("green tea ice cream", 2.0, 100, "green tea flavoured ice cream", new ArrayList<Tag>(Arrays.asList(repositoryTags[3])));
+            menuItems[19] = new MenuItem("mango ice cream", 2.0, 100, "mango flavoured ice cream", new ArrayList<Tag>(Arrays.asList(repositoryTags[3])));
             menuItems[20] = new MenuItem("coke", 2.0, 100, "standard coke brand soft drink, served in a cup with ice", new ArrayList<Tag>(Arrays.asList(repositoryTags[4])));
             menuItems[21] = new MenuItem("sprite", 2.0, 100, "standard sprite brand soft drink, served in a cup with ice", new ArrayList<Tag>(Arrays.asList(repositoryTags[4])));
             menuItems[22] = new MenuItem("crush", 2.0, 100, "standard crush brand soft drink, served in a cup with ice", new ArrayList<Tag>(Arrays.asList(repositoryTags[4])));
