@@ -1,4 +1,5 @@
 import React from "react";
+import when from "when";
 // const root = '/api';
 const root = "../api";
 import client from "../client";
@@ -23,6 +24,7 @@ export class Manager extends React.Component {
         this.state = {menuItems: [], tags: [], attributes: [], pagesize: 2, links: {}};
         this.updatePageSize = this.updatePageSize.bind(this);
         this.onCreate = this.onCreate.bind(this);
+        this.onUpdate = this.onUpdate.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onNavigate = this.onNavigate.bind(this);
     }
@@ -37,22 +39,34 @@ export class Manager extends React.Component {
                 headers: {'Accept': 'application/schema+json'}
             }).then(schema => {
                 this.schema = schema.entity;
+                this.links = menuItemCollection.entity._links;
                 return menuItemCollection;
             });
-        }).done(menuItemCollection => {
+        }).then(menuItemCollection => {
+            //this.page = menuItemCollection.entity.page;
+            return menuItemCollection.entity._embedded.menuItems.map(menuItem =>
+                client({
+                    method: 'GET',
+                    path: menuItem._links.self.href
+                })
+            );
+        }).then(menuItemPromises => {
+            return when.all(menuItemPromises);
+        }).done(menuItems => {
             this.setState({
-                menuItems: menuItemCollection.entity._embedded.menuItems,
+                menuItems: menuItems,
                 attributes: Object.keys(this.schema.properties).filter(attribute => attribute !== 'tags' && attribute !== 'orders'),
                 pageSize: pageSize,
-                links: menuItemCollection.entity._links});
+                links: this.links});
         });
     }
 
     onCreate(newMenuItem) {
-        follow(client, root, ['menuItems']).then(menuItemCollection => {
+        const self = this;
+        follow(client, root, ['menuItems']).then(response => {
             return client({
                 method: 'POST',
-                path: menuItemCollection.entity._links.self.href,
+                path: response.entity._links.self.href,
                 entity: newMenuItem,
                 headers: {'Content-Type': 'application/json'}
             })
@@ -68,10 +82,30 @@ export class Manager extends React.Component {
         });
     }
     // end::create[]
+    //TODO: 'If-Match': testing on a local sql database leads to a stale request
+    onUpdate(menuItem, updatedMenuItem) {
+        client({ //TODO: can switch to POST & MenuITemCollection
+            method: 'PUT',
+            path: menuItem.entity._links.self.href,
+            entity: updatedMenuItem,
+            headers: {
+                'Content-Type': 'application/json',
+                'If-Match': menuItem.headers.Etag
+            }
+        }).done(response => {
+            this.loadFromServer(this.state.pageSize);
+        }, response => {
+            if (response.status.code === 412) {
+                alert('DENIED: Unable to update ' +
+                    menuItem.entity._links.self.href + '. Your copy is stale.');
+            }
+        });
+    }
+    // end::update[]
 
     // tag::delete[]
     onDelete(menuItem) {
-        client({method: 'DELETE', path: menuItem._links.self.href}).done(response => {
+        client({method: 'DELETE', path: menuItem.entity._links.self.href}).done(response => {
             this.loadFromServer(this.state.pageSize);
         });
     }
@@ -79,12 +113,24 @@ export class Manager extends React.Component {
 
     // tag::navigate[]
     onNavigate(navUri) {
-        client({method: 'GET', path: navUri}).done(menuItemCollection => {
+        client({method: 'GET', path: navUri
+        }).then(menuItemCollection => {
+            this.links = menuItemCollection.entity._links;
+
+            return menuItemCollection.entity._embedded.menuItems.map(menuItem =>
+                client({
+                    method: 'GET',
+                    path: menuItem._links.self.href
+                })
+            );
+        }).then(menuItemPromises => {
+            return when.all(menuItemPromises);
+        }).done(menuItems => {
             this.setState({
-                menuItems: menuItemCollection.entity._embedded.menuItems,
-                attributes: this.state.attributes,
+                menuItems: menuItems,
+                attributes: Object.keys(this.schema.properties).filter(attribute => attribute !== 'tags' && attribute !== 'orders'),
                 pageSize: this.state.pageSize,
-                links: menuItemCollection.entity._links
+                links: this.links
             });
         });
     }
@@ -102,6 +148,7 @@ export class Manager extends React.Component {
     componentDidMount() {
         this.loadFromServer(this.state.pageSize);
     }
+
 
     render() {
         return (
@@ -141,7 +188,9 @@ export class Manager extends React.Component {
                             <ManagerMenuItemList menuItems={this.state.menuItems}
                                                  links = {this.state.links}
                                                  pageSize = {this.state.pageSize}
+                                                 attributes={this.state.attributes}
                                                  onNavigate = {this.onNavigate}
+                                                 onUpdate={this.onUpdate}
                                                  onDelete = {this.onDelete}
                                                  updatePageSize = {this.updatePageSize}/>
                         </div>
@@ -267,7 +316,11 @@ class ManagerMenuItemList extends React.Component {
     // tag::menuItem-list-render[]
     render() {
         const menuItems = this.props.menuItems.map(menuItem =>
-            <MenuItem key={menuItem._links.self.href} menuItem={menuItem} onDelete={this.props.onDelete}/>
+            <MenuItem key={menuItem.entity._links.self.href}
+                      menuItem={menuItem}
+                      attributes={this.props.attributes}
+                      onUpdate={this.props.onUpdate}
+                      onDelete={this.props.onDelete}/>
         );
 
         // const navLinks = [];
@@ -328,10 +381,10 @@ class MenuItem extends React.Component {
     render() {
         return (
             <tr>
-                <td>{this.props.menuItem.name}</td>
-                <td>{this.props.menuItem.description}</td>
-                <td>{this.props.menuItem.price}</td>
-                <td>{this.props.menuItem.inventory}</td>
+                <td>{this.props.menuItem.entity.name}</td>
+                <td>{this.props.menuItem.entity.description}</td>
+                <td>{this.props.menuItem.entity.price}</td>
+                <td>{this.props.menuItem.entity.inventory}</td>
                 <td>
                     <button type="button" className="btn btn-warning">
                         Edit
