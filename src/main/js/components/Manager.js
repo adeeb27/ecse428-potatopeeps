@@ -27,16 +27,14 @@ Modal.setAppElement('#root');
 export class Manager extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {menuItems: [], tags: [], attributes: [], pageSize: 10, links: {}, modalIsOpen: false};
+        this.state = {menuItems: [], tags: [], attributes: [], pageSize: 10, links: {}};
         this.updatePageSize = this.updatePageSize.bind(this);
         this.onCreate = this.onCreate.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onNavigate = this.onNavigate.bind(this);
 
-        this.openModal = this.openModal.bind(this);
-        this.afterOpenModal = this.afterOpenModal.bind(this);
-        this.closeModal = this.closeModal.bind(this);
+
     }
 
     loadFromServer(pageSize) {
@@ -145,19 +143,6 @@ export class Manager extends React.Component {
         });
     }
     // end::navigate[]
-
-    openModal() {
-        this.setState({modalIsOpen: true});
-    }
-
-    afterOpenModal() {
-        // references are now sync'd and can be accessed.
-        // this.subtitle.style.color = '#f00';
-    }
-
-    closeModal() {
-        this.setState({modalIsOpen: false});
-    }
 
     // tag::update-page-size[]
     updatePageSize(pageSize) {
@@ -462,6 +447,24 @@ class UpdateItemDialog extends React.Component { //TODO might need to move after
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.state = {modalIsOpen : false};
+
+        this.openModal = this.openModal.bind(this);
+        this.afterOpenModal = this.afterOpenModal.bind(this);
+        this.closeModal = this.closeModal.bind(this);
+    }
+
+    openModal() {
+        this.setState({modalIsOpen: true});
+    }
+
+    afterOpenModal() {
+        // references are now sync'd and can be accessed.
+        // this.subtitle.style.color = '#f00';
+    }
+
+    closeModal() {
+        this.setState({modalIsOpen: false});
     }
 
     handleSubmit(e) {
@@ -483,18 +486,17 @@ class UpdateItemDialog extends React.Component { //TODO might need to move after
             </p>
         );
 
-        console.log(menuItem);
         const dialogId = "updateMenuItem-" + this.props.menuItem.entity._links.self.href;
 
         return (
             <div>
-                <button className="btn btn-warning" onClick={this.props.openModal}>Update</button>
+                <button className="btn btn-warning" onClick={this.openModal}>Update</button>
                 <Modal
-                    isOpen={this.props.modalIsOpen}
-                    onAfterOpen={this.props.afterOpenModal}
-                    onRequestClose={this.props.closeModal}
+                    isOpen={this.state.modalIsOpen}
+                    onAfterOpen={this.afterOpenModal}
+                    onRequestClose={this.closeModal}
                     style={this.props.style}
-                    contentLabel="Example Modal"
+                    contentLabel={"update-modal-" + this.props.menuItem.entity['name']}
                 >
                     <div className="container-fluid">
                         <div className="row">
