@@ -15,7 +15,7 @@ import {Customer} from "./Customer";
 import {Manager} from "./Manager";
 import {Staff} from "./Staff";
 
-import "../../resources/static/css/style.css";
+// import "../../resources/static/css/style.css";
 import "../../resources/static/css/route-transition.css";
 // import "https://use.fontawesome.com/releases/v5.7.2/css/all.css";
 
