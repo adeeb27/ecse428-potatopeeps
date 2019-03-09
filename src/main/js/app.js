@@ -84,7 +84,7 @@ class App extends React.Component {
         });
     }
     // end::create[]
-
+    //TODO: 'If-Match': testing on a local sql database leads to a stale request
     onUpdate(menuItem, updatedMenuItem) {
         client({ //TODO: can switch to POST & MenuITemCollection
             method: 'PUT',
@@ -130,7 +130,7 @@ class App extends React.Component {
         }).done(menuItems => {
             this.setState({
                 menuItems: menuItems,
-                attributes: Object.keys(this.schema.properties),
+                attributes: Object.keys(this.schema.properties).filter(attribute => attribute !== 'tags' && attribute !== 'orders'),
                 pageSize: this.state.pageSize,
                 links: this.links
             });
@@ -379,10 +379,10 @@ class MenuItem extends React.Component {
     render() {
         return (
             <tr>
-                <td>{this.props.menuItem.name}</td>
-                <td>{this.props.menuItem.price}</td>
-                <td>{this.props.menuItem.inventory}</td>
-                <td>{this.props.menuItem.description}</td>
+                <td>{this.props.menuItem.entity.name}</td>
+                <td>{this.props.menuItem.entity.price}</td>
+                <td>{this.props.menuItem.entity.inventory}</td>
+                <td>{this.props.menuItem.entity.description}</td>
                 <td>
                     <UpdateDialog menuItem={this.props.menuItem}
                                   attributes={this.props.attributes}
