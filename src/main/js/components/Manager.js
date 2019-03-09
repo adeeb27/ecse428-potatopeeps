@@ -1,7 +1,10 @@
 import React from "react";
-import when from "when";
-// const root = '/api';
+import ReactDOM from "react-dom";
+import Modal from "react-modal";
+// import ReactModal from "react-modal";
 const root = "../api";
+
+import when from "when";
 import client from "../client";
 import follow from "../follow";
 
@@ -18,15 +21,22 @@ import {faTrash} from "@fortawesome/free-solid-svg-icons";
  * this file.
  */
 
+
+Modal.setAppElement('#root');
+
 export class Manager extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {menuItems: [], tags: [], attributes: [], pagesize: 2, links: {}};
+        this.state = {menuItems: [], tags: [], attributes: [], pageSize: 10, links: {}, modalIsOpen: false};
         this.updatePageSize = this.updatePageSize.bind(this);
         this.onCreate = this.onCreate.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onNavigate = this.onNavigate.bind(this);
+
+        this.openModal = this.openModal.bind(this);
+        this.afterOpenModal = this.afterOpenModal.bind(this);
+        this.closeModal = this.closeModal.bind(this);
     }
 
     loadFromServer(pageSize) {
@@ -89,8 +99,8 @@ export class Manager extends React.Component {
             path: menuItem.entity._links.self.href,
             entity: updatedMenuItem,
             headers: {
-                'Content-Type': 'application/json',
-                'If-Match': menuItem.headers.Etag
+                'Content-Type': 'application/json'
+                // 'If-Match': menuItem.headers.Etag
             }
         }).done(response => {
             this.loadFromServer(this.state.pageSize);
@@ -135,6 +145,19 @@ export class Manager extends React.Component {
         });
     }
     // end::navigate[]
+
+    openModal() {
+        this.setState({modalIsOpen: true});
+    }
+
+    afterOpenModal() {
+        // references are now sync'd and can be accessed.
+        // this.subtitle.style.color = '#f00';
+    }
+
+    closeModal() {
+        this.setState({modalIsOpen: false});
+    }
 
     // tag::update-page-size[]
     updatePageSize(pageSize) {
@@ -190,9 +213,14 @@ export class Manager extends React.Component {
                                                  pageSize = {this.state.pageSize}
                                                  attributes={this.state.attributes}
                                                  onNavigate = {this.onNavigate}
+                                                 updatePageSize = {this.updatePageSize}
                                                  onUpdate={this.onUpdate}
                                                  onDelete = {this.onDelete}
-                                                 updatePageSize = {this.updatePageSize}/>
+                                                 openModal = {this.openModal}
+                                                 afterOpenModal={this.afterOpenModal}
+                                                 closeModal={this.closeModal}
+                                                 modalIsOpen = {this.state.modalIsOpen}
+                                                 style={customStyles}/>
                         </div>
                         <div className="col-3">
                             <div className="container-fluid">
@@ -271,10 +299,6 @@ class ManagerMenuItemList extends React.Component {
 
     constructor(props) {
         super(props);
-        // this.handleNavFirst = this.handleNavFirst.bind(this);
-        // this.handleNavPrev = this.handleNavPrev.bind(this);
-        // this.handleNavNext = this.handleNavNext.bind(this);
-        // this.handleNavLast = this.handleNavLast.bind(this);
         this.handleInput = this.handleInput.bind(this);
     }
 
@@ -289,28 +313,6 @@ class ManagerMenuItemList extends React.Component {
                 pageSize.substring(0, pageSize.length - 1);
         }
     }
-    // end::handle-page-size-updates[]
-
-    // tag::handle-nav[]
-    // handleNavFirst(e){
-    //     e.preventDefault();
-    //     this.props.onNavigate(this.props.links.first.href);
-    // }
-    //
-    // handleNavPrev(e) {
-    //     e.preventDefault();
-    //     this.props.onNavigate(this.props.links.prev.href);
-    // }
-    //
-    // handleNavNext(e) {
-    //     e.preventDefault();
-    //     this.props.onNavigate(this.props.links.next.href);
-    // }
-    //
-    // handleNavLast(e) {
-    //     e.preventDefault();
-    //     this.props.onNavigate(this.props.links.last.href);
-    // }
     // end::handle-nav[]
 
     // tag::menuItem-list-render[]
@@ -320,26 +322,17 @@ class ManagerMenuItemList extends React.Component {
                       menuItem={menuItem}
                       attributes={this.props.attributes}
                       onUpdate={this.props.onUpdate}
-                      onDelete={this.props.onDelete}/>
+                      onDelete={this.props.onDelete}
+                      openModal = {this.props.openModal}
+                      afterOpenModal={this.props.afterOpenModal}
+                      closeModal={this.props.closeModal}
+                      modalIsOpen = {this.props.modalIsOpen}
+                      style={this.props.style}/>
         );
 
-        // const navLinks = [];
-        // if ("first" in this.props.links) {
-        //     navLinks.push(<button key="first" onClick={this.handleNavFirst}>&lt;&lt;</button>);
-        // }
-        // if ("prev" in this.props.links) {
-        //     navLinks.push(<button key="prev" onClick={this.handleNavPrev}>&lt;</button>);
-        // }
-        // if ("next" in this.props.links) {
-        //     navLinks.push(<button key="next" onClick={this.handleNavNext}>&gt;</button>);
-        // }
-        // if ("last" in this.props.links) {
-        //     navLinks.push(<button key="last" onClick={this.handleNavLast}>&gt;&gt;</button>);
-        // }
 
         return (
             <div id="menu-items" className="table-responsive">
-                {/*<input ref="pageSize" defaultValue={this.props.pageSize} onInput={this.handleInput}/>*/}
                 <table id="main-table" className="table table-striped">
                     <tbody>
                     <tr>
@@ -353,9 +346,6 @@ class ManagerMenuItemList extends React.Component {
                     {menuItems}
                     </tbody>
                 </table>
-                {/*<div>*/}
-                {/*{navLinks}*/}
-                {/*</div>*/}
             </div>
         )
     }
@@ -386,9 +376,15 @@ class MenuItem extends React.Component {
                 <td>{this.props.menuItem.entity.price}</td>
                 <td>{this.props.menuItem.entity.inventory}</td>
                 <td>
-                    <button type="button" className="btn btn-warning">
-                        Edit
-                    </button>
+
+                    <UpdateItemDialog menuItem={this.props.menuItem}
+                                      attributes={this.props.attributes}
+                                      onUpdate={this.props.onUpdate}
+                                      openModal = {this.props.openModal}
+                                      afterOpenModal={this.props.afterOpenModal}
+                                      closeModal={this.props.closeModal}
+                                      modalIsOpen = {this.props.modalIsOpen}
+                                      style={this.props.style}/>
                 </td>
                 <td>
                     <button className="btn btn-danger" onClick={this.handleDelete}>
@@ -399,8 +395,6 @@ class MenuItem extends React.Component {
         )
     }
 }
-
-
 
 /**
  * Holds the code related to creating menu items.
@@ -430,7 +424,7 @@ class CreateItemDialog extends React.Component {
         });
 
         // Navigate away from the dialog to hide it.
-        window.location = "#";
+        window.location = "#/manager";
     }
 
     render() {
@@ -463,6 +457,89 @@ class CreateItemDialog extends React.Component {
 }
 
 
+class UpdateItemDialog extends React.Component { //TODO might need to move after menuitem class
+
+    constructor(props) {
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        const updatedMenuItem = {};
+        this.props.attributes.forEach(attribute => {
+            updatedMenuItem[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
+        });
+        this.props.onUpdate(this.props.menuItem, updatedMenuItem);
+        window.location = "#/manager";
+    }
+
+    render() {
+        const inputs = this.props.attributes.map(attribute =>
+            <p key={this.props.menuItem.entity[attribute]}>
+                <input type="text" placeholder={attribute}
+                       defaultValue={this.props.menuItem.entity[attribute]}
+                       ref={attribute} className="field"/>
+            </p>
+        );
+
+        console.log(menuItem);
+        const dialogId = "updateMenuItem-" + this.props.menuItem.entity._links.self.href;
+
+        return (
+            <div>
+                <button className="btn btn-warning" onClick={this.props.openModal}>Update</button>
+                <Modal
+                    isOpen={this.props.modalIsOpen}
+                    onAfterOpen={this.props.afterOpenModal}
+                    onRequestClose={this.props.closeModal}
+                    style={this.props.style}
+                    contentLabel="Example Modal"
+                >
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="col-12">
+                                <h5 className="">Update Menu Item</h5>
+                            </div>
+                        </div>
+                        {/*<form>*/}
+                            <div className="row">
+                                <div className="col-12">
+                                    <div className="">
+                                        {inputs}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-12">
+                                    <div className="modal-footer">
+                                        <button className="btn btn-block btn-lg btn-primary" onClick={this.handleSubmit}>Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        {/*</form>*/}
+                    </div>
+
+                </Modal>
+                {/*<a href={"#" + dialogId} className="btn btn-warning">Update</a>*/}
+                {/*<div id={dialogId} className="modalDialog">*/}
+                    {/*<div>*/}
+                        {/*<a href="#" title="Close" className="close">X</a>*/}
+
+                        {/*<h2>Update a menuItem</h2>*/}
+
+                        {/*<form>*/}
+                            {/*{inputs}*/}
+                            {/*<button onClick={this.handleSubmit}>Update</button>*/}
+                        {/*</form>*/}
+                    {/*</div>*/}
+                {/*</div>*/}
+            </div>
+        )
+    }
+
+}
+
 /**
  * Holds the code related to creating tags.
  * TODO: Integration of correct UI, onCreate
@@ -485,5 +562,16 @@ class Tag extends React.Component{
         )
     }
 }
+
+const customStyles = {
+    content : {
+        // top                   : '50%',
+        // left                  : '50%',
+        // right                 : 'auto',
+        // bottom                : 'auto',
+        // marginRight           : '-50%',
+        // transform             : 'translate(-50%, -50%)'
+    }
+};
 
 

@@ -2,13 +2,9 @@
 
 const root = '/api';
 import React from "react";
-import ReactDOM from "react-dom";
-import client from "../client";
-import follow from "../follow";
+
 import {Route, NavLink, Switch} from "react-router-dom";
 import {CSSTransition, TransitionGroup} from "react-transition-group";
-
-
 
 import {Login} from "./Login";
 import {Customer} from "./Customer";
