@@ -1,5 +1,6 @@
 import React from "react";
 const root = "../api";
+import Select from "react-select";
 
 import when from "when";
 import client from "../client";
@@ -126,6 +127,7 @@ export class Manager extends React.Component {
             }
         }).done(response => {
             this.loadFromServer(this.state.pageSize);
+            this.loadTagsFromServer(this.state.pageSize);
         }, response => {
             if (response.status.code === 412) {
                 alert('DENIED: Unable to update ' +
@@ -229,7 +231,12 @@ export class Manager extends React.Component {
 
     }
 
+
+
     render() {
+        const tagList = this.state.tags.map(tag =>
+            ({label: tag.entity.name, value: tag})
+        );
         return (
             <div className="page manager-page">
                 <div id="header" className="container-fluid">
@@ -254,7 +261,10 @@ export class Manager extends React.Component {
                         <div className="col-3">
                             <h2>Menu & Inventory</h2>
                         </div>
-                        <div className="col-6" />
+                        <div className="col-6" >
+                            <Select options={tagList}
+                                    isMulti/>
+                        </div>
                         <div className="col-3">
                             <h3>Add A Menu Item</h3>
                         </div>
