@@ -25,16 +25,16 @@ export class Customer extends React.Component {
                 </div>
 
                 <a href="#" id="back-to-top">
-                    <i className="icon bg icon-UpArrow"></i>
+                    <i className="icon bg icon-UpArrow" />
                 </a>
 
 
                 <ul id="slideshow">
-                    <li id="slideshow-5"></li>
-                    <li id="slideshow-3"></li>
-                    <li id="slideshow-6"></li>
-                    <li id="slideshow-4"></li>
-                    <li id="slideshow-2"></li>
+                    <li id="slideshow-5" />
+                    <li id="slideshow-3" />
+                    <li id="slideshow-6" />
+                    <li id="slideshow-4" />
+                    <li id="slideshow-2" />
                 </ul>
             </div>
         )

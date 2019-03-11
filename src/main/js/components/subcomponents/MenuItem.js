@@ -2,7 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faTrash, faEdit, faAngleDoubleLeft,
+        faAngleDoubleRight, faAngleLeft, faAngleRight} from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 
@@ -13,12 +14,12 @@ export class MenuItemList extends React.Component {
     }
 
     render() {
-
         if(this.props.selectedView === 'Manager')
             return (<ManagerMenuItemList menuItems={this.props.menuItems}
-                                         links={this.props.links}
                                          pageSize={this.props.pageSize}
                                          attributes={this.props.attributes}
+                                         menuItemAttributes={this.props.menuItemAttributes}
+                                         menuItemLinks={this.props.menuItemLinks}
                                          onNavigate={this.props.onNavigate}
                                          updatePageSize={this.props.updatePageSize}
                                          onUpdate={this.props.onUpdate}
@@ -26,18 +27,18 @@ export class MenuItemList extends React.Component {
 
         else if(this.props.selectedView === 'Customer')
             return (<CustomerMenuItemList />);
-
     }
-
 }
-
-
 
 class ManagerMenuItemList extends React.Component {
 
     constructor(props) {
         super(props);
         this.handleInput = this.handleInput.bind(this);
+        this.handleNavFirst = this.handleNavFirst.bind(this);
+        this.handleNavPrev = this.handleNavPrev.bind(this);
+        this.handleNavNext = this.handleNavNext.bind(this);
+        this.handleNavLast = this.handleNavLast.bind(this);
     }
 
     handleInput(e) {
@@ -51,14 +52,41 @@ class ManagerMenuItemList extends React.Component {
         }
     }
 
+    handleNavFirst(e){
+        e.preventDefault();
+        this.props.onNavigate(this.props.menuItemLinks.first.href, 'menuItems');
+    }
+
+    handleNavPrev(e) {
+        e.preventDefault();
+        this.props.onNavigate(this.props.menuItemLinks.prev.href, 'menuItems');
+    }
+
+    handleNavNext(e) {
+        e.preventDefault();
+        this.props.onNavigate(this.props.menuItemLinks.next.href, 'menuItems');
+    }
+
+    handleNavLast(e) {
+        e.preventDefault();
+        this.props.onNavigate(this.props.menuItemLinks.last.href, 'menuItems');
+    }
+
     render() {
         const menuItems = this.props.menuItems.map(menuItem =>
             <ManagerMenuItem key={menuItem.entity._links.self.href}
                              menuItem={menuItem}
-                             attributes={this.props.attributes}
+                             menuItemAttributes={this.props.menuItemAttributes}
                              onUpdate={this.props.onUpdate}
                              onDelete={this.props.onDelete} />
         );
+
+        const navLinks = [
+            <Button key="first" variant="outline-secondary" onClick={this.handleNavFirst}><FontAwesomeIcon icon={faAngleDoubleLeft}/></Button>,
+            <Button key="prev" variant="outline-secondary" onClick={this.handleNavPrev}><FontAwesomeIcon icon={faAngleLeft}/></Button>,
+            <Button key="next" variant="outline-secondary" onClick={this.handleNavNext}><FontAwesomeIcon icon={faAngleRight}/></Button>,
+            <Button key="last" variant="outline-secondary" onClick={this.handleNavLast}><FontAwesomeIcon icon={faAngleDoubleRight}/></Button>
+        ];
 
         return (
             <div id="menu-items" className="table-responsive">
@@ -76,28 +104,67 @@ class ManagerMenuItemList extends React.Component {
                     {menuItems}
                     </tbody>
                 </table>
+                <div>
+                    {navLinks}
+                </div>
             </div>
         )
     }
 
 }
 
+
 class ManagerMenuItem extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {tags: []};
+        this.state = {menuItemTags: []};
         this.handleDelete = this.handleDelete.bind(this);
+        this.requestTags = this.requestTags.bind(this);
     }
 
     handleDelete() {
-        this.props.onDelete(this.props.menuItem);
+        this.props.onDelete(this.props.menuItem, 'menuItems');
     }
 
+    requestTags() {
+        fetch(this.props.menuItem.entity._links.tags.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
+            .then(
+                response => {
+                    if (response.status !== 200) {
+                        console.log('Looks like there was a problem. Status Code: ' +
+                            response.status);
+                        return;
+                    }
+
+                    // Examine the text in the response
+                    response.json().then((data) => {
+                        console.log(data._embedded.tags);
+                        this.setState({menuItemTags: data._embedded.tags});
+                    });
+                }
+            )
+            .catch(function(err) {
+                console.log('Fetch Error :-S', err);
+            });
+    }
+
+    componentDidMount() {
+        this.requestTags();
+    }
+
+
     render(){
+
+        const tags = this.state.menuItemTags.map((tag, index) =>
+            <span key={"menu-item-list-tag-" + tag._links.self.href + "-menu-item-" + this.props.menuItem.entity._links.self.href}>
+                {index === this.state.menuItemTags.length -1 ? tag.name : tag.name + ', '}
+            </span>
+        );
+
         return (
             <tr>
-                <td>--</td>
+                <td>{tags}</td>
                 <td>{this.props.menuItem.entity.name}</td>
                 <td>{this.props.menuItem.entity.description}</td>
                 <td>{this.props.menuItem.entity.price}</td>
@@ -105,8 +172,8 @@ class ManagerMenuItem extends React.Component {
                 <td>
 
                     <ManagerUpdateMenuItemDialog menuItem={this.props.menuItem}
-                                      attributes={this.props.attributes}
-                                      onUpdate={this.props.onUpdate}/>
+                                                 menuItemAttributes={this.props.menuItemAttributes}
+                                                 onUpdate={this.props.onUpdate}/>
                 </td>
                 <td>
                     <button className="btn btn-danger" onClick={this.handleDelete}>
@@ -146,15 +213,16 @@ class ManagerUpdateMenuItemDialog extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         const updatedMenuItem = {};
-        this.props.attributes.forEach(attribute => {
+        this.props.menuItemAttributes.forEach(attribute => {
             updatedMenuItem[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
         });
-        this.props.onUpdate(this.props.menuItem, updatedMenuItem);
-        this.handleShow();
+
+        this.props.onUpdate(this.props.menuItem, updatedMenuItem, 'menuItems');
+        this.handleClose();
     }
 
     render() {
-        const inputs = this.props.attributes.map(attribute =>
+        const inputs = this.props.menuItemAttributes.map(attribute =>
             <div key={"row-" + this.props.menuItem.entity._links.self.href + "-" + attribute} className="row">
                 <div key={"col-" + this.props.menuItem.entity._links.self.href + "-" + attribute} className="form-group col">
                     <label key={"label-" + this.props.menuItem.entity._links.self.href + "-" + attribute}
@@ -173,7 +241,9 @@ class ManagerUpdateMenuItemDialog extends React.Component {
 
         return (
             <div>
-                <button className="btn btn-warning" onClick={this.handleShow}>Update</button>
+                <button className="btn btn-warning" onClick={this.handleShow}>
+                    <FontAwesomeIcon icon={faEdit}/>
+                </button>
                 <Modal show={this.state.show} onHide={this.handleClose}>
                     <Modal.Header>
                         <Modal.Title>Update A Menu Item</Modal.Title>
@@ -213,13 +283,13 @@ export class ManagerCreateMenuItemDialog extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
         const newMenuItem = {};
-        this.props.attributes.forEach(attribute => {
+        this.props.menuItemAttributes.forEach(attribute => {
             newMenuItem[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
         });
-        this.props.onCreate(newMenuItem);
+        this.props.onCreate(newMenuItem, 'menuItems');
 
         // clear out the dialog's inputs
-        this.props.attributes.forEach(attribute => {
+        this.props.menuItemAttributes.forEach(attribute => {
             ReactDOM.findDOMNode(this.refs[attribute]).value = '';
         });
 
@@ -228,22 +298,17 @@ export class ManagerCreateMenuItemDialog extends React.Component {
     }
 
     render() {
-
-        function isDescription(attribute) {
-            return attribute === 'description'
-        }
-
-        const formInputs = this.props.attributes.map(attribute =>
+        const formInputs = this.props.menuItemAttributes.map(attribute =>
             <div key={"create-row-" + attribute} className="row">
                 <div key={"create-col-" + attribute} className="form-group col">
                     <label key={"create-label-" + attribute}
                            htmlFor={"create-" + attribute}>
-                        {attribute.toUpperCase()}
+                        {attribute.charAt(0).toUpperCase() + attribute.slice(1)}
                     </label>
 
                     <input key={"create-input-" + attribute}
                            id={"create-" + attribute}
-                           type="text" placeholder={"Enter " + attribute}
+                           type="text" placeholder={"Enter " + attribute.charAt(0).toUpperCase() + attribute.slice(1)}
                            ref={attribute} className="field form-control"/>
                 </div>
             </div>
@@ -258,7 +323,7 @@ export class ManagerCreateMenuItemDialog extends React.Component {
                         <div className="row">
                             <div className="col">
                                 <Button className="btn btn-primary btn-block" onClick={this.handleSubmit}>
-                                    Create
+                                    Add Menu Item
                                 </Button>
                             </div>
                         </div>
