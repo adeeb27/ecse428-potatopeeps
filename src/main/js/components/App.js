@@ -1,35 +1,51 @@
 'use strict';
 
-import React from "react";
-const root = "/api";
-
-import {Route, NavLink, Switch} from "react-router-dom";
+/** ----- NPM PACKAGE IMPORTS -----**/
+import React from "react"; // Imports the ReactJS Library; Link: https://reactjs.org/
+import {Route, NavLink, Switch} from "react-router-dom"; // Imports the React-Router Elements mentioned in Index.js
 import {CSSTransition, TransitionGroup} from "react-transition-group";
+const root = "/api"; // Root is a variable used to provide pathing to the uriListConverter
 
+/** ----- COMPONENT IMPORTS -----**/
 import {Login} from "./Login";
-import {Customer} from "./Customer";
-import {Manager} from "./Manager";
 import {Staff} from "./Staff";
+import {Manager} from "./Manager";
+import {Customer} from "./Customer";
 
-// import "../../resources/static/css/style.css";
-import "../../resources/static/css/route-transition.css";
+/** ----- TUTORIAL API IMPORTS -----**/
 import follow from "../follow";
 import client from "../client";
 import when from "when";
-// import "https://use.fontawesome.com/releases/v5.7.2/css/all.css";
 
-/*
-* This file is the React JS equivalent of Java's 'main' method, and
-* is the entry point of the application.
-*
-* Note to everyone on the team - the majority of the components
-* displayed below are unlikely to stay within this file, these are simply
-* here to act as a proof of concept for the rest of the team and serve
-* as reference for future code additions.
+/** ----- CSS/STYLING IMPORTS -----**/
+// import "../../resources/static/css/style.css"; /** TEMPORARILY REMOVED PENDING REFACTORING BY UI TEAM. **/
+import "../../resources/static/css/route-transition.css";
+
+/**
+* This file is the React JS equivalent of Java's 'main' method, and holds the majority of
+ * our generic business logic (Creating, Updating, Deleting resources).
+ *
+ * The state of this Component contains and should contain virtually all of the information we intend on storing
+ * about the application - this includes DiningSessions, MenuItems, Orders and Tags. Do note that if we decide to add
+ * further database tables, we will have to update the methods below accordingly.
+ *
+ * This information is then passed or 'sent' to the components we have instantiated as Routes, specifically the
+ * Customer.js, Manager.js, Staff.js. This *named* information sent to these components is subsequently
+ * accessed in each via their props variable. See documentation below for further explanation.
+ *
+ * Link to ReactJS Documentation on State: https://reactjs.org/docs/state-and-lifecycle.html
+ * Link to ReactJS Documentation on Components & Props: https://reactjs.org/docs/components-and-props.html
+ *
+ * @Author Evan Bruchet, Gabriel Negash
 * */
 
 export class App extends React.Component {
 
+    /**
+     * The constructor below instantiates each of the state variables mentioned previously. These variables are then
+     * selectively sent to the components Customer, Manager, Staff. Note some of these variables are NOT passed to the
+     * Route components as they don't require all these variables. (Manager does not need to see DiningSessions for ex.)
+    * */
     constructor(props){
         super(props);
         this.state ={
@@ -55,16 +71,29 @@ export class App extends React.Component {
         this.loadResourceFromServer = this.loadResourceFromServer.bind(this);
     }
 
-    loadResourceFromServer(resource, pageSize){
+
+    /**
+     * loadResourceFromServer - Initializes / updates the state variables mentioned above with the appropriate values.
+     * Generally called upon loading of a page, or after Creating/Updating/Deleting a resource, so the View has an up
+     * to date view of the database.
+     *
+     * @param resourceType - A string sent describing which of the resources the sub-component wishes to 'load'. Note
+     * the possible values are 'diningSessions', 'menuItems', 'orders', 'tags' as these are how we currently reference
+     * our database tables via URI.
+     * @param pageSize - Simply denotes the number of entries to return.
+     *
+     * Link to ReactJS/Spring DATA REST Tutorial: https://spring.io/guides/tutorials/react-and-spring-data-rest/#react-and-spring-data-rest-part-2
+     */
+    loadResourceFromServer(resourceType, pageSize){
         follow(client, root, [
-            {rel: resource, params: {size: pageSize}}]
+            {rel: resourceType, params: {size: pageSize}}]
         ).then(resourceCollection => {
             return client({
                 method: 'GET',
                 path: resourceCollection.entity._links.profile.href,
                 headers: {'Accept': 'application/schema+json'}
             }).then(resourceSchema => {
-                switch(resource){
+                switch(resourceType){
                     case('diningSessions'):
                         this.diningSessionSchema = resourceSchema.entity;
                         this.diningSessionLinks = resourceCollection.entity._links;
@@ -85,7 +114,7 @@ export class App extends React.Component {
                 return resourceCollection;
             });
         }).then(resourceCollection => {
-            switch(resource){
+            switch(resourceType){
                 case('diningSessions'):
                     return resourceCollection.entity._embedded.diningSessions.map(diningSession =>
                         client({
@@ -118,7 +147,7 @@ export class App extends React.Component {
         }).then(resourcePromises => {
             return when.all(resourcePromises);
         }).done(resources => {
-            switch(resource) {
+            switch(resourceType) {
                 case('diningSessions'):
                     this.setState({
                         diningSessions: resources,
@@ -155,25 +184,13 @@ export class App extends React.Component {
         });
     }
 
-    onDelete(deletedResource, resourceType) {
-        client({method: 'DELETE', path: deletedResource.entity._links.self.href}).done(() => {
-            switch(resourceType){
-                case('diningSessions'):
-                    this.loadResourceFromServer('diningSessions', this.state.pageSize);
-                    break;
-                case('menuItems'):
-                    this.loadResourceFromServer('menuItems', this.state.pageSize);
-                    break;
-                case('orders'):
-                    this.loadResourceFromServer('orders', this.state.pageSize);
-                    break;
-                case('tags'):
-                    this.loadResourceFromServer('tags', this.state.pageSize);
-                    break;
-            }
-        });
-    }
-
+    /**
+     * onCreate - Creates and inserts the passed resource into the database, then refreshes the state's view of the table.
+     * @param newResource - A JS Object, describing the resource to be created.
+     * @param resourceType - A string describing which of the resource tables the sub-component wishes to insert into.
+     *
+     * @author Ryan Dotsikas, Evan Bruchet
+     */
     onCreate(newResource, resourceType) {
         follow(client, root, [resourceType]).then(response => {
             return client({
@@ -194,8 +211,18 @@ export class App extends React.Component {
         });
     }
 
+    /**
+     * onUpdate - Updates the passed resource in the database, assuming present - then refreshes state's view of the table.
+     * @param resource - A JS Object, describing the resource to be updated.
+     * @param updatedResource - The JS Object with new properties describing the resource to be updated.
+     * @param resourceType - A string sent describing which of the resource tables the sub-component wishes to update
+     * Note the possible values are 'diningSessions', 'menuItems', 'orders', 'tags' as these are our currently
+     * existing database tables, and how they are referenced via URI.
+     *
+     * @author Gabriel Negash, Evan Bruchet
+     */
     onUpdate(resource, updatedResource, resourceType) {
-        client({ //TODO: can switch to POST & MenuITemCollection
+        client({
             method: 'PUT',
             path: resource.entity._links.self.href,
             entity: updatedResource,
@@ -213,6 +240,46 @@ export class App extends React.Component {
         });
     }
 
+    /**
+     * onDelete - Deletes the passed resource from the database, then refreshes the state's view of the table.
+     *
+     * @param deletedResource - A JS Object, describing the resource to be deleted.
+     * @param resourceType - A string sent describing which of the resource tables the sub-component wishes to delete
+     * from. Note the possible values are 'diningSessions', 'menuItems', 'orders', 'tags' as these are our currently
+     * existing database tables, and how they are referenced via URI.
+     *
+     * @author Ryan Dotsikas, Evan Bruchet
+     */
+    onDelete(deletedResource, resourceType) {
+        client({method: 'DELETE', path: deletedResource.entity._links.self.href}).done(() => {
+            switch(resourceType){
+                case('diningSessions'):
+                    this.loadResourceFromServer('diningSessions', this.state.pageSize);
+                    break;
+                case('menuItems'):
+                    this.loadResourceFromServer('menuItems', this.state.pageSize);
+                    break;
+                case('orders'):
+                    this.loadResourceFromServer('orders', this.state.pageSize);
+                    break;
+                case('tags'):
+                    this.loadResourceFromServer('tags', this.state.pageSize);
+                    break;
+            }
+        });
+    }
+
+    /**
+     * onNavigate - Called in the onCreate function to force a navigation to the final page of the table to see the
+     * newly inserted resource.
+     *
+     * @param navUri - The URI upon which a GET Request is performed.
+     * @param resourceType - A string sent describing which of the resource tables the sub-component wishes to navigate
+     * to. Note the possible values are 'diningSessions', 'menuItems', 'orders', 'tags' as these are our currently
+     * existing database tables, and how they are referenced via URI.
+     *
+     * @author Ryan Dotsikas, Evan Bruchet
+     */
     onNavigate(navUri, resourceType) {
         client({method: 'GET', path: navUri
         }).then(resourceCollection => {
@@ -296,14 +363,25 @@ export class App extends React.Component {
         }
     }
 
+    /**
+     * render - Render a React element into the DOM in the supplied container and return a reference to the component
+     *
+     * @returns The HTML/JSX code to be displayed by this element. In this case, we return a basic navbar at the top
+     * to allow the development team to move between our existing pages easily using <NavLink> components.
+     * NOTE: This navbar will be removed by the end of the project.
+     *
+     * Additionally, this is where we place all of our <Route> component, grouped together by a <Switch> component. This
+     * <Switch> component iterates over all its children <Route> elements and renders the first one matching the current
+     * URL. We have a Route for each of our 'pages' or views - Login, Customer, Manager and Staff.
+     */
     render() {
         return (
             <div className="App">
                 <div className="nav">
-                    <NavLink exact to="/login">Login</NavLink>
-                    <NavLink to="/staff">Staff</NavLink>
-                    <NavLink to="/manager">Manager</NavLink>
-                    <NavLink to="/customer">Customer</NavLink>
+                    <NavLink exact to="/login">{"Login  "}</NavLink>
+                    <NavLink to="/staff">{"Staff  "}</NavLink>
+                    <NavLink to="/manager">{"Manager  "}</NavLink>
+                    <NavLink to="/customer">{"Customer  "}</NavLink>
                 </div>
 
                 <Route render={({location}) => (
@@ -311,45 +389,48 @@ export class App extends React.Component {
                         <CSSTransition key={location.pathname} timeout={30000} classNames="fade" >
                             <Switch location={location}>
                                 <Route exact path={"/login"} component={Login}/>
-                                <Route path={"/customer"} render={(props) => (<Customer loadResourceFromServer={this.loadResourceFromServer}
-                                                                                  onCreate={this.onCreate}
-                                                                                  onUpdate={this.onUpdate}
-                                                                                  onDelete={this.onDelete}
-                                                                                  onNavigate={this.onNavigate}
-                                                                                  diningSessions={this.state.diningSessions}
-                                                                                  diningSessionLinks={this.state.diningSessionLinks}
-                                                                                  diningSessionAttributes={this.state.diningSessionAttributes}
-                                                                                  orders={this.state.orders}
-                                                                                  orderLinks={this.state.orderLinks}
-                                                                                  orderAttributes={this.state.orderAttributes}
-                                                                                  selectedView={'Staff'}
-                                                                                  {...props}/>)}/>
-                                <Route path={"/manager"} render={(props) => (<Manager loadResourceFromServer={this.loadResourceFromServer}
-                                                                                  onCreate={this.onCreate}
-                                                                                  onUpdate={this.onUpdate}
-                                                                                  onDelete={this.onDelete}
-                                                                                  onNavigate={this.onNavigate}
-                                                                                  menuItems={this.state.menuItems}
-                                                                                  menuItemLinks={this.state.menuItemLinks}
-                                                                                  menuItemAttributes={this.state.menuItemAttributes}
-                                                                                  tags={this.state.tags}
-                                                                                  tagLinks={this.state.tagLinks}
-                                                                                  tagAttributes={this.state.tagAttributes}
-                                                                                  selectedView={'Manager'}
-                                                                                  {...props}/>)}/>
-                                <Route path={"/staff"} render={(props) => (<Staff loadResourceFromServer={this.loadResourceFromServer}
-                                                                                  onCreate={this.onCreate}
-                                                                                  onUpdate={this.onUpdate}
-                                                                                  onDelete={this.onDelete}
-                                                                                  onNavigate={this.onNavigate}
-                                                                                  diningSessions={this.state.diningSessions}
-                                                                                  diningSessionLinks={this.state.diningSessionLinks}
-                                                                                  diningSessionAttributes={this.state.diningSessionAttributes}
-                                                                                  orders={this.state.orders}
-                                                                                  orderLinks={this.state.orderLinks}
-                                                                                  orderAttributes={this.state.orderAttributes}
-                                                                                  selectedView={'Staff'}
-                                                                                  {...props}/>)}/>
+                                <Route path={"/customer"} render={(props) =>
+                                    (<Customer loadResourceFromServer={this.loadResourceFromServer}
+                                                                      onCreate={this.onCreate}
+                                                                      onUpdate={this.onUpdate}
+                                                                      onDelete={this.onDelete}
+                                                                      onNavigate={this.onNavigate}
+                                                                      diningSessions={this.state.diningSessions}
+                                                                      diningSessionLinks={this.state.diningSessionLinks}
+                                                                      diningSessionAttributes={this.state.diningSessionAttributes}
+                                                                      orders={this.state.orders}
+                                                                      orderLinks={this.state.orderLinks}
+                                                                      orderAttributes={this.state.orderAttributes}
+                                                                      selectedView={'Staff'}
+                                                                      {...props}/>)}/>
+                                <Route path={"/manager"} render={(props) =>
+                                    (<Manager loadResourceFromServer={this.loadResourceFromServer}
+                                                                      onCreate={this.onCreate}
+                                                                      onUpdate={this.onUpdate}
+                                                                      onDelete={this.onDelete}
+                                                                      onNavigate={this.onNavigate}
+                                                                      menuItems={this.state.menuItems}
+                                                                      menuItemLinks={this.state.menuItemLinks}
+                                                                      menuItemAttributes={this.state.menuItemAttributes}
+                                                                      tags={this.state.tags}
+                                                                      tagLinks={this.state.tagLinks}
+                                                                      tagAttributes={this.state.tagAttributes}
+                                                                      selectedView={'Manager'}
+                                                                      {...props}/>)}/>
+                                <Route path={"/staff"} render={(props) =>
+                                    (<Staff loadResourceFromServer={this.loadResourceFromServer}
+                                                                    onCreate={this.onCreate}
+                                                                    onUpdate={this.onUpdate}
+                                                                    onDelete={this.onDelete}
+                                                                    onNavigate={this.onNavigate}
+                                                                    diningSessions={this.state.diningSessions}
+                                                                    diningSessionLinks={this.state.diningSessionLinks}
+                                                                    diningSessionAttributes={this.state.diningSessionAttributes}
+                                                                    orders={this.state.orders}
+                                                                    orderLinks={this.state.orderLinks}
+                                                                    orderAttributes={this.state.orderAttributes}
+                                                                    selectedView={'Staff'}
+                                                                    {...props}/>)}/>
                             </Switch>
                         </CSSTransition>
                     </TransitionGroup>

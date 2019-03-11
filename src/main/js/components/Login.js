@@ -1,9 +1,12 @@
+'use strict';
+
+/** ----- NPM PACKAGE IMPORTS -----**/
 import React from "react";
-import "../../resources/static/css/login.css";
-// import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faKey } from '@fortawesome/free-solid-svg-icons'
 
+/** ----- CSS/STYLING IMPORTS -----**/
+import "../../resources/static/css/login.css";
 
 /**
  * This JS file contains all code related to the rendering of the 'Login' perspective.
@@ -20,14 +23,6 @@ export class Login extends React.Component {
             password: ""
         };
     }
-
-
-    // Rudimentary form validation, should be expanded upon later
-    // Placed here as an example for future use.
-    validateForm() {
-        return this.state.user.length > 0 && this.state.password.length;
-    }
-
 
     /**
      * Displays the login page

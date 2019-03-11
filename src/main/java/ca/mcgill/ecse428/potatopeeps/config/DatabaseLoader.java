@@ -58,8 +58,8 @@ public class DatabaseLoader implements CommandLineRunner {
             // FILL MENU_ITEM TABLE
             MenuItem[] menuItems = new MenuItem[26];
             menuItems[0] = new MenuItem("Snap Peas", 3.5, 100, "Roasted snap peas with sea salt", new ArrayList<Tag>(Arrays.asList(repositoryTags[0], repositoryTags[5])));
-            menuItems[1] = new MenuItem("Spring Roll", 4.0, 100, "--", new ArrayList<Tag>(Arrays.asList(repositoryTags[0], repositoryTags[5], repositoryTags[6])));
-            menuItems[2] = new MenuItem("Imperial Roll", 4.0, 100, "--", new ArrayList<Tag>(Arrays.asList(repositoryTags[0])));
+            menuItems[1] = new MenuItem("Spring Roll", 4.0, 100, "Small roll of thin pastry filled with vegetables", new ArrayList<Tag>(Arrays.asList(repositoryTags[0], repositoryTags[5], repositoryTags[6])));
+            menuItems[2] = new MenuItem("Imperial Roll", 4.0, 100, "Crispy roll filled with vegetables", new ArrayList<Tag>(Arrays.asList(repositoryTags[0])));
             menuItems[3] = new MenuItem("Popcorn Shrimp", 5.0, 100, "Deep fried small shrimp", new ArrayList<Tag>(Arrays.asList(repositoryTags[0])));
             menuItems[4] = new MenuItem("Tempura Vegetables", 3.0, 100, "Vegetables deep fried in tempura", new ArrayList<Tag>(Arrays.asList(repositoryTags[0])));
             menuItems[5] = new MenuItem("Chicken Curry", 11.0, 100, "Mild chicken curry on rice", new ArrayList<Tag>(Arrays.asList(repositoryTags[1])));

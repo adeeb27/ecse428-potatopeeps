@@ -1,12 +1,19 @@
+'use strict';
+
+/** ----- NPM PACKAGE IMPORTS -----**/
 import React from "react";
 import ReactDOM from "react-dom";
-
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTrash, faEdit, faAngleDoubleLeft,
-        faAngleDoubleRight, faAngleLeft, faAngleRight} from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTrash, faEdit, faAngleDoubleLeft,
+    faAngleDoubleRight, faAngleLeft, faAngleRight} from "@fortawesome/free-solid-svg-icons";
 
+/**
+ * This React Component contains all code related to the rendering of a MenuItemList - being either the Customer or
+ * Manager view of such a list. Uses rudimentary conditional rendering based on the 'selectedView' prop passed down
+ * from its parent component in Customer.js or Manager.js, respectively.
+ */
 export class MenuItemList extends React.Component {
 
     constructor(props) {
@@ -14,6 +21,7 @@ export class MenuItemList extends React.Component {
     }
 
     render() {
+        /* Returns the Manager 'version' of the MenuItemList if the selectedView property is set to Manager. */
         if(this.props.selectedView === 'Manager')
             return (<ManagerMenuItemList menuItems={this.props.menuItems}
                                          pageSize={this.props.pageSize}
@@ -24,12 +32,22 @@ export class MenuItemList extends React.Component {
                                          updatePageSize={this.props.updatePageSize}
                                          onUpdate={this.props.onUpdate}
                                          onDelete={this.props.onDelete}/>);
-
+        /* Returns the Customer 'version' of the MenuItemList if the selectedView property is set to Customer. */
         else if(this.props.selectedView === 'Customer')
-            return (<CustomerMenuItemList />);
+            return (<CustomerMenuItemList menuItems={this.props.menuItems}
+                                          pageSize={this.props.pageSize}
+                                          attributes={this.props.attributes}
+                                          menuItemAttributes={this.props.menuItemAttributes}
+                                          menuItemLinks={this.props.menuItemLinks}
+                                          onNavigate={this.props.onNavigate}
+                                          updatePageSize={this.props.updatePageSize}/>);
     }
 }
 
+/**
+ * This React Component contains all code related to the rendering of the Manager 'view' of a MenuItemList, referenced
+ * above.
+ */
 class ManagerMenuItemList extends React.Component {
 
     constructor(props) {
@@ -72,6 +90,13 @@ class ManagerMenuItemList extends React.Component {
         this.props.onNavigate(this.props.menuItemLinks.last.href, 'menuItems');
     }
 
+
+    /**
+     * render - Render a React element into the DOM in the supplied container and return a reference to the component
+     *
+     * @returns The HTML/JSX code to be displayed by this element. In this case, we return the ManagerMenuItemList
+     * defined above, along with buttons beneath said list to navigate in between its pages.
+     */
     render() {
         const menuItems = this.props.menuItems.map(menuItem =>
             <ManagerMenuItem key={menuItem.entity._links.self.href}
@@ -82,10 +107,10 @@ class ManagerMenuItemList extends React.Component {
         );
 
         const navLinks = [
-            <Button key="first" variant="outline-secondary" onClick={this.handleNavFirst}><FontAwesomeIcon icon={faAngleDoubleLeft}/></Button>,
-            <Button key="prev" variant="outline-secondary" onClick={this.handleNavPrev}><FontAwesomeIcon icon={faAngleLeft}/></Button>,
-            <Button key="next" variant="outline-secondary" onClick={this.handleNavNext}><FontAwesomeIcon icon={faAngleRight}/></Button>,
-            <Button key="last" variant="outline-secondary" onClick={this.handleNavLast}><FontAwesomeIcon icon={faAngleDoubleRight}/></Button>
+            <Button key="first" variant="outline-primary" onClick={this.handleNavFirst}><FontAwesomeIcon icon={faAngleDoubleLeft}/></Button>,
+            <Button key="prev" variant="outline-primary" onClick={this.handleNavPrev}><FontAwesomeIcon icon={faAngleLeft}/></Button>,
+            <Button key="next" variant="outline-primary" onClick={this.handleNavNext}><FontAwesomeIcon icon={faAngleRight}/></Button>,
+            <Button key="last" variant="outline-primary" onClick={this.handleNavLast}><FontAwesomeIcon icon={faAngleDoubleRight}/></Button>
         ];
 
         return (
@@ -113,7 +138,10 @@ class ManagerMenuItemList extends React.Component {
 
 }
 
-
+/**
+ * This React Component contains all code related to the rendering of the Manager 'view' of a MenuItem, referenced
+ * above in ManagerMenuItemList.
+ */
 class ManagerMenuItem extends React.Component {
 
     constructor(props) {
@@ -123,10 +151,21 @@ class ManagerMenuItem extends React.Component {
         this.requestTags = this.requestTags.bind(this);
     }
 
+    /**
+     * handleDelete - handles the submission of the delete request on the given menuItem, by calling the onDelete function
+     * defined in App.js.
+     */
     handleDelete() {
         this.props.onDelete(this.props.menuItem, 'menuItems');
     }
 
+    /**
+     * requestTags - uses Fetch-API to request a JSON resource at a provided URL using the fetch method to return a
+     * JavaScript object. I used this to load the tags of the current MenuItem to display in the table - consider reusing
+     * this for the Customer.js view.
+     *
+     * Link to Fetch API Introduction: https://developers.google.com/web/updates/2015/03/introduction-to-fetch
+     */
     requestTags() {
         fetch(this.props.menuItem.entity._links.tags.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
             .then(
@@ -149,11 +188,26 @@ class ManagerMenuItem extends React.Component {
             });
     }
 
+    /**
+     * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree). Initialization
+     * that requires DOM nodes should go here. If you need to load data from a remote endpoint, this is a good place to
+     * instantiate the network request. - (Description from ReactJS Docs)
+     *
+     * I use this to call the requestTags method defined above - probably a better way of doing this, open to suggestions.
+     *
+     * Link to componentDidMount() docs: https://reactjs.org/docs/react-component.html#componentdidmount
+     */
     componentDidMount() {
         this.requestTags();
     }
 
-
+    /**
+     * render - Render a React element into the DOM in the supplied container and return a reference to the component
+     *
+     * @returns The HTML/JSX code to be displayed by this element. In this case, we simply display the ManagerMenuItem
+     * entry in the list - this includes the majority of information about it, along with an update and delete button,
+     * that call the onUpdate and onDelete methods defined in App.js, respectively.
+     */
     render(){
 
         const tags = this.state.menuItemTags.map((tag, index) =>
@@ -187,9 +241,9 @@ class ManagerMenuItem extends React.Component {
 }
 
 /**
- * Holds the code related to updating menu items from the Manager View Page.
- * NOTE: was implemented through the use of a popup
- * TODO: refactor for integration of correct UI and general commenting
+ * Holds the code related to updating menu items from the Manager 'view'.
+ * NOTE: was implemented through the use of a modal (popup window)
+ *
  * @author Gabriel Negash, Evan Bruchet
  */
 class ManagerUpdateMenuItemDialog extends React.Component {
@@ -198,18 +252,29 @@ class ManagerUpdateMenuItemDialog extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
-
         this.state = {modalIsOpen : false, show: false}; // Set the default state of every menu item's modal to be closed
     }
 
+    /**
+     * handleClose - sets the 'show' state variable to false, closing any Update Modal Dialogs currently opened.
+     */
     handleClose() {
         this.setState({ show: false });
     }
 
+    /**
+     * handleShow - sets the 'show' state variable to true, closing the relevant Update Modal Dialog.
+     */
     handleShow() {
         this.setState({ show: true });
     }
 
+
+    /**
+     * handleSubmit - handles the submission of the update request on the given menuItem, by calling the onUpdate function
+     * defined in App.js.
+     * @param e - the event passed upon clicking the update button - used to prevent the default form submission behaviour.
+     */
     handleSubmit(e) {
         e.preventDefault();
         const updatedMenuItem = {};
@@ -221,6 +286,12 @@ class ManagerUpdateMenuItemDialog extends React.Component {
         this.handleClose();
     }
 
+    /**
+     * render - Render a React element into the DOM in the supplied container and return a reference to the component.
+     *
+     * @returns The HTML/JSX code to be displayed by this element. In this case, we return the UpdateMenuDialog, i.e.,
+     * the modal dialog used to display it and its associated form.
+     */
     render() {
         const inputs = this.props.menuItemAttributes.map(attribute =>
             <div key={"row-" + this.props.menuItem.entity._links.self.href + "-" + attribute} className="row">
@@ -241,9 +312,9 @@ class ManagerUpdateMenuItemDialog extends React.Component {
 
         return (
             <div>
-                <button className="btn btn-warning" onClick={this.handleShow}>
+                <Button className="btn btn-warning" onClick={this.handleShow}>
                     <FontAwesomeIcon icon={faEdit}/>
-                </button>
+                </Button>
                 <Modal show={this.state.show} onHide={this.handleClose}>
                     <Modal.Header>
                         <Modal.Title>Update A Menu Item</Modal.Title>
@@ -270,8 +341,7 @@ class ManagerUpdateMenuItemDialog extends React.Component {
 
 
 /**
- * Holds the code related to creating menu items.
- * TODO: refactor for integration of correct UI
+ * Holds the code related to creating menu items from the Manager 'view'.
  * @author Ryan Dotsikas, Evan Bruchet
  */
 export class ManagerCreateMenuItemDialog extends React.Component {
@@ -293,10 +363,14 @@ export class ManagerCreateMenuItemDialog extends React.Component {
             ReactDOM.findDOMNode(this.refs[attribute]).value = '';
         });
 
-        // Navigate away from the dialog to hide it.
-        window.location = "#/manager";
     }
 
+    /**
+     * render - Render a React element into the DOM in the supplied container and return a reference to the component
+     *
+     * @returns The HTML/JSX code to be displayed by this element. In this case, we return the simple CreateMenuItem
+     * form seen on the right of the Manager.js page.
+     */
     render() {
         const formInputs = this.props.menuItemAttributes.map(attribute =>
             <div key={"create-row-" + attribute} className="row">
