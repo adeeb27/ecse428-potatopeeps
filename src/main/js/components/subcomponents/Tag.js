@@ -15,7 +15,7 @@ export class ManagerCreateTagDialog extends React.Component {
             newTag[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
         });
 
-        this.props.onCreateTag(newTag);
+        this.props.onCreate(newTag, 'tags');
         this.props.tagAttributes.forEach(attribute => {
             ReactDOM.findDOMNode(this.refs[attribute]).value = '';
         });
@@ -24,8 +24,10 @@ export class ManagerCreateTagDialog extends React.Component {
 
     render() {
         const tagInputs = this.props.tagAttributes.map(attribute =>
-            <div key={"add-tag-col"} className="form-group col">
-                <input key={"add-tag-input"} type="text" id={"add-tag-" + attribute + "-input"} placeholder={attribute} ref={attribute} className="form-control" />
+            <div key={"add-tag-col-" + attribute} className="form-group col">
+                <input key={"add-tag-input-" + attribute} type="text" id={"add-tag-" + attribute + "-input"}
+                       placeholder={attribute.charAt(0).toUpperCase() + attribute.slice(1)}
+                       ref={attribute} className="form-control" />
             </div>
         );
 
