@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -18,7 +19,7 @@ public class DiningSession implements Serializable {
     }
 
     enum DiningSessionStatus {
-        ONGOING, COMPLETED;
+        ONGOING, COMPLETED
     }
 
     /**
@@ -48,10 +49,6 @@ public class DiningSession implements Serializable {
     private DiningSessionStatus status;
 
     @OneToMany(mappedBy="diningSession")
-    private Set<Order> orders;
-    
-//    public void addOrder(Order o) {
-//    	orders.add(o);
-//    }
+    private List<Order> orders;
     
 }

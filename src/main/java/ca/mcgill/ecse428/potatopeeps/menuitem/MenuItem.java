@@ -44,7 +44,7 @@ public class MenuItem implements Serializable {
     private String description;
 
     @OneToMany(mappedBy = "menuItem")
-    private Set<Order> orders;
+    private List<Order> orders;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
