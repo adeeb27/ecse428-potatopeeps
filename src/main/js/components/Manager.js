@@ -27,6 +27,8 @@ export class Manager extends React.Component {
         this.state = {pageSize: 10, selectedView: 'Manager'};
     }
 
+
+
     /**
      * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree). Initialization
      * that requires DOM nodes should go here. If you need to load data from a remote endpoint, this is a good place to
@@ -50,7 +52,7 @@ export class Manager extends React.Component {
      */
     render() {
         const tagList = this.props.tags.map(tag =>
-            ({label: tag.entity.name, value: tag})
+            ({label: tag.entity.name, value: tag, key: tag.entity._links.self.href})
         );
         return (
             <div className="page manager-page">
@@ -75,6 +77,7 @@ export class Manager extends React.Component {
                         </div>
                         <div className="col-6" >
                             <Select options={tagList}
+                                    onChange={out => this.props.filterMenuItemList(out)}
                                     isMulti/>
                         </div>
                         <div className="col-3">

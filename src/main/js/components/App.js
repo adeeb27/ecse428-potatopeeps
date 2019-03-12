@@ -39,6 +39,8 @@ import "../../resources/static/css/route-transition.css";
  * @Author Evan Bruchet, Gabriel Negash
 * */
 
+let validResources = [];
+
 export class App extends React.Component {
 
     /**
@@ -68,6 +70,7 @@ export class App extends React.Component {
         this.onDelete = this.onDelete.bind(this);
         this.onNavigate = this.onNavigate.bind(this);
         this.updatePageSize = this.updatePageSize.bind(this);
+        this.filterMenuItemList = this.filterMenuItemList.bind(this);
         this.loadResourceFromServer = this.loadResourceFromServer.bind(this);
     }
 
@@ -182,6 +185,81 @@ export class App extends React.Component {
                     break;
             }
         });
+    }
+
+    // let validResources = [];
+
+
+
+    filterMenuItemList(options, filterSize){
+        this.setState({menuItems: []});
+
+        follow(client, root, [
+            {rel: 'menuItems', params: {size: filterSize}}
+        ]).then(resourceCollection => {
+            return client({
+                method: 'GET',
+                path: resourceCollection.entity._links.profile.href,
+                headers: {'Accept': 'application/schema+json'}
+            }).then(menuItemSchema => {
+                this.menuItemSchema = menuItemSchema.entity;
+                this.menuItemLinks = resourceCollection.entity._links;
+                return resourceCollection;
+            });
+        }).then(resourceCollection => {
+            return resourceCollection.entity._embedded.menuItems.map(menuItem =>
+                client({
+                    method: 'GET',
+                    path: menuItem._links.self.href
+                })
+            );
+        }).then(resourcePromises => {
+            return when.all(resourcePromises);
+        }).done(resources =>{
+            this.resourceTags = [];
+            this.validResources = [];
+            let optionLabels = options.map(op => op.label);
+            resources.forEach(resource => {
+
+                fetch(resource.entity._links.tags.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
+                    .then(
+                        response => {
+                            if (response.status !== 200) {
+                                console.log('Looks like there was a problem. Status Code: ' +
+                                    response.status);
+                                return;
+                            }
+
+                            // Examine the text in the response
+                            response.json().then((data) => {
+                                this.resourceTags.length = 0;
+                                console.log(resource.entity.name + " has tags " + data._embedded.tags.map(tag => tag.name));
+                                data._embedded.tags.map(tag => this.resourceTags.push(tag.name));
+                                if(this.resourceTags.some(res => optionLabels.includes(res))){
+                                    let currentMenuItems = this.state.menuItems;
+                                    if(currentMenuItems.indexOf(resource) === -1)
+                                        currentMenuItems.push(resource);
+                                    this.setState({menuItems : currentMenuItems});
+                                }
+                                console.log("Inside fetch: " + this.resourceTags);
+                            });
+                        }
+                    )
+                    .catch(function(err) {
+                        console.log('Fetch Error :-S', err);
+                    });
+
+                console.log("Option Labels: " + optionLabels + " Resource Tags: " + this.resourceTags);
+                console.log("Valid Resources: " + this.validResources)
+            });
+
+            this.setState({
+                menuItemAttributes: Object.keys(this.menuItemSchema.properties).filter(attribute => attribute !== 'tags' && attribute !== 'orders'),
+                pageSize: filterSize,
+                menuItemLinks: this.menuItemLinks
+            });
+        });
+
     }
 
     /**
@@ -363,6 +441,8 @@ export class App extends React.Component {
         }
     }
 
+
+
     /**
      * render - Render a React element into the DOM in the supplied container and return a reference to the component
      *
@@ -409,6 +489,7 @@ export class App extends React.Component {
                                                                       onUpdate={this.onUpdate}
                                                                       onDelete={this.onDelete}
                                                                       onNavigate={this.onNavigate}
+                                                                      filterMenuItemList={this.filterMenuItemList}
                                                                       menuItems={this.state.menuItems}
                                                                       menuItemLinks={this.state.menuItemLinks}
                                                                       menuItemAttributes={this.state.menuItemAttributes}

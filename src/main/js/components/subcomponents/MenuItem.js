@@ -320,9 +320,9 @@ class ManagerUpdateMenuItemDialog extends React.Component {
                         <Modal.Title>Update A Menu Item</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <form>
+                        {/*<form>*/}
                             {inputs}
-                        </form>
+                        {/*</form>*/}
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={this.handleClose}>
