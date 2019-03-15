@@ -477,11 +477,18 @@ export class App extends React.Component {
                                                                       onNavigate={this.onNavigate}
                                                                       diningSessions={this.state.diningSessions}
                                                                       diningSessionLinks={this.state.diningSessionLinks}
+                                                                      filterMenuItemList={this.filterMenuItemList}
+                                                                      menuItems={this.state.menuItems}
+                                                                      menuItemLinks={this.state.menuItemLinks}
+                                                                      menuItemAttributes={this.state.menuItemAttributes}
+                                                                      tags={this.state.tags}
+                                                                      tagLinks={this.state.tagLinks}
+                                                                      tagAttributes={this.state.tagAttributes}
                                                                       diningSessionAttributes={this.state.diningSessionAttributes}
                                                                       orders={this.state.orders}
                                                                       orderLinks={this.state.orderLinks}
                                                                       orderAttributes={this.state.orderAttributes}
-                                                                      selectedView={'Staff'}
+                                                                      selectedView={'Customer'}
                                                                       {...props}/>)}/>
                                 <Route path={"/manager"} render={(props) =>
                                     (<Manager loadResourceFromServer={this.loadResourceFromServer}

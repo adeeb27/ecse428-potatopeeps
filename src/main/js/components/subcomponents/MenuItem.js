@@ -40,7 +40,11 @@ export class MenuItemList extends React.Component {
                                           menuItemAttributes={this.props.menuItemAttributes}
                                           menuItemLinks={this.props.menuItemLinks}
                                           onNavigate={this.props.onNavigate}
-                                          updatePageSize={this.props.updatePageSize}/>);
+                                          updatePageSize={this.props.updatePageSize}
+                                          onUpdate={this.props.onUpdate}
+                                          onDelete={this.props.onDelete}/>);
+
+
     }
 }
 
@@ -409,9 +413,177 @@ export class ManagerCreateMenuItemDialog extends React.Component {
 
 
 class CustomerMenuItemList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleInput = this.handleInput.bind(this);
+        this.handleNavFirst = this.handleNavFirst.bind(this);
+        this.handleNavPrev = this.handleNavPrev.bind(this);
+        this.handleNavNext = this.handleNavNext.bind(this);
+        this.handleNavLast = this.handleNavLast.bind(this);
+    }
 
+    handleInput(e) {
+        e.preventDefault();
+        const pageSize = ReactDOM.findDOMNode(this.refs.pageSize).value;
+        if (/^[0-9]+$/.test(pageSize)) {
+            this.props.updatePageSize(pageSize);
+        } else {
+            ReactDOM.findDOMNode(this.refs.pageSize).value =
+                pageSize.substring(0, pageSize.length - 1);
+        }
+    }
+
+    handleNavFirst(e){
+        e.preventDefault();
+        this.props.onNavigate(this.props.menuItemLinks.first.href, 'menuItems');
+    }
+
+    handleNavPrev(e) {
+        e.preventDefault();
+        this.props.onNavigate(this.props.menuItemLinks.prev.href, 'menuItems');
+    }
+
+    handleNavNext(e) {
+        e.preventDefault();
+        this.props.onNavigate(this.props.menuItemLinks.next.href, 'menuItems');
+    }
+
+    handleNavLast(e) {
+        e.preventDefault();
+        this.props.onNavigate(this.props.menuItemLinks.last.href, 'menuItems');
+    }
+
+
+    /**
+     * render - Render a React element into the DOM in the supplied container and return a reference to the component
+     *
+     * @returns The HTML/JSX code to be displayed by this element. In this case, we return the ManagerMenuItemList
+     * defined above, along with buttons beneath said list to navigate in between its pages.
+     */
+    render() {
+        const menuItems = this.props.menuItems.map(menuItem =>
+            <CustomerMenuItem key={menuItem.entity._links.self.href}
+                              menuItem={menuItem}
+                              menuItemAttributes={this.props.menuItemAttributes}
+                              onUpdate={this.props.onUpdate}
+                              onDelete={this.props.onDelete}
+            />
+        );
+
+        const navLinks = [
+            <Button key="first" variant="outline-primary" onClick={this.handleNavFirst}><FontAwesomeIcon icon={faAngleDoubleLeft}/></Button>,
+            <Button key="prev" variant="outline-primary" onClick={this.handleNavPrev}><FontAwesomeIcon icon={faAngleLeft}/></Button>,
+            <Button key="next" variant="outline-primary" onClick={this.handleNavNext}><FontAwesomeIcon icon={faAngleRight}/></Button>,
+            <Button key="last" variant="outline-primary" onClick={this.handleNavLast}><FontAwesomeIcon icon={faAngleDoubleRight}/></Button>
+        ];
+
+        return (
+            <div id="menu-items" className="table-responsive">
+                <table id="main-table" className="table table-striped">
+                    <tbody>
+                    <tr>
+                        <th>Tags</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th />
+                        <th />
+                    </tr>
+                    {menuItems}
+                    </tbody>
+                </table>
+                <div>
+                    {navLinks}
+                </div>
+            </div>
+        )
+    }
 }
 
 class CustomerMenuItem extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {menuItemTags: []};
+        // this.handleDelete = this.handleDelete.bind(this);
+        this.requestTags = this.requestTags.bind(this);
+    }
+
+    /**
+     * handleDelete - handles the submission of the delete request on the given menuItem, by calling the onDelete function
+     * defined in App.js.
+     */
+    // handleDelete() {
+    //     this.props.onDelete(this.props.menuItem, 'menuItems');
+    // }
+
+    /**
+     * requestTags - uses Fetch-API to request a JSON resource at a provided URL using the fetch method to return a
+     * JavaScript object. I used this to load the tags of the current MenuItem to display in the table - consider reusing
+     * this for the Customer.js view.
+     *
+     * Link to Fetch API Introduction: https://developers.google.com/web/updates/2015/03/introduction-to-fetch
+     */
+    requestTags() {
+        fetch(this.props.menuItem.entity._links.tags.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
+            .then(
+                response => {
+                    if (response.status !== 200) {
+                        console.log('Looks like there was a problem. Status Code: ' +
+                            response.status);
+                        return;
+                    }
+
+                    // Examine the text in the response
+                    response.json().then((data) => {
+                        console.log(data._embedded.tags);
+                        this.setState({menuItemTags: data._embedded.tags});
+                    });
+                }
+            )
+            .catch(function(err) {
+                console.log('Fetch Error :-S', err);
+            });
+    }
+
+    /**
+     * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree). Initialization
+     * that requires DOM nodes should go here. If you need to load data from a remote endpoint, this is a good place to
+     * instantiate the network request. - (Description from ReactJS Docs)
+     *
+     * I use this to call the requestTags method defined above - probably a better way of doing this, open to suggestions.
+     *
+     * Link to componentDidMount() docs: https://reactjs.org/docs/react-component.html#componentdidmount
+     */
+    componentDidMount() {
+        this.requestTags();
+    }
+
+    /**
+     * render - Render a React element into the DOM in the supplied container and return a reference to the component
+     *
+     * @returns The HTML/JSX code to be displayed by this element. In this case, we simply display the ManagerMenuItem
+     * entry in the list - this includes the majority of information about it, along with an update and delete button,
+     * that call the onUpdate and onDelete methods defined in App.js, respectively.
+     */
+    render(){
+
+        const tags = this.state.menuItemTags.map((tag, index) =>
+            <span key={"menu-item-list-tag-" + tag._links.self.href + "-menu-item-" + this.props.menuItem.entity._links.self.href}>
+                {index === this.state.menuItemTags.length -1 ? tag.name : tag.name + ', '}
+            </span>
+        );
+
+        return (
+            <tr>
+                <td>{tags}</td>
+                <td>{this.props.menuItem.entity.name}</td>
+                <td>{this.props.menuItem.entity.description}</td>
+                <td>{this.props.menuItem.entity.price}</td>
+                <td>{this.props.menuItem.entity.inventory}</td>
+
+            </tr>
+        )
+    }
 
 }
