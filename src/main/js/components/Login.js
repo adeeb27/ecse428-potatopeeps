@@ -7,9 +7,11 @@ import { faUser, faKey } from '@fortawesome/free-solid-svg-icons'
 
 /** ----- CSS/STYLING IMPORTS -----**/
 import "../../resources/static/css/login.css";
+import "../../resources/static/css/select-task.css";
+
 
 /** ----- COMPONENT IMPORTS ------ **/
-import {Manager} from "./Manager";
+
 
 /**
  * This JS file contains all code related to the rendering of the 'Login' perspective.
@@ -42,10 +44,10 @@ export class Login extends React.Component {
         e.preventDefault(); // stop it from posting info
         if((this.state.user).toString().trim() == "user" && (this.state.password).toString().trim() == "password"){
             console.log('redirecting...');
-            // this.props.history.push("/manager");
-            return (
-                <Manager/> // when changing class, make sure you have proper import if needed
-            )
+            this.props.history.push('/selectTask');
+            // return (
+                // <SelectTask/> // when changing class, make sure you have proper import if needed
+            // );
         }
     }
 
@@ -86,38 +88,40 @@ export class SelectTask extends React.Component {
         super(props);
         this.state = {clicked: false};
         this.goToCustomerPage = this.goToCustomerPage.bind(this);
-        this.goToStaffPage = this.goToCustomerPage.bind(this);
-        this.goToManagerPage = this.goToCustomerPage.bind(this);
+        this.goToStaffPage = this.goToStaffPage.bind(this);
+        this.goToManagerPage = this.goToManagerPage.bind(this);
     }
 
     goToCustomerPage(e) {
         e.preventDefault();
-        return (
-            <CustomerLanding/>
-        )
+        // return (
+        //     <CustomerLanding/>
+        // )
+        this.props.history.push('/customer');
     }
 
     goToStaffPage(e) {
         e.preventDefault();
-        return (
-            <StaffLanding/>
-        )
+        // return (
+        //     <StaffLanding/>
+        // )
+        this.props.history.push('/staff');
     }
 
     goToManagerPage(e) {
         e.preventDefault();
-        return (
-            <Manager/>
-        )
+        // return (
+        //     <Manager/>
+        // )
+        this.props.history.push('/manager');
     }
 
     render() {
         return (
                 <div>
-                    <meta name="viewport" content="width=device-width, initial-scale=1" />
-                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-                    <link rel="stylesheet" id="style-css" href="./asset/css/select-task.css" type="text/css"
-                          media="all"/>
+                    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+                    {/* <link rel="stylesheet" id="style-css" href="../../resources/static/css/select-task.css" type="text/css" media="all"/> */}
                     <div className="bg">
                         <i className="glyphicon glyphicon-remove" />
                         <h1 style={{color: 'aliceblue', fontFamily: '"Lucida Sans"'}}>Select Task</h1>

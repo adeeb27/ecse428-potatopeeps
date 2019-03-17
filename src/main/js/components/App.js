@@ -7,7 +7,7 @@ import {CSSTransition, TransitionGroup} from "react-transition-group";
 const root = "/api"; // Root is a variable used to provide pathing to the uriListConverter
 
 /** ----- COMPONENT IMPORTS -----**/
-import {Login} from "./Login";
+import {Login, SelectTask} from "./Login";
 import {Staff} from "./Staff";
 import {Manager} from "./Manager";
 import {Customer} from "./Customer";
@@ -512,6 +512,7 @@ export class App extends React.Component {
                                                                     orderAttributes={this.state.orderAttributes}
                                                                     selectedView={'Staff'}
                                                                     {...props}/>)}/>
+                                <Route exact path={"/selectTask"} component={SelectTask}/>
                             </Switch>
                         </CSSTransition>
                     </TransitionGroup>
