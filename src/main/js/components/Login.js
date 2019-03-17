@@ -79,3 +79,59 @@ export class Login extends React.Component {
         )
     }
 }
+
+export class SelectTask extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {clicked: false};
+        this.goToCustomerPage = this.goToCustomerPage.bind(this);
+        this.goToStaffPage = this.goToCustomerPage.bind(this);
+        this.goToManagerPage = this.goToCustomerPage.bind(this);
+    }
+
+    goToCustomerPage(e) {
+        e.preventDefault();
+        return (
+            <CustomerLanding/>
+        )
+    }
+
+    goToStaffPage(e) {
+        e.preventDefault();
+        return (
+            <StaffLanding/>
+        )
+    }
+
+    goToManagerPage(e) {
+        e.preventDefault();
+        return (
+            <Manager/>
+        )
+    }
+
+    render() {
+        return (
+                <div>
+                    <meta name="viewport" content="width=device-width, initial-scale=1" />
+                    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+                    <link rel="stylesheet" id="style-css" href="./asset/css/select-task.css" type="text/css"
+                          media="all"/>
+                    <div className="bg">
+                        <i className="glyphicon glyphicon-remove" />
+                        <h1 style={{color: 'aliceblue', fontFamily: '"Lucida Sans"'}}>Select Task</h1>
+                        <div className="column">
+                            <h2 className="column-text" style={{top: '50%', left: '8%'}} onClick={this.goToCustomerPage} >Customer</h2>
+                        </div>
+                        <div className="column">
+                            <h2 className="column-text" style={{top: '50%', left: '45%'}} onClick={this.goToStaffPage} >Staff</h2>
+                        </div>
+                        <div className="column">
+                            <h2 className="column-text" style={{top: '50%', left: '77%'}} onClick={this.goToManagerPage} >Manager</h2>
+                        </div>
+                    </div>
+                </div>
+         );
+     }
+}
