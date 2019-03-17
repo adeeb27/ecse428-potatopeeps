@@ -8,11 +8,11 @@ import Button from "./Customer";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
 import "../../resources/static/css/customerLanding.css";
-import {ManagerCreateMenuItemDialog, MenuItemList} from "./subcomponents/MenuItem";
-
 import "../../resources/static/css/manager.css";
+import "../../resources/static/css/style.css";
 import "../../resources/static/css/external/bootstrap.min.css";
-import {ManagerCreateTagDialog} from "./subcomponents/Tag";
+
+
 /**
  * This JS file contains all code related to the rendering of the 'Customer' perspective.
  *
@@ -36,6 +36,7 @@ export class Customer extends React.Component {
         this.props.loadResourceFromServer('menuItems', this.state.pageSize);
         this.props.loadResourceFromServer('tags', this.state.pageSize);
     }
+
     render() {
         return (
             <CustomerLanding/>
@@ -47,30 +48,42 @@ export class Customer extends React.Component {
 
 export class CustomerLanding extends React.Component {
 
+
     constructor(props) {
         super(props);
-        this.state = {clicked: false};
+        this.mainPage = 0;
+        this.requestWaiter = 1;
+        this.billRequest = 2
+        this.cartNum = 3;
+        this.appetizer = 4;
+        this.mainCourse = 5;
+        this.drink = 6;
+        this.dessert = 7;
+        this.state = {pageNum: this.mainPage};
         this.handleClick = this.handleClick.bind(this);
-
     }
 
-    handleClick() {
-        // this.setState({
-        //     clicked: true
-        //
-        // });
-        this.state = {clicked: true};
-        this.setState(this.state)
+    // handleClick(pageType, e) {
+    //
+    //     this.state = {pageName: pageType};
+    //     this.setState(this.state)
+    //
+    // }
+
+    handleClick(button) {
+
+        this.state = {pageNum: button};
+        this.setState( this.state )
 
     }
 
     render() {
-        if (!this.state.clicked.valueOf()) {
+        if (this.state.pageNum == this.mainPage) {
             return (
 
                 <div>
                     <title>Welcome to PotatoPeeps Sushi</title>
-                    <link rel="stylesheet" id="style-css" href="./asset/css/customerLanding.css" type="text/css"
+                    <link rel="stylesheet" id="style-css" href="../../resources/static/css/customerLanding.css" type="text/css"
                           media="all"/>
                     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
                           integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
@@ -78,16 +91,16 @@ export class CustomerLanding extends React.Component {
                     <div id="wrapper">
                         <main className>
                             <header className="frontpage">
-                                <button className="landing-page-button" style={{zIndex: 1000}}>
+                                <button className="landing-page-button" style={{zIndex: 1000}} onClick={this.handleClick.bind(this, this.requestWaiter)}>
                                     <i className="fas fa-user" style={{fontSize: '20px'}}> Service Request</i>
                                 </button>
                                 <a href="#" className="logo">
                                     <img src="./img/logo.png" alt="Home"/>
                                 </a>
-                                <button className="landing-page-button" style={{zIndex: 1000}}>
+                                <button className="landing-page-button" style={{zIndex: 1000}} onClick={this.handleClick.bind(this, this.billRequest)}>
                                     <i className="fas fa-dollar-sign" style={{fontSize: '20px'}}> Bill Request</i>
                                 </button>
-                                <button className="landing-page-button" style={{zIndex: 1000}}>
+                                <button className="landing-page-button" style={{zIndex: 1000}} onClick={this.handleClick.bind(this, this.cartNum)}>
                                     <i className="fa fa-shopping-cart" style={{fontSize: '20px'}}/>
                                 </button>
                             </header>
@@ -96,7 +109,7 @@ export class CustomerLanding extends React.Component {
 
                                     <li>
 
-                                        <a href="#/customer" onClick={this.handleClick}>
+                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.appetizer)}>
                                             <section>
 
                                                 <h1>Appetizer</h1><h5 className="badge-rounded"> Spring roll, roasted
@@ -109,7 +122,7 @@ export class CustomerLanding extends React.Component {
 
 
                                     <li>
-                                        <a href="#/customer" onClick={this.handleClick}>
+                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.mainCourse)}>
 
                                             <section>
                                                 <h1>Main Course</h1><h5 className="badge-rounded"> Chicken Curry,
@@ -118,14 +131,14 @@ export class CustomerLanding extends React.Component {
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#/customer" onClick={this.handleClick}>
+                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.drink)}>
                                             <section>
                                                 <h1>Drink</h1><h5 className="badge-rounded"> Coke, Sprite, Crush...</h5>
                                             </section>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#/customer" onClick={this.handleClick}>
+                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.dessert)}>
                                             <section>
                                                 <h1>Dessert</h1><h5 className="badge-rounded">Green Tea Ice Cream, Deep
                                                 Fried Banana...</h5>
@@ -168,9 +181,25 @@ export class CustomerLanding extends React.Component {
                     </ul>
                 </div>
             );
-        } else if (this.state.clicked.valueOf()) {
+        } else if (this.state.pageNum == this.appetizer || this.state.pageNum == this.mainCourse ||
+            this.state.pageNum == this.dessert || this.state.pageNum == this.drink) {
             return (
                 <CustomerMenu/>
+            )
+        }
+        else if (this.state.pageNum == this.cartNum) {
+            return (
+                <CustomerCartPage/>
+            )
+        }
+        else if (this.state.pageNum == this.billRequest) {
+            return (
+                <CustomerCartPage/>
+            )
+        }
+        else if (this.state.pageNum == this.requestWaiter) {
+            return (
+                <CustomerCartPage/>
             )
         }
 
@@ -203,16 +232,17 @@ export class CustomerMenu extends React.Component {
         this.setState()
 
     }
+
     render() {
         if (!this.state.clicked.valueOf()) {
             return (
                 <div>
                     <title>Menu for Customer</title>
-                    <link rel="stylesheet" id="style-css" href="./asset/css/customerLanding.css" type="text/css"
-                          media="all"/>
-                    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-                          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
-                          crossOrigin="anonymous"/>
+                    {/*<link rel="stylesheet" id="style-css" href="./asset/css/customerLanding.css" type="text/css"*/}
+                          {/*media="all"/>*/}
+                    {/*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"*/}
+                          {/*integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"*/}
+                          {/*crossOrigin="anonymous"/>*/}
                     <div>
                         <main className>
                             <header className="detail full">
@@ -351,15 +381,187 @@ export class CustomerMenu extends React.Component {
                     </ul>
                 </div>
             );
-        }
-        else if (this.state.clicked.valueOf()) {
+        } else if (this.state.clicked.valueOf()) {
             return (
                 <CustomerLanding/>
             )
         }
     }
+}
 
+export class CustomerCartPage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {clicked: false};
+        this.handleClick = this.handleClick.bind(this);
+
+    }
+
+    handleClick() {
+        this.state = {clicked: true};
+        this.setState(this.state);
+
+    }
+
+    render() {
+        return (
+            <div>
+                <title>Cart</title>
+                <link rel="stylesheet" id="style-css" href="../resources/static/css/style.css" type="text/css" media="all" />
+                <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossOrigin="anonymous" />
+                <div>
+                    <main className>
+                        <header className="detail full">
+                            <a href="#/customer" className="back" data-transition="slide-from-top" />
+                            <section>
+                                <h1>Cart</h1>
+                                <h3 className="page-badge">5 Items in Total</h3>
+                            </section>
+                        </header>
+                        <div className="content-wrap full-width">
+                            <div className="table-container">
+                                <table className="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col" />
+                                        <th scope="col">Item</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Total</th>
+                                        <th scope="col" />
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th scope="row">
+                                            <img className="item-preview" src="./img/4.jpg" />
+                                        </th>
+                                        <td>Food Name</td>
+                                        <td>$58.00</td>
+                                        <td>
+                                            <div className="number-input">
+                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepDown()" />
+                                                <input className="quantity" min={0} name="quantity" defaultValue={1} type="number" />
+                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepUp()" className="plus" />
+                                            </div>
+                                        </td>
+                                        <td>$158.00</td>
+                                        <td>
+                                            <i className="far fa-times-circle" title="Remove" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">
+                                            <img className="item-preview" src="./img/4.jpg" />
+                                        </th>
+                                        <td>Food Name</td>
+                                        <td>$58.00</td>
+                                        <td>
+                                            <div className="number-input">
+                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepDown()" />
+                                                <input className="quantity" min={0} name="quantity" defaultValue={1} type="number" />
+                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepUp()" className="plus" />
+                                            </div>
+                                        </td>
+                                        <td>$158.00</td>
+                                        <td>
+                                            <i className="far fa-times-circle" title="Remove" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">
+                                            <img className="item-preview" src="./img/4.jpg" />
+                                        </th>
+                                        <td>Food Name</td>
+                                        <td>$58.00</td>
+                                        <td>
+                                            <div className="number-input">
+                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepDown()" />
+                                                <input className="quantity" min={0} name="quantity" defaultValue={1} type="number" />
+                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepUp()" className="plus" />
+                                            </div>
+                                        </td>
+                                        <td>$158.00</td>
+                                        <td>
+                                            <i className="far fa-times-circle" title="Remove" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">
+                                            <img className="item-preview" src="./img/4.jpg" />
+                                        </th>
+                                        <td>Food Name</td>
+                                        <td>$58.00</td>
+                                        <td>
+                                            <div className="number-input">
+                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepDown()" />
+                                                <input className="quantity" min={0} name="quantity" defaultValue={1} type="number" />
+                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepUp()" className="plus" />
+                                            </div>
+                                        </td>
+                                        <td>$158.00</td>
+                                        <td>
+                                            <i className="far fa-times-circle" title="Remove" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">
+                                            <img className="item-preview" src="./img/4.jpg" />
+                                        </th>
+                                        <td>Food Name</td>
+                                        <td>$58.00</td>
+                                        <td>
+                                            <div className="number-input">
+                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepDown()" />
+                                                <input className="quantity" min={0} name="quantity" defaultValue={1} type="number" />
+                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepUp()" className="plus" />
+                                            </div>
+                                        </td>
+                                        <td>$158.00</td>
+                                        <td>
+                                            <i className="far fa-times-circle" title="Remove" />
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="button-container">
+                                <button className="cart-help-button">
+                                    <i className="fas fa-user" style={{fontSize: '20px'}}>    Request Staff</i>
+                                </button>
+                                <button className="cart-help-button">
+                                    <i className="fas fa-sync-alt" style={{fontSize: '20px'}}>    Update Cart</i>
+                                </button>
+                                <span className="cart-total name">Cart Totals: </span>
+                                <span className="cart-total amount">$200.00</span>
+                                <button className="cart-help-button">
+                                    <i className="fas fa-cart-arrow-down" style={{fontSize: '20px'}}>    Place Order</i>
+                                </button>
+                            </div>
+                            <footer>
+                                <div className="signature">
+                                    <h6>Sushi</h6>
+                                    <h5>PotatoPeeps</h5>
+                                </div>
+                            </footer>
+                        </div>
+                    </main></div>
+                <a href="#" id="back-to-top">
+                    <i className="icon bg icon-UpArrow" />
+                </a>
+                <ul id="slideshow">
+                    <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}} />
+                    <li style={{backgroundImage: 'url("./img/3.jpg")', display: 'block', zIndex: 0, animationDelay: '6s'}} />
+                    <li style={{backgroundImage: 'url("./img/6.jpg")', display: 'block', zIndex: 0, animationDelay: '12s'}} />
+                    <li style={{backgroundImage: 'url("./img/4.jpg")', display: 'block', zIndex: 0, animationDelay: '18s'}} />
+                    <li style={{backgroundImage: 'url("./img/2.jpg")', display: 'block', zIndex: 0, animationDelay: '24s'}} />
+                </ul>
+            </div>
+        );
+    }
 
 }
+
+
 
 
