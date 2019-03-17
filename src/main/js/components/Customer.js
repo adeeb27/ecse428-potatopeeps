@@ -109,7 +109,8 @@ export class CustomerLanding extends React.Component {
 
 
                                     <li>
-                                        <a href="#" data-transition="slide-to-top" className="internal">
+                                        <a href="#/customer" onClick={this.handleClick}>
+
                                             <section>
                                                 <h1>Main Course</h1><h5 className="badge-rounded"> Chicken Curry,
                                                 Vegetable Curry, Lamb Curry...</h5>
@@ -117,14 +118,14 @@ export class CustomerLanding extends React.Component {
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#" data-transition="slide-to-top" className="internal">
+                                        <a href="#/customer" onClick={this.handleClick}>
                                             <section>
                                                 <h1>Drink</h1><h5 className="badge-rounded"> Coke, Sprite, Crush...</h5>
                                             </section>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#" data-transition="slide-to-top" className="internal">
+                                        <a href="#/customer" onClick={this.handleClick}>
                                             <section>
                                                 <h1>Dessert</h1><h5 className="badge-rounded">Green Tea Ice Cream, Deep
                                                 Fried Banana...</h5>
