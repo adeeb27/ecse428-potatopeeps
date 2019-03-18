@@ -44,7 +44,13 @@ export class Login extends React.Component {
         e.preventDefault(); // stop it from posting info
         if((this.state.user).toString().trim() === "user" && (this.state.password).toString().trim() === "password"){
             console.log('redirecting...');
+            this.setState({user: "", password:""});g
             this.props.history.push('/selectTask');
+        }
+        else if((this.state.user).toString().trim() !== "user"){
+            alert("Invalid User Name");
+        } else{
+            alert("Invalid Password");
         }
     }
 
@@ -64,7 +70,7 @@ export class Login extends React.Component {
                             </div>
                             <div className="form-group">
                                 <FontAwesomeIcon icon={faKey}/>
-                                <input type="text" name="password" className="login-input" value={this.state.password} onChange={this.handlePasswordChange}/>
+                                <input type="password" name="password" className="login-input" value={this.state.password} onChange={this.handlePasswordChange}/>
                             </div>
                             <div className="btn">
                                 <button className="btn btn-outline-primary" type="submit" name="Login">
