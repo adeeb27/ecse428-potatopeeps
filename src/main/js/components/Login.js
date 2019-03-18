@@ -45,9 +45,6 @@ export class Login extends React.Component {
         if((this.state.user).toString().trim() == "user" && (this.state.password).toString().trim() == "password"){
             console.log('redirecting...');
             this.props.history.push('/selectTask');
-            // return (
-                // <SelectTask/> // when changing class, make sure you have proper import if needed
-            // );
         }
     }
 
@@ -87,52 +84,48 @@ export class SelectTask extends React.Component {
     constructor(props) {
         super(props);
         this.state = {clicked: false};
+        this.cancel = this.cancel.bind(this);
         this.goToCustomerPage = this.goToCustomerPage.bind(this);
         this.goToStaffPage = this.goToStaffPage.bind(this);
         this.goToManagerPage = this.goToManagerPage.bind(this);
     }
 
+    cancel(e) {
+        e.preventDefault();
+        this.props.history.push('/login');
+    }
+
     goToCustomerPage(e) {
         e.preventDefault();
-        // return (
-        //     <CustomerLanding/>
-        // )
         this.props.history.push('/customer');
     }
 
     goToStaffPage(e) {
         e.preventDefault();
-        // return (
-        //     <StaffLanding/>
-        // )
         this.props.history.push('/staff');
     }
 
     goToManagerPage(e) {
         e.preventDefault();
-        // return (
-        //     <Manager/>
-        // )
         this.props.history.push('/manager');
     }
 
     render() {
         return (
-                <div>
+            <div id="main-st" className={"page main-st"}>
                     <meta name="viewport" content="width=device-width, initial-scale=1"/>
                     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-                    {/* <link rel="stylesheet" id="style-css" href="../../resources/static/css/select-task.css" type="text/css" media="all"/> */}
-                    <div className="bg">
-                        <i className="glyphicon glyphicon-remove" />
+                    <div className="bg-st">
+                        <i className="glyphicon glyphicon-remove" onClick={this.cancel}/>
                         <h1 style={{color: 'aliceblue', fontFamily: '"Lucida Sans"'}}>Select Task</h1>
-                        <div className="column">
-                            <h2 className="column-text" style={{top: '50%', left: '8%'}} onClick={this.goToCustomerPage} >Customer</h2>
+                        <div className="column-st" onClick={this.goToCustomerPage}>
+                            <h2 className="header-st" style={{top: '50%', left: '8%'}}>Customer</h2>
                         </div>
-                        <div className="column">
-                            <h2 className="column-text" style={{top: '50%', left: '45%'}} onClick={this.goToStaffPage} >Staff</h2>
+                        <div className="column-st" onClick={this.goToStaffPage}>
+                            <h2 className="header-st" style={{top: '50%', left: '45%'}}>Staff</h2>
                         </div>
-                        <div className="column">
-                            <h2 className="column-text" style={{top: '50%', left: '77%'}} onClick={this.goToManagerPage} >Manager</h2>
+                        <div className="column-st" onClick={this.goToManagerPage}>
+                            <h2 className="header-st" style={{top: '50%', left: '77%'}}>Manager</h2>
                         </div>
                     </div>
                 </div>
