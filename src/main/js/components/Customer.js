@@ -4,6 +4,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+/** ----- COMPONENT IMPORTS -----**/
+import {CustomerDiningSessionSelect} from "./subcomponents/DiningSession";
+
 /** ----- CSS/STYLING IMPORTS -----**/
 import "../../resources/static/css/select_table_num.css";
 
@@ -24,20 +27,57 @@ export class Customer extends React.Component {
 
     constructor(props) {
         super(props);
-        this.goToCustomerLanding = this.goToCustomerLanding.bind(this);
+        this.state = {pageSize: 10, selectedView: 'Customer'}
     }
 
-    goToCustomerLanding(e) {
-        e.preventDefault();
-        this.props.history.push('/CustomerLanding');
+    componentDidMount(){
+        this.props.loadResourceFromServer('menuItems', this.state.pageSize);
+        this.props.loadResourceFromServer('diningSessions', this.state.pageSize);
     }
 
     render() {
         return (
+            <TableNumberSelect
+                handleTableNumberSelect={this.handleTableNumberSelect}
+                diningSessions={this.props.diningSessions}
+                diningSessionAttributes={this.props.diningSessionAttributes}
+                history={this.props.history}
+                onUpdate={this.props.onUpdate}/>
+        );
+    }
+}
+
+class TableNumberSelect extends React.Component{
+
+    constructor(props){
+        super(props);
+        this.handleTableNumberSelect = this.handleTableNumberSelect.bind(this);
+    }
+
+
+    handleTableNumberSelect(e) {
+        e.preventDefault();
+        const updatedDiningSession = {};
+
+        let selectedTableNumber = document.getElementById('table-select-dropdown').value
+
+        updatedDiningSession['tableNumber'] = selectedTableNumber;
+        updatedDiningSession['diningSessionStatus'] = 'ACTIVE';
+        updatedDiningSession['serviceRequestStatus'] = 'INACTIVE';
+        updatedDiningSession['billRequestStatus'] = 'INACTIVE';
+
+        let oldDiningSession = this.props.diningSessions.find(function(session) {
+            return session.entity.tableNumber === parseInt(selectedTableNumber, 10);
+        });
+
+        this.props.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
+        this.props.history.push('/CustomerLanding');
+    }
+
+
+    render() {
+        return (
             <div id="main-stn" className={"page main-stn"}>
-                <meta charSet="utf-8" />
-                <meta name="viewport" content="width=device-width,initial-scale=1" />
-                <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
                 <title>Table number selection</title>
                 <div className="background-stn">
                     <div className="shadow-stn">
@@ -47,14 +87,10 @@ export class Customer extends React.Component {
                             <h2 className="h2-stn">Please select a table number</h2>
                         </div>
                         <div className="table">
-                            <select className="tableID-stn">
-                                <option value="table1">Table No.1</option>
-                                <option value="table2">Table No.2</option>
-                                <option value="table3">Table No.3</option>
-                            </select>
+                            <CustomerDiningSessionSelect diningSessions={this.props.diningSessions}/>
                         </div>
                         <div className="submit-button">
-                            <button type="button" className="submit-stn" onClick={this.goToCustomerLanding}>submit</button>
+                            <button type="button" className="submit-stn" onClick={this.handleTableNumberSelect}>Submit</button>
                         </div>
                     </div>
                 </div>
