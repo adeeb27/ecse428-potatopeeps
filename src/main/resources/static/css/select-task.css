@@ -1,71 +1,32 @@
 .main-st {
     height: 100%;
     margin: 0;
-    box-sizing: border-box;
 }
 
 #main-st {
     height: 100%;
     margin: 0;
-    box-sizing: border-box;
 }
 
 .bg-st {
     /* The image used */
-    background-image: url("../img/background1.jpg");
-
     /* Full height */
     height: 100%;
 
     /* Center and scale the image nicely */
-    background-position: center;
-    background-repeat: no-repeat;
+    background: url("../img/background1.jpg") no-repeat center;
     background-size: cover;
 
     /* Allign text in center */
     text-align: center;
-
-    box-sizing: border-box;
 }
 
 .column-st {
-    float: left;
-    width: 33.33%;
-    padding: 10px;
-    height: 100%;
     background-color: #000;
     opacity: 0.6;
-    box-sizing: border-box;
-    font-weight: bold;
-    color: #fff;
-}
-
-.glyphicon {
-    font-size: 50px;
-    color: aliceblue;
-    box-sizing: border-box;
-}
-
-.glyphicon:hover {
-    cursor:pointer;
-    box-sizing: border-box;
-}
-
-.header-st {
-    font-weight: bold;
-    color: #fff;
-    box-sizing: border-box;
-    position: absolute;
 }
 
 .column-st:hover {
-    opacity:0.4;
-    cursor: pointer;
-    box-sizing: border-box;
-}
-
-.column-text-st {
-    color: #000;
-    opacity: 1;
-    box-sizing: border-box;
+    opacity: 0.3;
+    transition: opacity 0.5s ease-in-out;
 }

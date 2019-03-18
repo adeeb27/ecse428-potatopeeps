@@ -468,7 +468,7 @@ export class App extends React.Component {
                     <TransitionGroup>
                         <CSSTransition key={location.pathname} timeout={30000} classNames="fade" >
                             <Switch location={location}>
-                                <Route exact path={"/login"} component={Login}/>
+                                <Route exact path={["/login", "/"]} component={Login}/>
                                 <Route path={"/customer"} render={(props) =>
                                     (<Customer loadResourceFromServer={this.loadResourceFromServer}
                                                                       onCreate={this.onCreate}
