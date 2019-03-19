@@ -2,12 +2,12 @@
 
 /** ----- NPM PACKAGE IMPORTS -----**/
 import React from "react";
-import "../../resources/static/css/customerLanding.css";
+import "../../resources/static/css/Customer.css";
 import "../../resources/static/css/manager.css";
 import "../../resources/static/css/style.css";
 import "../../resources/static/css/external/bootstrap.min.css";
 import {CustomerMenuItem} from "./subcomponents/MenuItem";
-import {ManagerCreateTagDialog} from "./subcomponents/Tag"
+
 
 /**
  * This JS file contains all code related to the rendering of the 'Customer' perspective.
@@ -22,31 +22,43 @@ import {ManagerCreateTagDialog} from "./subcomponents/Tag"
  * @See Tag
  *
  */
+
 export class Customer extends React.Component {
+
     constructor(props) {
         super(props);
         this.mainPage = 0;
         this.requestWaiter = 1;
-        this.billRequest = 2
+        this.billRequest = 2;
         this.cartNum = 3;
         this.appetizer = 4;
         this.mainCourse = 5;
         this.drink = 6;
         this.dessert = 7;
-        this.state = { selectedView: 'Customer', pageNum: this.mainPage};
+        this.state = { selectedView: 'Customer', pageNum: this.mainPage, pageType: "Main Page"};
         this.handleClick = this.handleClick.bind(this);
     }
-
 
     componentDidMount() {
         this.props.loadResourceFromServer('menuItems', this.state.pageSize);
         this.props.loadResourceFromServer('tags', this.state.pageSize);
     }
 
-    handleClick(button) {
-        this.state = {pageNum: button};
-        this.setState( this.state )
+    handleClick(button, menuCategory) {
 
+        const tagList = this.props.tags.map(tag =>
+            ({label: tag.entity.name, value: tag, key: tag.entity._links.self.href})
+        );
+
+        this.state = {pageNum: button, pageType: menuCategory};
+
+        this.testTag = [];
+        var index = tagList.map(function(d) { return d['label']; }).indexOf(menuCategory);
+        this.testTag[0] = tagList[index];
+        this.filteredList = [];
+        this.filteredList = this.props.filterMenuItemList(this.testTag);
+
+        this.setState( this.state );
     }
 
     render() {
@@ -55,65 +67,51 @@ export class Customer extends React.Component {
 
                 <div>
                     <title>Welcome to PotatoPeeps Sushi</title>
-                    <link rel="stylesheet" id="style-css" href="../../resources/static/css/customerLanding.css" type="text/css"
-                          media="all"/>
-                    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-                          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
-                          crossOrigin="anonymous"/>
+                    <link rel="stylesheet" id="style-css" href="../../resources/static/css/Customer.css" type="text/css" media="all" />
+                    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossOrigin="anonymous" />
                     <div id="wrapper">
-                        <main className>
+                        <main className="main-wrapper">
                             <header className="frontpage">
-                                <button className="landing-page-button" style={{zIndex: 1000}} onClick={this.handleClick.bind(this, this.requestWaiter)}>
-                                    <i className="fas fa-user" style={{fontSize: '20px'}}> Service Request</i>
+                                <button className="landing-page-button" style={{zIndex: 1000}}>
+                                    <i className="fas fa-user" style={{fontSize: '20px'}}>    Service Request</i>
                                 </button>
                                 <a href="#" className="logo">
-                                    <img src="./img/logo.png" alt="Home"/>
+                                    <img src="./img/logo.png" alt="Home" />
                                 </a>
-                                <button className="landing-page-button" style={{zIndex: 1000}} onClick={this.handleClick.bind(this, this.billRequest)}>
-                                    <i className="fas fa-dollar-sign" style={{fontSize: '20px'}}> Bill Request</i>
+                                <button className="landing-page-button" style={{zIndex: 1000}}>
+                                    <i className="fas fa-dollar-sign" style={{fontSize: '20px'}}>    Bill Request</i>
                                 </button>
-                                <button className="landing-page-button" style={{zIndex: 1000}} onClick={this.handleClick.bind(this, this.cartNum)}>
-                                    <i className="fa fa-shopping-cart" style={{fontSize: '20px'}}/>
+                                <button className="landing-page-button" style={{zIndex: 1000}}>
+                                    <i className="fa fa-shopping-cart" style={{fontSize: '20px'}} />
                                 </button>
                             </header>
                             <nav className="strokes">
                                 <ul id="navigation">
-
                                     <li>
-
-                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.appetizer)}>
+                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.appetizer, "Appetizer")} data-transition="slide-to-top" className="internal">
                                             <section>
-
-                                                <h1>Appetizer</h1><h5 className="badge-rounded"> Spring roll, roasted
-                                                peas, popcorn shrimp... </h5>
-
-                                            </section>
-
-                                        </a>
-                                    </li>
-
-
-                                    <li>
-                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.mainCourse)}>
-
-                                            <section>
-                                                <h1>Main Course</h1><h5 className="badge-rounded"> Chicken Curry,
-                                                Vegetable Curry, Lamb Curry...</h5>
+                                                <h1>Appetizer</h1><h5 className="badge-rounded">Healthy and Fresh</h5>
                                             </section>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.drink)}>
+                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.mainCourse, "Main Course")} data-transition="slide-to-top" className="internal">
                                             <section>
-                                                <h1>Drink</h1><h5 className="badge-rounded"> Coke, Sprite, Crush...</h5>
+                                                <h1>Main Course</h1><h5 className="badge-rounded">Skillfully crafted</h5>
                                             </section>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.dessert)}>
+                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.dessert, "Dessert")} data-transition="slide-to-top" className="internal">
                                             <section>
-                                                <h1>Dessert</h1><h5 className="badge-rounded">Green Tea Ice Cream, Deep
-                                                Fried Banana...</h5>
+                                                <h1>Dessert</h1><h5 className="badge-rounded">Healthy and Fresh</h5>
+                                            </section>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.drink, "Drink")} data-transition="slide-to-top" className="internal">
+                                            <section>
+                                                <h1>Drink</h1><h5 className="badge-rounded">Skillfully crafted</h5>
                                             </section>
                                         </a>
                                     </li>
@@ -121,40 +119,27 @@ export class Customer extends React.Component {
                             </nav>
                         </main>
                     </div>
-                    <a href="#/customer" id="back-to-top">
-                        <i className="icon bg icon-UpArrow"/>
+                    <a href="#" id="back-to-top">
+                        <i className="icon bg icon-UpArrow" />
                     </a>
                     <ul id="slideshow">
-                        <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}}/>
-                        <li style={{
-                            backgroundImage: 'url("./img/3.jpg")',
-                            display: 'block',
-                            zIndex: 0,
-                            animationDelay: '6s'
-                        }}/>
-                        <li style={{
-                            backgroundImage: 'url("./img/6.jpg")',
-                            display: 'block',
-                            zIndex: 0,
-                            animationDelay: '12s'
-                        }}/>
-                        <li style={{
-                            backgroundImage: 'url("./img/4.jpg")',
-                            display: 'block',
-                            zIndex: 0,
-                            animationDelay: '18s'
-                        }}/>
-                        <li style={{
-                            backgroundImage: 'url("./img/2.jpg")',
-                            display: 'block',
-                            zIndex: 0,
-                            animationDelay: '24s'
-                        }}/>
+                        <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}} />
+                        <li style={{backgroundImage: 'url("./img/3.jpg")', display: 'block', zIndex: 0, animationDelay: '6s'}} />
+                        <li style={{backgroundImage: 'url("./img/6.jpg")', display: 'block', zIndex: 0, animationDelay: '12s'}} />
+                        <li style={{backgroundImage: 'url("./img/4.jpg")', display: 'block', zIndex: 0, animationDelay: '18s'}} />
+                        <li style={{backgroundImage: 'url("./img/2.jpg")', display: 'block', zIndex: 0, animationDelay: '24s'}} />
                     </ul>
                 </div>
             );
+
         } else if (this.state.pageNum == this.appetizer || this.state.pageNum == this.mainCourse ||
             this.state.pageNum == this.dessert || this.state.pageNum == this.drink) {
+
+            // const tagList = this.props.tags.map(tag =>
+            //     ({label: tag.entity.name, value: tag, key: tag.entity._links.self.href})
+            // );
+
+
             //TODO: Insert filtering of menuitems by tag, and pass that into menuItems
             return (
                 <CustomerMenu selectedView={this.state.selectedView}
@@ -167,7 +152,9 @@ export class Customer extends React.Component {
                               updatePageSize={this.props.updatePageSize}
                               onUpdate={this.props.onUpdate}
                               onDelete={this.props.onDelete}
-                              tags={this.props.tags}/>
+                              tags={this.props.tags}
+                              tagName={this.state.pageType}
+                               />
 
             )
         }
@@ -201,18 +188,17 @@ export class CustomerMenu extends React.Component {
     constructor(props) {
         super(props);
         this.state = {pageSize: 10, clicked: false};
-        this.handleClick = this.handleClick.bind(this);
+        // this.handleClick = this.handleClick.bind(this);
 
     }
 
-    handleClick() {
-        this.state = {clicked: true};
-        this.setState(this.state);
-
-    }
+    // handleClick() {
+    //     this.state = {clicked: true};
+    //     this.setState(this.state);
+    //
+    // }
 
     render() {
-
         const menuItems = this.props.menuItems.map(menuItem =>
             <CustomerMenuItem key={menuItem.entity._links.self.href}
                               menuItem={menuItem}
@@ -220,8 +206,6 @@ export class CustomerMenu extends React.Component {
             />
         );
 
-        if (!this.state.clicked.valueOf()) {
-            console.log(this.props.tags);
             return (
                 <div>
                     <title>Menu for Customer</title>
@@ -233,12 +217,12 @@ export class CustomerMenu extends React.Component {
                     <div>
                         <main className>
                             <header className="detail full">
-                                <a href="#/customer" onClick={this.handleClick} className="back"
+                                <a href="#/customer" className="back"
                                    data-transition="slide-from-top"/>
                                 <section>
 
-                                    <h1>Test Category</h1>
-                                    <h3 className="page-badge">Healthy and Fresh</h3> //TODO: remove
+                                    <h1>{this.props.tagName}</h1>
+
                                 </section>
                             </header>
                             <div className="content-wrap full-width">
@@ -286,12 +270,8 @@ export class CustomerMenu extends React.Component {
                     </ul>
                 </div>
             );
-        } else if (this.state.clicked.valueOf()) {
-            return (
-                <Customer/>
-            )
         }
-    }
+
 }
 
 export class CustomerCartPage extends React.Component {

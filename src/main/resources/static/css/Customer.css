@@ -4,127 +4,7 @@ Mixins, normalize and browser fixes.
 
 ----------------------------------------------- */
 
-/* Set default font family to sans-serif & prevent IOS text size adjus after orietnation change */
-html {
-  font-family: sans-serif;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-}
 
-/* Remove default body margin */
-body {
-  margin: 0;
-}
-/* HTML5 display definitions. */
-main,
-header,
-footer,
-section {
-  display: block;
-}
-/* Firefox @fontface cleanup */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-  font-weight: normal;
-}
-/* Normalize opentypes */
-html,
-body {
-  -webkit-font-feature-settings: "kern" 1, "liga" 1, "pnum" 1, "tnum" 0, "onum" 1, "lnum" 0, "dlig" 0;
-  font-feature-settings: "kern" 1, "liga" 1, "pnum" 1, "tnum" 0, "onum" 1, "lnum" 0, "dlig" 0;
-}
-h1,
-h2,
-h3 {
-  -webkit-font-feature-settings: "kern" 1, "liga" 1, "pnum" 1, "tnum" 0, "onum" 1, "lnum" 0, "dlig" 1;
-  font-feature-settings: "kern" 1, "liga" 1, "pnum" 1, "tnum" 0, "onum" 1, "lnum" 0, "dlig" 1;
-}
-
-/* --------------------------------------------
-
-Typography and styling for typograpic elements
-
------------------------------------------------ */
-/* Add font smoothing to typographic elements */
-p,
-span,
-a,
-h1,
-h2,
-h3,
-h4,
-h5,
-strong {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-/* Set lineheights and margins for elements*/
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-span {
-  line-height: 1.2;
-  margin: 0 0 .35em 0;
-}
-/* Set paragraph properties */
-p {
-  line-height: 1.7em;
-  text-align: left;
-  margin: 20px 0;
-}
-/* General header styling */
-h1 {
-  font-size: 38px;
-  font-size: 3.8rem;
-  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.4);
-  font-weight: 700;
-}
-h2 {
-  font-size: 26px;
-  font-size: 2.6rem;
-  font-weight: 700;
-}
-h3 {
-  font-size: 21px;
-  font-size: 2.1rem;
-}
-h4 {
-  font-size: 16px;
-  font-size: 1.6rem;
-}
-h5 {
-  font-size: 14px;
-  font-size: 1.4rem;
-}
-h6 {
-  font-size: 10px;
-  font-size: 1rem;
-}
-p,
-span {
-  font-size: 15px;
-  font-size: 1.5rem;
-}
-/* Style anchors in lists and paragraphs */
-p a,
-ul a,
-ol a {
-  text-decoration: underline;
-}
-/* Basic anchor styling and transitions */
-a {
-  text-decoration: none;
-  color: #6c9bae;
-}
 /* Styling for the signature shown in the footer */
 .signature {
   padding: 20px 0;
@@ -135,24 +15,22 @@ a {
   color: #e52f1b;
   letter-spacing: 2px;
   margin: 0;
+  font-size: 9px;
 }
 .signature h5 {
   font-size: 48px;
-  font-size: 4.8rem;
   font-family: 'kristimedium', serif;
   margin: 0 0 0 0;
 }
 @media only screen and (max-width: 667px) {
   .signature h5 {
     font-size: 30px;
-    font-size: 3rem;
   }
 }
 
 /* Styling for badges (element with background) and rounded corners */
 .page-badge {
   font-size: 14px;
-  font-size: 1.4rem;
   letter-spacing: 1px;
   display: inline-block;
   padding: .6em 1em;
@@ -225,7 +103,8 @@ Icon definitions & styling for easy use
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-i {
+
+i .fa, i .fas, i .far {
   display: inline-block;
   vertical-align: middle;
 }
@@ -242,22 +121,19 @@ Selections and general setup
   text-shadow: none;
 }
 
-html {
+.category-title, .cart-title {
+  font-size: 44px;
+}
+
+#wrapper {
   background-color: rgba(0, 0, 0, 0.95);
   font: normal 62.5%/1em 'montserratregular', sans-serif;
-  height: 100%;
   color: #FFFFFF;
-  overflow: hidden;
   line-height: 1.7;
 }
-/* Define the body styling and rules */
-body {
-  width: 100%;
-  height: 100%;
-}
-body main {
+
+.main-wrapper {
   font-size: 14px;
-  font-size: 1.4rem;
   z-index: 10;
   position: absolute;
   display: block;
@@ -268,11 +144,8 @@ body main {
   overflow: visible;
   overflow-y: scroll;
 }
-@media only screen and (max-width: 667px), only screen and (max-width: 667px) and (orientation : landscape), only screen and (min-width: 768px) and (max-width: 1024px) {
-  body main {
-    -webkit-overflow-scrolling: touch;
-  }
-}
+
+
 .hide {
   opacity: 0;
 }
@@ -288,10 +161,7 @@ body main {
 Homepage header (Which shows logo or back (X) button)
 
 ----------------------------------------------- */
-header {
-  position: relative;
-  /* Styling of the header for detail pages */
-}
+
 header .logo {
   z-index: 11;
   position: relative;
@@ -390,6 +260,7 @@ header.detail {
   text-align: center;
 }
 header.detail.full {
+  position: relative;
   background-color: rgba(0, 0, 0, 0.9);
 }
 header.detail * {
@@ -407,12 +278,7 @@ header.detail section {
 header.detail section h1 {
   margin: 0;
 }
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation : landscape), only screen and (min-width: 1025px) {
-  header.detail section h1 {
-    font-size: 44px;
-    font-size: 4.4rem;
-  }
-}
+
 @media only screen and (max-width: 667px) and (orientation : landscape) {
   header.detail {
     height: 70vh;
@@ -426,6 +292,7 @@ header.contact-header {
 }
 
 .frontpage {
+  position: relative;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -465,6 +332,7 @@ The background slideshow
   width: 100%;
   height: 100%;
   z-index: 0;
+  background-color: rgba(0, 0, 0, 0.95);
 }
 #slideshow li {
   background-size: cover;
@@ -669,13 +537,13 @@ Cart
   margin-left: 0;
 }
 
-table {
+.cart-table {
     border-collapse: collapse;
     width: 88%;
     font-size: 18px;
 }
 
-.table thead th {
+.cart-table thead th {
     vertical-align: bottom;
     border-top: 2px solid #dee2e6;
     color: #000;
@@ -683,25 +551,25 @@ table {
     border-color: #dee2e6;
 }
 
-.table td, .table th {
-    padding: 1.55rem;
+.cart-table td, .cart-table th {
+    padding: 0.95rem;
     vertical-align: center;
     text-align: center;
     border-bottom: 1px solid #dee2e6;
 }
 
-.table th .item-preview {
+.cart-table th .item-preview {
   width: 90px;
   height: 60px;
   border-radius: 10px;
 }
 
-.table .fa-times-circle {
+.cart-table .fa-times-circle {
   font-size: 22px;
   cursor: pointer;
 }
 
-.table .fa-times-circle:hover {
+.cart-table .fa-times-circle:hover {
   color: rgba(229,56,36,0.8);
 }
 
@@ -1001,12 +869,12 @@ Homepage navigation
 }
 .strokes ul li a section h1 {
   font-size: 24px;
-  font-size: 2.4rem;
   letter-spacing: 0;
 }
 .strokes ul li a section h5 {
   line-height: 1em;
   margin-bottom: .1em;
+  font-size: 14px;
 }
 .strokes ul li a section * {
   margin-top: 0;
@@ -1048,7 +916,6 @@ Homepage navigation
   }
   .strokes ul li a section h1 {
     font-size: 28px;
-    font-size: 2.8rem;
     opacity: 1;
   }
   .strokes ul li a:hover {
@@ -1062,9 +929,9 @@ Homepage navigation
     opacity: 1;
   }
   .strokes ul li a:hover section h5 {
-    -webkit-transform: translateY(0);
-        -ms-transform: translateY(0);
-            transform: translateY(0);
+    -webkit-transform: translateY(-1);
+        -ms-transform: translateY(-1);
+            transform: translateY(-1);
     opacity: 1;
   }
 }

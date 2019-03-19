@@ -6,7 +6,7 @@ import ReactDOM from "react-dom";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import "../../../resources/static/css/customerLanding.css";
+import "../../../resources/static/css/Customer.css";
 import "../../../resources/static/css/manager.css";
 import "../../../resources/static/css/style.css";
 import "../../../resources/static/css/external/bootstrap.min.css";
