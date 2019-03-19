@@ -214,24 +214,39 @@ export class App extends React.Component {
         });
     }
 
-    filterMenuItemList(selectedTags){
+    filterMenuItemList(selectedView, selectedTags){
         let validMenuItems;
         if (selectedTags.length === 0) {
             this.setState({menuItems: []});
             this.loadResourceFromServer('menuItems', this.state.pageSize);
             return Promise.resolve(this.state.menuItemTags); //TODO: Return MenuItems not MenuItemTags
         } else{
-            validMenuItems = this.state.menuItemTags
-                .filter(menuItemTag => selectedTags
-                    .every(e => menuItemTag.tags.map(tag => tag)
-                        .includes(e))).map(menuItemTag => menuItemTag.menuItem);
-            console.log("Valid Menu Items: ", validMenuItems);
-            return Promise.resolve(validMenuItems)
-                .then(validMenuItems => {
-                    this.setState({menuItems: validMenuItems});
-                    console.log("This State Menu Items: ", this.state.menuItems);
-                    return validMenuItems;
-                });
+            switch(selectedView){
+                case('Customer'):
+                    validMenuItems = this.state.menuItemTags
+                        .filter(menuItemTag => selectedTags
+                            .every(e => menuItemTag.tags.map(tag => tag)
+                                .includes(e))).map(menuItemTag => menuItemTag.menuItem);
+                    return Promise.resolve(validMenuItems)
+                        .then(validMenuItems => {
+                            this.setState({menuItems: validMenuItems});
+                            return validMenuItems;
+                        });
+                case('Manager'):
+                    let tagValues = selectedTags.map(selTag => selTag.label);
+                    validMenuItems = this.state.menuItemTags
+                        .filter(menuItemTag =>
+                            selectedTags.map(selTag => selTag.label)
+                                .every(e => menuItemTag.tags.map(tag => tag)
+                                    .includes(e))).map(menuItemTag => menuItemTag.menuItem);
+                    return Promise.resolve(validMenuItems)
+                        .then(validMenuItems => {
+                            this.setState({menuItems: validMenuItems});
+                            return validMenuItems;
+                        });
+            }
+
+
         }
 
 

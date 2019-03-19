@@ -910,9 +910,6 @@ Homepage navigation
   .strokes ul li a section h5 {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    -webkit-transform: translateY(-30px);
-        -ms-transform: translateY(-30px);
-            transform: translateY(-30px);
   }
   .strokes ul li a section h1 {
     font-size: 28px;
@@ -1055,23 +1052,23 @@ Homepage navigation
 
 .landing-page-button:hover {
   background-color: #fff;
-}
-
-.landing-page-button:hover .fa-user {
-  color: #000;
-  transition: .5s ease;
-}
-
-.landing-page-button:hover .fa-dollar-sign {
-  color: #000;
-  transition: .5s ease;
-}
-
-.landing-page-button:hover .fa-shopping-cart {
-  color: #000;
-  transition: .5s ease;
+  color: black;
+  transition: .5s ease-in-out;
 }
 
 .landing-page-button:focus {
   outline: none;
+}
+
+.customer-tag-buttons{
+  background: transparent !important;
+  color: white !important;
+}
+
+.customer-header-buttons{
+  font-size: 24px !important;
+}
+
+.landing-page-header-button-icons{
+  margin-right: 2px !important;
 }

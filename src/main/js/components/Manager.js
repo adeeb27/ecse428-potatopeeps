@@ -24,7 +24,7 @@ import "../../resources/static/css/external/bootstrap.min.css";
 export class Manager extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {pageSize: 10, selectedView: 'Manager'};
+        this.state = {pageSize: 30, selectedView: 'Manager'};
     }
 
 
@@ -65,7 +65,7 @@ export class Manager extends React.Component {
                         </div>
                         <div className="col-1 text-right">
                             <Button id="logout-btn" className="btn btn-danger" type="button">
-                                {"Logout  "}
+                                {"Logout"}
                                 <FontAwesomeIcon icon={faSignOutAlt}/>
                             </Button>
                         </div>
@@ -77,7 +77,8 @@ export class Manager extends React.Component {
                         </div>
                         <div className="col-6" >
                             <Select options={tagList}
-                                    onChange={out => this.props.filterMenuItemList(out)}
+                                    onChange={selectedTags =>
+                                        this.props.filterMenuItemList(this.state.selectedView, selectedTags)}
                                     isMulti/>
                         </div>
                         <div className="col-3">
