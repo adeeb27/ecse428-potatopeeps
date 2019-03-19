@@ -10,7 +10,7 @@ const root = "/api"; // Root is a variable used to provide pathing to the uriLis
 import {Login} from "./Login";
 import {Staff} from "./Staff";
 import {Manager} from "./Manager";
-import {Customer} from "./Customer";
+import {Customer, CustomerMenu} from "./Customer";
 
 /** ----- TUTORIAL API IMPORTS -----**/
 import follow from "../follow";
@@ -57,6 +57,7 @@ export class App extends React.Component {
             menuItems: [],
             menuItemLinks: {},
             menuItemAttributes: [],
+            menuItemTags: [],
             orders: [],
             orderLinks: {},
             orderAttributes: [],
@@ -160,6 +161,32 @@ export class App extends React.Component {
                     });
                     break;
                 case('menuItems'):
+                    this.resourceTags = [];
+                    this.setState({menuItemTags: []});
+                    resources.forEach(resource => {
+                        fetch(resource.entity._links.tags.href, {
+                            method: 'GET',
+                            headers: {'Content-Type': 'application/schema+json'}
+                        })
+                            .then(
+                                response => {
+                                    response.json().then((data) => {
+                                        let menuItemTagsTemp = this.state.menuItemTags;
+                                        let resourceTags = data._embedded.tags.map(tag => tag.name);
+                                        let newMenuItemTag = {menuItem: resource, tags: resourceTags};
+
+                                        Promise.resolve(newMenuItemTag).then(value => {
+                                            if (menuItemTagsTemp.indexOf(value) === -1)
+                                                menuItemTagsTemp.push(value);
+                                            this.setState({menuItemTags: menuItemTagsTemp});
+                                        });
+                                    });
+                                }
+                            )
+                            .catch(function (err) {
+                                console.log('Fetch Error :-S', err);
+                            });
+                    });
                     this.setState({
                         menuItems: resources,
                         menuItemAttributes: Object.keys(this.menuItemSchema.properties).filter(attribute => attribute !== 'tags' && attribute !== 'orders'),
@@ -187,75 +214,26 @@ export class App extends React.Component {
         });
     }
 
-    // let validResources = [];
+    filterMenuItemList(selectedTags){
+        let validMenuItems;
+        if (selectedTags.length === 0) {
+            this.setState({menuItems: []});
+            this.loadResourceFromServer('menuItems', this.state.pageSize);
+            return Promise.resolve(this.state.menuItemTags); //TODO: Return MenuItems not MenuItemTags
+        } else{
+            validMenuItems = this.state.menuItemTags
+                .filter(menuItemTag => selectedTags
+                    .every(e => menuItemTag.tags.map(tag => tag)
+                        .includes(e))).map(menuItemTag => menuItemTag.menuItem);
+            console.log("Valid Menu Items: ", validMenuItems);
+            return Promise.resolve(validMenuItems)
+                .then(validMenuItems => {
+                    this.setState({menuItems: validMenuItems});
+                    console.log("This State Menu Items: ", this.state.menuItems);
+                    return validMenuItems;
+                });
+        }
 
-    filterMenuItemList(options, filterSize){
-        this.setState({menuItems: []});
-        follow(client, root, [
-            {rel: 'menuItems', params: {size: filterSize}}
-        ]).then(resourceCollection => {
-            return client({
-                method: 'GET',
-                path: resourceCollection.entity._links.profile.href,
-                headers: {'Accept': 'application/schema+json'}
-            }).then(menuItemSchema => {
-                this.menuItemSchema = menuItemSchema.entity;
-                this.menuItemLinks = resourceCollection.entity._links;
-                return resourceCollection;
-            });
-        }).then(resourceCollection => {
-            return resourceCollection.entity._embedded.menuItems.map(menuItem =>
-                client({
-                    method: 'GET',
-                    path: menuItem._links.self.href
-                })
-            );
-        }).then(resourcePromises => {
-            return when.all(resourcePromises);
-        }).done(resources =>{
-            this.resourceTags = [];
-            this.validResources = [];
-            let optionLabels = options.map(op => op.label);
-            resources.forEach(resource => {
-
-                fetch(resource.entity._links.tags.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
-                    .then(
-                        response => {
-                            if (response.status !== 200) {
-                                console.log('Looks like there was a problem. Status Code: ' +
-                                    response.status);
-                                return;
-                            }
-
-                            // Examine the text in the response
-                            response.json().then((data) => {
-                                this.resourceTags.length = 0;
-                                console.log(resource.entity.name + " has tags " + data._embedded.tags.map(tag => tag.name));
-                                data._embedded.tags.map(tag => this.resourceTags.push(tag.name));
-                                if(this.resourceTags.some(res => optionLabels.includes(res))){
-                                    let currentMenuItems = this.state.menuItems;
-                                    if(currentMenuItems.indexOf(resource) === -1)
-                                        currentMenuItems.push(resource);
-                                    this.setState({menuItems : currentMenuItems});
-                                }
-                                console.log("Inside fetch: " + this.resourceTags);
-                            });
-                        }
-                    )
-                    .catch(function(err) {
-                        console.log('Fetch Error :-S', err);
-                    });
-
-                console.log("Option Labels: " + optionLabels + " Resource Tags: " + this.resourceTags);
-                console.log("Valid Resources: " + this.validResources)
-            });
-
-            this.setState({
-                menuItemAttributes: Object.keys(this.menuItemSchema.properties).filter(attribute => attribute !== 'tags' && attribute !== 'orders'),
-                pageSize: filterSize,
-                menuItemLinks: this.menuItemLinks
-            });
-        });
 
     }
 
@@ -516,6 +494,22 @@ export class App extends React.Component {
                                                                     orderAttributes={this.state.orderAttributes}
                                                                     selectedView={'Staff'}
                                                                     {...props}/>)}/>
+                                <Route path={"/customer-menu"} render={(props) =>
+                                    (<CustomerMenu loadResourceFromServer={this.loadResourceFromServer}
+                                            onCreate={this.onCreate}
+                                            onUpdate={this.onUpdate}
+                                            onDelete={this.onDelete}
+                                            onNavigate={this.onNavigate}
+                                            diningSessions={this.state.diningSessions}
+                                            diningSessionLinks={this.state.diningSessionLinks}
+                                            diningSessionAttributes={this.state.diningSessionAttributes}
+                                            orders={this.state.orders}
+                                            orderLinks={this.state.orderLinks}
+                                            orderAttributes={this.state.orderAttributes}
+                                            menuItemTags={this.state.menuItemTags}
+                                            selectedView={'Customer'}
+                                            filterMenuItemList={this.filterMenuItemList}
+                                            {...props}/>)}/>
                             </Switch>
                         </CSSTransition>
                     </TransitionGroup>

@@ -6,8 +6,7 @@ import "../../resources/static/css/Customer.css";
 import "../../resources/static/css/manager.css";
 import "../../resources/static/css/style.css";
 import "../../resources/static/css/external/bootstrap.min.css";
-import {CustomerMenuItem} from "./subcomponents/MenuItem";
-
+import {MenuItemList} from "./subcomponents/MenuItem";
 
 /**
  * This JS file contains all code related to the rendering of the 'Customer' perspective.
@@ -26,138 +25,102 @@ export class Customer extends React.Component {
 
     constructor(props) {
         super(props);
-        this.prettifyTag = [];
-        this.state = { selectedView: 'Customer', pageType: "Main Page" };
-        this.handleClick = this.handleClick.bind(this);
+        this.state = {selectedView: 'Customer'};
     }
 
     componentDidMount() {
-        this.props.loadResourceFromServer('menuItems', this.state.pageSize);
+        this.props.loadResourceFromServer('menuItems', 30);
         this.props.loadResourceFromServer('tags', this.state.pageSize);
     }
 
-    handleClick(menuCategory) {
+    render() {
 
-        const tagList = this.props.tags.map(tag =>
-            ({label: tag.entity.name, value: tag, key: tag.entity._links.self.href})
+        return(
+            <CustomerLandingPage history={this.props.history}
+                                 selectedView={this.state.selectedView}
+                                 menuItems={this.props.menuItems}
+                                 filterMenuItemList={this.props.filterMenuItemList}
+                                 tags={this.props.tags}/>
+        );
+    }
+}
+
+
+export class CustomerLandingPage extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.handleTagClick = this.handleTagClick.bind(this);
+    }
+
+    handleTagClick(e, selectedTag){
+        e.preventDefault();
+        this.props.filterMenuItemList([selectedTag]).then((response) => {
+            this.props.history.push({
+                pathname: '/customer-menu',
+                state: {
+                    tagName: selectedTag,
+                    menuItems: response,
+                    selectedView: this.props.selectedView,
+                    customerFilter: this.props.customerFilter,
+                    filterMenuItemList: this.props.filterMenuItemList}
+            })
+        });
+    }
+
+    render(){
+        const tags = this.props.tags.map(tag =>
+            <li key={"customer-landing-li-" + tag.entity._links.self.href}>
+               <a key={"customer-landing-a-" + tag.entity._links.self.href} onClick={(e) => this.handleTagClick(e, tag.entity.name)}  data-transition="slide-to-top" className="internal">
+                   <section key={"customer-landing-section-" + tag.entity._links.self.href}>
+                       <h1 key={"customer-landing-h1-" + tag.entity._links.self.href}>{tag.entity.name}</h1>
+                       <button key={"customer-landing-h5-" + tag.entity._links.self.href} className="badge-rounded">
+                           {"View " + tag.entity.name + "s"}
+                       </button>
+                   </section>
+               </a>
+            </li>
         );
 
-        this.state = { pageType: menuCategory};
-        this.prettifyTag[0] = tagList[tagList.map(function(d) { return d['label']; }).indexOf(menuCategory)];
-        this.props.filterMenuItemList(this.prettifyTag);
-        this.setState( this.state );
-
-    }
-
-    render() {
-        if (this.state.pageType === "Main Page") {
-            return (
-
-                <div>
-                    <title>Welcome to PotatoPeeps Sushi</title>
-                    <link rel="stylesheet" id="style-css" href="../../resources/static/css/Customer.css" type="text/css" media="all" />
-                    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossOrigin="anonymous" />
-                    <div id="wrapper">
-                        <main className="main-wrapper">
-                            <header className="frontpage">
-                                <button className="landing-page-button" style={{zIndex: 1000}}>
-                                    <i className="fas fa-user" style={{fontSize: '20px'}}>    Service Request</i>
-                                </button>
-                                <a href="#" className="logo">
-                                    <img src="./img/logo.png" alt="Home" />
-                                </a>
-                                <button className="landing-page-button" style={{zIndex: 1000}}>
-                                    <i className="fas fa-dollar-sign" style={{fontSize: '20px'}}>    Bill Request</i>
-                                </button>
-                                <button className="landing-page-button" style={{zIndex: 1000}}>
-                                    <i className="fa fa-shopping-cart" style={{fontSize: '20px'}} />
-                                </button>
-                            </header>
-                            <nav className="strokes">
-                                <ul id="navigation">
-                                    <li>
-                                        <a href="#/customer" onClick={this.handleClick.bind(this, "Appetizer")} data-transition="slide-to-top" className="internal">
-                                            <section>
-                                                <h1>Appetizer</h1><h5 className="badge-rounded">Healthy and Fresh</h5>
-                                            </section>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#/customer" onClick={this.handleClick.bind(this, "Main Course")} data-transition="slide-to-top" className="internal">
-                                            <section>
-                                                <h1>Main Course</h1><h5 className="badge-rounded">Skillfully crafted</h5>
-                                            </section>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#/customer" onClick={this.handleClick.bind(this, "Dessert")} data-transition="slide-to-top" className="internal">
-                                            <section>
-                                                <h1>Dessert</h1><h5 className="badge-rounded">Healthy and Fresh</h5>
-                                            </section>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#/customer" onClick={this.handleClick.bind(this, "Drink")} data-transition="slide-to-top" className="internal">
-                                            <section>
-                                                <h1>Drink</h1><h5 className="badge-rounded">Skillfully crafted</h5>
-                                            </section>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </main>
-                    </div>
-                    <a href="#" id="back-to-top">
-                        <i className="icon bg icon-UpArrow" />
-                    </a>
-                    <ul id="slideshow">
-                        <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}} />
-                        <li style={{backgroundImage: 'url("./img/3.jpg")', display: 'block', zIndex: 0, animationDelay: '6s'}} />
-                        <li style={{backgroundImage: 'url("./img/6.jpg")', display: 'block', zIndex: 0, animationDelay: '12s'}} />
-                        <li style={{backgroundImage: 'url("./img/4.jpg")', display: 'block', zIndex: 0, animationDelay: '18s'}} />
-                        <li style={{backgroundImage: 'url("./img/2.jpg")', display: 'block', zIndex: 0, animationDelay: '24s'}} />
-                    </ul>
+        return(
+            <div>
+                <title>Welcome to PotatoPeeps Sushi</title>
+                <div id="wrapper">
+                    <main className="main-wrapper">
+                        <header className="frontpage">
+                            <button className="landing-page-button" style={{zIndex: 1000}}>
+                                <i className="fas fa-user" style={{fontSize: '20px'}}>    Service Request</i>
+                            </button>
+                            <a href="#" className="logo">
+                                <img src="./img/logo.png" alt="Home" />
+                            </a>
+                            <button className="landing-page-button" style={{zIndex: 1000}}>
+                                <i className="fas fa-dollar-sign" style={{fontSize: '20px'}}>    Bill Request</i>
+                            </button>
+                            <button className="landing-page-button" style={{zIndex: 1000}}>
+                                <i className="fa fa-shopping-cart" style={{fontSize: '20px'}} />
+                            </button>
+                        </header>
+                        <nav className="strokes">
+                            <ul id="navigation">
+                                {tags}
+                            </ul>
+                        </nav>
+                    </main>
                 </div>
-            );
-
-        } else if (this.state.pageType === "Appetizer"  || this.state.pageType === "Main Course" ||
-            this.state.pageType === "Dessert" || this.state.pageType === "Drink") {
-
-            return (
-                <CustomerMenu selectedView={this.state.selectedView}
-                              menuItems={this.props.menuItems}
-                              pageSize={this.props.pageSize}
-                              attributes={this.props.attributes}
-                              menuItemAttributes={this.props.menuItemAttributes}
-                              menuItemLinks={this.props.menuItemLinks}
-                              onNavigate={this.props.onNavigate}
-                              updatePageSize={this.props.updatePageSize}
-                              onUpdate={this.props.onUpdate}
-                              onDelete={this.props.onDelete}
-                              tags={this.props.tags}
-                              tagName={this.state.pageType}
-                               />
-
-            )
-        }
-        // else if (this.state.pageType == this.cartNum) {
-        //     return (
-        //         <CustomerCartPage/>
-        //     )
-        // }
-        // else if (this.state.pageType == this.billRequest) {
-        //     return (
-        //         <CustomerCartPage/>
-        //     )
-        // }
-        // else if (this.state.pageType == this.requestWaiter) {
-        //     return (
-        //         <CustomerCartPage/>
-        //     )
-        // }
-
+                <a href="#" id="back-to-top">
+                    <i className="icon bg icon-UpArrow" />
+                </a>
+                <ul id="slideshow">
+                    <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}} />
+                    <li style={{backgroundImage: 'url("./img/3.jpg")', display: 'block', zIndex: 0, animationDelay: '6s'}} />
+                    <li style={{backgroundImage: 'url("./img/6.jpg")', display: 'block', zIndex: 0, animationDelay: '12s'}} />
+                    <li style={{backgroundImage: 'url("./img/4.jpg")', display: 'block', zIndex: 0, animationDelay: '18s'}} />
+                    <li style={{backgroundImage: 'url("./img/2.jpg")', display: 'block', zIndex: 0, animationDelay: '24s'}} />
+                </ul>
+            </div>
+        );
     }
-
 }
 
 /***
@@ -170,81 +133,37 @@ export class Customer extends React.Component {
 export class CustomerMenu extends React.Component {
     constructor(props) {
         super(props);
+        this.handleCloseMenu = this.handleCloseMenu.bind(this);
         this.state = {pageSize: 10, clicked: false};
-        // this.handleClick = this.handleClick.bind(this);
+    }
 
+    handleCloseMenu(){
+        this.props.history.push('/customer');
     }
 
     render() {
-        const menuItems = this.props.menuItems.map(menuItem =>
-            <CustomerMenuItem key={menuItem.entity._links.self.href}
-                              menuItem={menuItem}
-                              menuItemAttributes={this.props.menuItemAttributes}
-            />
-        );
-
             return (
                 <div>
-
-                    <link rel="stylesheet" id="style-css" href="../../resources/static/css/Customer.css" type="text/css"
-                          media="all"/>
-                    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-                          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
-                          crossOrigin="anonymous"/>
                     <div>
-                        <main className>
+                        <main>
                             <header className="detail full">
-                                <a href="#/customer" className="back"
-                                   data-transition="slide-from-top"/>
+                                <a className="back"
+                                   onClick={this.handleCloseMenu}/>
                                 <section>
-
-                                    <h1>{this.props.tagName}</h1>
-
+                                    <h1>{this.props.location.state.tagName}</h1>
                                 </section>
                             </header>
-                            <div className="content-wrap full-width">
-                                <div className="gridViewContainer">
-                                    {menuItems}
-                                </div>
-                                <footer>
-                                    <div className="signature">
-                                        <h6>Sushi</h6>
-                                        <h5>PotatoPeeps</h5>
-                                    </div>
-                                </footer>
-                            </div>
+                            <MenuItemList selectedView={this.props.selectedView}
+                                          menuItems={this.props.location.state.menuItems}
+                                          pageSize={this.state.pageSize}
+                                          menuItemTags={this.props.menuItemTags}
+                                          onNavigate={this.props.onNavigate}
+                                          onDelete={this.props.onDelete}
+                                          filterMenuItemList={this.props.filterMenuItemList}
+                                          tagName={this.props.location.state.tagName}
+                                          filterMenuitemList={this.props.location.state.filterMenuItemList}/>
                         </main>
                     </div>
-                    <a href="#/customer" id="back-to-top">
-                        <i className="icon bg icon-UpArrow"/>
-                    </a>
-                    <ul id="slideshow">
-                        <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}}/>
-                        <li style={{
-                            backgroundImage: 'url("./img/3.jpg")',
-                            display: 'block',
-                            zIndex: 0,
-                            animationDelay: '6s'
-                        }}/>
-                        <li style={{
-                            backgroundImage: 'url("./img/6.jpg")',
-                            display: 'block',
-                            zIndex: 0,
-                            animationDelay: '12s'
-                        }}/>
-                        <li style={{
-                            backgroundImage: 'url("./img/4.jpg")',
-                            display: 'block',
-                            zIndex: 0,
-                            animationDelay: '18s'
-                        }}/>
-                        <li style={{
-                            backgroundImage: 'url("./img/2.jpg")',
-                            display: 'block',
-                            zIndex: 0,
-                            animationDelay: '24s'
-                        }}/>
-                    </ul>
                 </div>
             );
         }
@@ -270,8 +189,6 @@ export class CustomerCartPage extends React.Component {
         return (
             <div>
                 <title>Cart</title>
-                <link rel="stylesheet" id="style-css" href="../resources/static/css/style.css" type="text/css" media="all" />
-                <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossOrigin="anonymous" />
                 <div>
                     <main className>
                         <header className="detail full">

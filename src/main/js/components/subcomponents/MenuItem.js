@@ -12,7 +12,8 @@ import "../../../resources/static/css/style.css";
 import "../../../resources/static/css/external/bootstrap.min.css";
 import {
     faTrash, faEdit, faAngleDoubleLeft,
-    faAngleDoubleRight, faAngleLeft, faAngleRight
+    faAngleDoubleRight, faAngleLeft, faAngleRight,
+    faPlus
 } from "@fortawesome/free-solid-svg-icons";
 
 /**
@@ -45,8 +46,12 @@ export class MenuItemList extends React.Component {
                                           attributes={this.props.attributes}
                                           menuItemAttributes={this.props.menuItemAttributes}
                                           menuItemLinks={this.props.menuItemLinks}
+                                          menuItemTags={this.props.menuItemTags}
                                           onNavigate={this.props.onNavigate}
-                                          updatePageSize={this.props.updatePageSize}/>);
+                                          updatePageSize={this.props.updatePageSize}
+                                          filterMenuItemList={this.props.filterMenuItemList}
+                                          customerFilter={this.props.customerFilter}
+                                          tagName={this.props.tagName}/>);
 
 
     }
@@ -193,7 +198,6 @@ class ManagerMenuItem extends React.Component {
 
                     // Examine the text in the response
                     response.json().then((data) => {
-                        console.log(data._embedded.tags);
                         this.setState({menuItemTags: data._embedded.tags});
                     });
                 }
@@ -263,8 +267,8 @@ class ManagerMenuItem extends React.Component {
  * @author Gabriel Negash, Evan Bruchet
  */
 class ManagerUpdateMenuItemDialog extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -424,10 +428,9 @@ export class ManagerCreateMenuItemDialog extends React.Component {
 }
 
 
-class CustomerMenuItemList extends React.Component {
+export class CustomerMenuItemList extends React.Component {
     constructor(props) {
         super(props);
-
     }
 
     /**
@@ -436,13 +439,30 @@ class CustomerMenuItemList extends React.Component {
      * @returns The HTML/JSX code to be displayed by this element. In this case, we return the ManagerMenuItemList
      * defined above, along with buttons beneath said list to navigate in between its pages.
      */
+
     render() {
         const menuItems = this.props.menuItems.map(menuItem =>
             <CustomerMenuItem key={menuItem.entity._links.self.href}
                               menuItem={menuItem}
+                              menuItems={this.props.menuItems}
                               menuItemAttributes={this.props.menuItemAttributes}/>
         );
 
+
+        return(
+            <div className="content-wrap full-width">
+                <div className="gridViewContainer">
+                    {menuItems}
+                </div>
+                <footer>
+                    <div className="signature">
+                        <h6>Sushi</h6>
+                        <h5>PotatoPeeps</h5>
+                    </div>
+                </footer>
+            </div>
+
+        );
     }
 }
 
@@ -475,7 +495,6 @@ export class CustomerMenuItem extends React.Component {
 
                     // Examine the text in the response
                     response.json().then((data) => {
-                        console.log(data._embedded.tags);
                         this.setState({menuItemTags: data._embedded.tags});
                     });
                 }
@@ -505,25 +524,26 @@ export class CustomerMenuItem extends React.Component {
      * entry in the list - this includes the majority of information about it
      */
     render() {
-
-
         return (
 
             <div className="gridViewItem">
                 <img className="itemImage" draggable="false" src="./img/4.jpg"/>
                 <div className="overlay">
-                    <div className="text">{this.props.menuItem.entity.name}</div>
+                    <div className="text">
+                        <b>
+                            {this.props.menuItem.entity.name}
+                        </b>
+                        <div className="dropdown-divider"/>
+                    </div>
                     <div className="text">{this.props.menuItem.entity.description}</div>
                     <div className="text">{this.props.menuItem.entity.price}</div>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                         <button className="add-to-cart-button" title="Add to cart">
-                            <i className="fa fa-shopping-cart" style={{fontSize: '20px'}}/>
+                            <FontAwesomeIcon icon={faPlus}/>
                         </button>
                     </div>
                 </div>
             </div>
-
-
         )
     }
 
