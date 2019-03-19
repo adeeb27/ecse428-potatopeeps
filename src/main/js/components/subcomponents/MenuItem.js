@@ -46,9 +46,7 @@ export class MenuItemList extends React.Component {
                                           menuItemAttributes={this.props.menuItemAttributes}
                                           menuItemLinks={this.props.menuItemLinks}
                                           onNavigate={this.props.onNavigate}
-                                          updatePageSize={this.props.updatePageSize}
-                                          onUpdate={this.props.onUpdate}
-                                          onDelete={this.props.onDelete}/>);
+                                          updatePageSize={this.props.updatePageSize}/>);
 
 
     }
@@ -429,21 +427,8 @@ export class ManagerCreateMenuItemDialog extends React.Component {
 class CustomerMenuItemList extends React.Component {
     constructor(props) {
         super(props);
-        // this.handleInput = this.handleInput.bind(this);
 
     }
-
-    // handleInput(e) {
-    //     e.preventDefault();
-    //     const pageSize = ReactDOM.findDOMNode(this.refs.pageSize).value;
-    //     if (/^[0-9]+$/.test(pageSize)) {
-    //         this.props.updatePageSize(pageSize);
-    //     } else {
-    //         ReactDOM.findDOMNode(this.refs.pageSize).value =
-    //             pageSize.substring(0, pageSize.length - 1);
-    //     }
-    // }
-
 
     /**
      * render - Render a React element into the DOM in the supplied container and return a reference to the component
@@ -455,31 +440,9 @@ class CustomerMenuItemList extends React.Component {
         const menuItems = this.props.menuItems.map(menuItem =>
             <CustomerMenuItem key={menuItem.entity._links.self.href}
                               menuItem={menuItem}
-                              menuItemAttributes={this.props.menuItemAttributes}
-                              onUpdate={this.props.onUpdate}
-                              onDelete={this.props.onDelete}
-            />
+                              menuItemAttributes={this.props.menuItemAttributes}/>
         );
 
-        return (
-            <div id="menu-items" className="table-responsive">
-                <table id="main-table" className="table table-striped">
-                    <tbody>
-                    <tr>
-                        <th>Tags</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th/>
-                        <th/>
-                    </tr>
-                    {menuItems}
-                    </tbody>
-                </table>
-
-            </div>
-        )
     }
 }
 
@@ -489,14 +452,6 @@ export class CustomerMenuItem extends React.Component {
         this.state = {menuItemTags: []};
         this.requestTags = this.requestTags.bind(this);
     }
-
-    /**
-     * handleDelete - handles the submission of the delete request on the given menuItem, by calling the onDelete function
-     * defined in App.js.
-     */
-    // handleDelete() {
-    //     this.props.onDelete(this.props.menuItem, 'menuItems');
-    // }
 
     /**
      * requestTags - uses Fetch-API to request a JSON resource at a provided URL using the fetch method to return a
@@ -539,30 +494,18 @@ export class CustomerMenuItem extends React.Component {
      *
      * Link to componentDidMount() docs: https://reactjs.org/docs/react-component.html#componentdidmount
      */
-    // componentDidMount() {
-    //     this.requestTags();
-    // }
+    componentDidMount() {
+        this.requestTags();
+    }
 
     /**
      * render - Render a React element into the DOM in the supplied container and return a reference to the component
      *
-     * @returns The HTML/JSX code to be displayed by this element. In this case, we simply display the ManagerMenuItem
-     * entry in the list - this includes the majority of information about it, along with an update and delete button,
-     * that call the onUpdate and onDelete methods defined in App.js, respectively.
+     * @returns The HTML/JSX code to be displayed by this element. In this case, we simply display the CustomerMenuItem
+     * entry in the list - this includes the majority of information about it
      */
     render() {
-        //
-        // const tags = this.state.menuItemTags.map((tag, index) =>
-        //     <span key={"menu-item-list-tag-" + tag._links.self.href + "-menu-item-" + this.props.menuItem.entity._links.self.href}>
-        //         {index === this.state.menuItemTags.length -1 ? tag.name : tag.name + ', '}
-        //     </span>
-        // );
-        {/*        <div>
-            <h1>{this.props.menuItem.entity.name}</h1>
-            <h1>{this.props.menuItem.entity.description}</h1>
-            <h1>{this.props.menuItem.entity.price}</h1>
-        </div>*/
-        }
+
 
         return (
 

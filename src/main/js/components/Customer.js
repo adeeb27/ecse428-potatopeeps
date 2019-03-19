@@ -11,15 +11,14 @@ import {CustomerMenuItem} from "./subcomponents/MenuItem";
 
 /**
  * This JS file contains all code related to the rendering of the 'Customer' perspective.
- *
  * Any components you wish to create related to this perspective should be developed within
  * this file.
  */
 
 /***
- * Holds entire page view. Customer Landing page
- * TODO: should include search by Tag bar (drop-down selectable items)
- * @See Tag
+ *
+ * Holds entire page view. Starting off with the Customer Landing page
+ * @Author Adeeb Ibne Amjad, Dibbo Ritwik
  *
  */
 
@@ -27,15 +26,8 @@ export class Customer extends React.Component {
 
     constructor(props) {
         super(props);
-        this.mainPage = 0;
-        this.requestWaiter = 1;
-        this.billRequest = 2;
-        this.cartNum = 3;
-        this.appetizer = 4;
-        this.mainCourse = 5;
-        this.drink = 6;
-        this.dessert = 7;
-        this.state = { selectedView: 'Customer', pageNum: this.mainPage, pageType: "Main Page"};
+        this.prettifyTag = [];
+        this.state = { selectedView: 'Customer', pageType: "Main Page" };
         this.handleClick = this.handleClick.bind(this);
     }
 
@@ -44,25 +36,21 @@ export class Customer extends React.Component {
         this.props.loadResourceFromServer('tags', this.state.pageSize);
     }
 
-    handleClick(button, menuCategory) {
+    handleClick(menuCategory) {
 
         const tagList = this.props.tags.map(tag =>
             ({label: tag.entity.name, value: tag, key: tag.entity._links.self.href})
         );
 
-        this.state = {pageNum: button, pageType: menuCategory};
-
-        this.testTag = [];
-        var index = tagList.map(function(d) { return d['label']; }).indexOf(menuCategory);
-        this.testTag[0] = tagList[index];
-        this.filteredList = [];
-        this.filteredList = this.props.filterMenuItemList(this.testTag);
-
+        this.state = { pageType: menuCategory};
+        this.prettifyTag[0] = tagList[tagList.map(function(d) { return d['label']; }).indexOf(menuCategory)];
+        this.props.filterMenuItemList(this.prettifyTag);
         this.setState( this.state );
+
     }
 
     render() {
-        if (this.state.pageNum == this.mainPage) {
+        if (this.state.pageType === "Main Page") {
             return (
 
                 <div>
@@ -88,28 +76,28 @@ export class Customer extends React.Component {
                             <nav className="strokes">
                                 <ul id="navigation">
                                     <li>
-                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.appetizer, "Appetizer")} data-transition="slide-to-top" className="internal">
+                                        <a href="#/customer" onClick={this.handleClick.bind(this, "Appetizer")} data-transition="slide-to-top" className="internal">
                                             <section>
                                                 <h1>Appetizer</h1><h5 className="badge-rounded">Healthy and Fresh</h5>
                                             </section>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.mainCourse, "Main Course")} data-transition="slide-to-top" className="internal">
+                                        <a href="#/customer" onClick={this.handleClick.bind(this, "Main Course")} data-transition="slide-to-top" className="internal">
                                             <section>
                                                 <h1>Main Course</h1><h5 className="badge-rounded">Skillfully crafted</h5>
                                             </section>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.dessert, "Dessert")} data-transition="slide-to-top" className="internal">
+                                        <a href="#/customer" onClick={this.handleClick.bind(this, "Dessert")} data-transition="slide-to-top" className="internal">
                                             <section>
                                                 <h1>Dessert</h1><h5 className="badge-rounded">Healthy and Fresh</h5>
                                             </section>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#/customer" onClick={this.handleClick.bind(this, this.drink, "Drink")} data-transition="slide-to-top" className="internal">
+                                        <a href="#/customer" onClick={this.handleClick.bind(this, "Drink")} data-transition="slide-to-top" className="internal">
                                             <section>
                                                 <h1>Drink</h1><h5 className="badge-rounded">Skillfully crafted</h5>
                                             </section>
@@ -132,18 +120,12 @@ export class Customer extends React.Component {
                 </div>
             );
 
-        } else if (this.state.pageNum == this.appetizer || this.state.pageNum == this.mainCourse ||
-            this.state.pageNum == this.dessert || this.state.pageNum == this.drink) {
+        } else if (this.state.pageType === "Appetizer"  || this.state.pageType === "Main Course" ||
+            this.state.pageType === "Dessert" || this.state.pageType === "Drink") {
 
-            // const tagList = this.props.tags.map(tag =>
-            //     ({label: tag.entity.name, value: tag, key: tag.entity._links.self.href})
-            // );
-
-
-            //TODO: Insert filtering of menuitems by tag, and pass that into menuItems
             return (
                 <CustomerMenu selectedView={this.state.selectedView}
-                              menuItems={this.props.menuItems} //I.E. pass filtered menuItems here
+                              menuItems={this.props.menuItems}
                               pageSize={this.props.pageSize}
                               attributes={this.props.attributes}
                               menuItemAttributes={this.props.menuItemAttributes}
@@ -158,32 +140,33 @@ export class Customer extends React.Component {
 
             )
         }
-        else if (this.state.pageNum == this.cartNum) {
-            return (
-                <CustomerCartPage/>
-            )
-        }
-        else if (this.state.pageNum == this.billRequest) {
-            return (
-                <CustomerCartPage/>
-            )
-        }
-        else if (this.state.pageNum == this.requestWaiter) {
-            return (
-                <CustomerCartPage/>
-            )
-        }
+        // else if (this.state.pageType == this.cartNum) {
+        //     return (
+        //         <CustomerCartPage/>
+        //     )
+        // }
+        // else if (this.state.pageType == this.billRequest) {
+        //     return (
+        //         <CustomerCartPage/>
+        //     )
+        // }
+        // else if (this.state.pageType == this.requestWaiter) {
+        //     return (
+        //         <CustomerCartPage/>
+        //     )
+        // }
 
     }
 
 }
 
 /***
- * Holds view of entire menu page
- * Should allow for parsing by tags, such that user inputs tags to search by
- * Then the corresponding menuItemList is added beneath
- * TODO: integrate UI of Customer, Parsing by Tags, ...
+ *
+ * Holds view of entire menu page parsed by tags, menu items are displayed
+ * corresponding to the menu category page clicked on
+ *
  */
+
 export class CustomerMenu extends React.Component {
     constructor(props) {
         super(props);
@@ -191,12 +174,6 @@ export class CustomerMenu extends React.Component {
         // this.handleClick = this.handleClick.bind(this);
 
     }
-
-    // handleClick() {
-    //     this.state = {clicked: true};
-    //     this.setState(this.state);
-    //
-    // }
 
     render() {
         const menuItems = this.props.menuItems.map(menuItem =>
@@ -208,12 +185,12 @@ export class CustomerMenu extends React.Component {
 
             return (
                 <div>
-                    <title>Menu for Customer</title>
-                    {/*<link rel="stylesheet" id="style-css" href="./asset/css/customerLanding.css" type="text/css"*/}
-                          {/*media="all"/>*/}
-                    {/*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"*/}
-                          {/*integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"*/}
-                          {/*crossOrigin="anonymous"/>*/}
+
+                    <link rel="stylesheet" id="style-css" href="../../resources/static/css/Customer.css" type="text/css"
+                          media="all"/>
+                    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+                          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+                          crossOrigin="anonymous"/>
                     <div>
                         <main className>
                             <header className="detail full">
@@ -274,6 +251,7 @@ export class CustomerMenu extends React.Component {
 
 }
 
+// TODO: Implement functionality, take help from the above classes if necessary
 export class CustomerCartPage extends React.Component {
     constructor(props) {
         super(props);
