@@ -189,11 +189,8 @@ export class App extends React.Component {
 
     // let validResources = [];
 
-
-
     filterMenuItemList(options, filterSize){
         this.setState({menuItems: []});
-
         follow(client, root, [
             {rel: 'menuItems', params: {size: filterSize}}
         ]).then(resourceCollection => {

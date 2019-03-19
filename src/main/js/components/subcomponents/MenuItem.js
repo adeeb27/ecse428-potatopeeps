@@ -6,8 +6,14 @@ import ReactDOM from "react-dom";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTrash, faEdit, faAngleDoubleLeft,
-    faAngleDoubleRight, faAngleLeft, faAngleRight} from "@fortawesome/free-solid-svg-icons";
+import "../../../resources/static/css/customerLanding.css";
+import "../../../resources/static/css/manager.css";
+import "../../../resources/static/css/style.css";
+import "../../../resources/static/css/external/bootstrap.min.css";
+import {
+    faTrash, faEdit, faAngleDoubleLeft,
+    faAngleDoubleRight, faAngleLeft, faAngleRight
+} from "@fortawesome/free-solid-svg-icons";
 
 /**
  * This React Component contains all code related to the rendering of a MenuItemList - being either the Customer or
@@ -22,7 +28,7 @@ export class MenuItemList extends React.Component {
 
     render() {
         /* Returns the Manager 'version' of the MenuItemList if the selectedView property is set to Manager. */
-        if(this.props.selectedView === 'Manager')
+        if (this.props.selectedView === 'Manager')
             return (<ManagerMenuItemList menuItems={this.props.menuItems}
                                          pageSize={this.props.pageSize}
                                          attributes={this.props.attributes}
@@ -33,7 +39,7 @@ export class MenuItemList extends React.Component {
                                          onUpdate={this.props.onUpdate}
                                          onDelete={this.props.onDelete}/>);
         /* Returns the Customer 'version' of the MenuItemList if the selectedView property is set to Customer. */
-        else if(this.props.selectedView === 'Customer')
+        else if (this.props.selectedView === 'Customer')
             return (<CustomerMenuItemList menuItems={this.props.menuItems}
                                           pageSize={this.props.pageSize}
                                           attributes={this.props.attributes}
@@ -74,7 +80,7 @@ class ManagerMenuItemList extends React.Component {
         }
     }
 
-    handleNavFirst(e){
+    handleNavFirst(e) {
         e.preventDefault();
         this.props.onNavigate(this.props.menuItemLinks.first.href, 'menuItems');
     }
@@ -107,14 +113,18 @@ class ManagerMenuItemList extends React.Component {
                              menuItem={menuItem}
                              menuItemAttributes={this.props.menuItemAttributes}
                              onUpdate={this.props.onUpdate}
-                             onDelete={this.props.onDelete} />
+                             onDelete={this.props.onDelete}/>
         );
 
         const navLinks = [
-            <Button key="first" variant="outline-primary" onClick={this.handleNavFirst}><FontAwesomeIcon icon={faAngleDoubleLeft}/></Button>,
-            <Button key="prev" variant="outline-primary" onClick={this.handleNavPrev}><FontAwesomeIcon icon={faAngleLeft}/></Button>,
-            <Button key="next" variant="outline-primary" onClick={this.handleNavNext}><FontAwesomeIcon icon={faAngleRight}/></Button>,
-            <Button key="last" variant="outline-primary" onClick={this.handleNavLast}><FontAwesomeIcon icon={faAngleDoubleRight}/></Button>
+            <Button key="first" variant="outline-primary" onClick={this.handleNavFirst}><FontAwesomeIcon
+                icon={faAngleDoubleLeft}/></Button>,
+            <Button key="prev" variant="outline-primary" onClick={this.handleNavPrev}><FontAwesomeIcon
+                icon={faAngleLeft}/></Button>,
+            <Button key="next" variant="outline-primary" onClick={this.handleNavNext}><FontAwesomeIcon
+                icon={faAngleRight}/></Button>,
+            <Button key="last" variant="outline-primary" onClick={this.handleNavLast}><FontAwesomeIcon
+                icon={faAngleDoubleRight}/></Button>
         ];
 
         return (
@@ -127,8 +137,8 @@ class ManagerMenuItemList extends React.Component {
                         <th>Description</th>
                         <th>Price</th>
                         <th>Quantity</th>
-                        <th />
-                        <th />
+                        <th/>
+                        <th/>
                     </tr>
                     {menuItems}
                     </tbody>
@@ -171,7 +181,10 @@ class ManagerMenuItem extends React.Component {
      * Link to Fetch API Introduction: https://developers.google.com/web/updates/2015/03/introduction-to-fetch
      */
     requestTags() {
-        fetch(this.props.menuItem.entity._links.tags.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
+        fetch(this.props.menuItem.entity._links.tags.href, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        })
             .then(
                 response => {
                     if (response.status !== 200) {
@@ -187,7 +200,7 @@ class ManagerMenuItem extends React.Component {
                     });
                 }
             )
-            .catch(function(err) {
+            .catch(function (err) {
                 console.log('Fetch Error :-S', err);
             });
     }
@@ -212,11 +225,12 @@ class ManagerMenuItem extends React.Component {
      * entry in the list - this includes the majority of information about it, along with an update and delete button,
      * that call the onUpdate and onDelete methods defined in App.js, respectively.
      */
-    render(){
+    render() {
 
         const tags = this.state.menuItemTags.map((tag, index) =>
-            <span key={"menu-item-list-tag-" + tag._links.self.href + "-menu-item-" + this.props.menuItem.entity._links.self.href}>
-                {index === this.state.menuItemTags.length -1 ? tag.name : tag.name + ', '}
+            <span
+                key={"menu-item-list-tag-" + tag._links.self.href + "-menu-item-" + this.props.menuItem.entity._links.self.href}>
+                {index === this.state.menuItemTags.length - 1 ? tag.name : tag.name + ', '}
             </span>
         );
 
@@ -235,7 +249,7 @@ class ManagerMenuItem extends React.Component {
                 </td>
                 <td>
                     <button className="btn btn-danger" onClick={this.handleDelete}>
-                        <FontAwesomeIcon icon={faTrash} />
+                        <FontAwesomeIcon icon={faTrash}/>
                     </button>
                 </td>
             </tr>
@@ -256,21 +270,21 @@ class ManagerUpdateMenuItemDialog extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
-        this.state = {modalIsOpen : false, show: false}; // Set the default state of every menu item's modal to be closed
+        this.state = {modalIsOpen: false, show: false}; // Set the default state of every menu item's modal to be closed
     }
 
     /**
      * handleClose - sets the 'show' state variable to false, closing any Update Modal Dialogs currently opened.
      */
     handleClose() {
-        this.setState({ show: false });
+        this.setState({show: false});
     }
 
     /**
      * handleShow - sets the 'show' state variable to true, closing the relevant Update Modal Dialog.
      */
     handleShow() {
-        this.setState({ show: true });
+        this.setState({show: true});
     }
 
 
@@ -299,7 +313,8 @@ class ManagerUpdateMenuItemDialog extends React.Component {
     render() {
         const inputs = this.props.menuItemAttributes.map(attribute =>
             <div key={"row-" + this.props.menuItem.entity._links.self.href + "-" + attribute} className="row">
-                <div key={"col-" + this.props.menuItem.entity._links.self.href + "-" + attribute} className="form-group col">
+                <div key={"col-" + this.props.menuItem.entity._links.self.href + "-" + attribute}
+                     className="form-group col">
                     <label key={"label-" + this.props.menuItem.entity._links.self.href + "-" + attribute}
                            htmlFor={"update-" + this.props.menuItem.entity._links.self.href + "-" + attribute}>
                         {attribute.toUpperCase()}
@@ -325,7 +340,7 @@ class ManagerUpdateMenuItemDialog extends React.Component {
                     </Modal.Header>
                     <Modal.Body>
                         {/*<form>*/}
-                            {inputs}
+                        {inputs}
                         {/*</form>*/}
                     </Modal.Body>
                     <Modal.Footer>
@@ -390,23 +405,22 @@ export class ManagerCreateMenuItemDialog extends React.Component {
                            ref={attribute} className="field form-control"/>
                 </div>
             </div>
-
         );
 
         return (
-                <div className="col-12">
-                    <form>
-                        {formInputs}
-                        <div className="dropdown-divider" />
-                        <div className="row">
-                            <div className="col">
-                                <Button className="btn btn-primary btn-block" onClick={this.handleSubmit}>
-                                    Add Menu Item
-                                </Button>
-                            </div>
+            <div className="col-12">
+                <form>
+                    {formInputs}
+                    <div className="dropdown-divider"/>
+                    <div className="row">
+                        <div className="col">
+                            <Button className="btn btn-primary btn-block" onClick={this.handleSubmit}>
+                                Add Menu Item
+                            </Button>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
+            </div>
         )
     }
 }
@@ -415,43 +429,20 @@ export class ManagerCreateMenuItemDialog extends React.Component {
 class CustomerMenuItemList extends React.Component {
     constructor(props) {
         super(props);
-        this.handleInput = this.handleInput.bind(this);
-        this.handleNavFirst = this.handleNavFirst.bind(this);
-        this.handleNavPrev = this.handleNavPrev.bind(this);
-        this.handleNavNext = this.handleNavNext.bind(this);
-        this.handleNavLast = this.handleNavLast.bind(this);
+        // this.handleInput = this.handleInput.bind(this);
+
     }
 
-    handleInput(e) {
-        e.preventDefault();
-        const pageSize = ReactDOM.findDOMNode(this.refs.pageSize).value;
-        if (/^[0-9]+$/.test(pageSize)) {
-            this.props.updatePageSize(pageSize);
-        } else {
-            ReactDOM.findDOMNode(this.refs.pageSize).value =
-                pageSize.substring(0, pageSize.length - 1);
-        }
-    }
-
-    handleNavFirst(e){
-        e.preventDefault();
-        this.props.onNavigate(this.props.menuItemLinks.first.href, 'menuItems');
-    }
-
-    handleNavPrev(e) {
-        e.preventDefault();
-        this.props.onNavigate(this.props.menuItemLinks.prev.href, 'menuItems');
-    }
-
-    handleNavNext(e) {
-        e.preventDefault();
-        this.props.onNavigate(this.props.menuItemLinks.next.href, 'menuItems');
-    }
-
-    handleNavLast(e) {
-        e.preventDefault();
-        this.props.onNavigate(this.props.menuItemLinks.last.href, 'menuItems');
-    }
+    // handleInput(e) {
+    //     e.preventDefault();
+    //     const pageSize = ReactDOM.findDOMNode(this.refs.pageSize).value;
+    //     if (/^[0-9]+$/.test(pageSize)) {
+    //         this.props.updatePageSize(pageSize);
+    //     } else {
+    //         ReactDOM.findDOMNode(this.refs.pageSize).value =
+    //             pageSize.substring(0, pageSize.length - 1);
+    //     }
+    // }
 
 
     /**
@@ -470,13 +461,6 @@ class CustomerMenuItemList extends React.Component {
             />
         );
 
-        const navLinks = [
-            <Button key="first" variant="outline-primary" onClick={this.handleNavFirst}><FontAwesomeIcon icon={faAngleDoubleLeft}/></Button>,
-            <Button key="prev" variant="outline-primary" onClick={this.handleNavPrev}><FontAwesomeIcon icon={faAngleLeft}/></Button>,
-            <Button key="next" variant="outline-primary" onClick={this.handleNavNext}><FontAwesomeIcon icon={faAngleRight}/></Button>,
-            <Button key="last" variant="outline-primary" onClick={this.handleNavLast}><FontAwesomeIcon icon={faAngleDoubleRight}/></Button>
-        ];
-
         return (
             <div id="menu-items" className="table-responsive">
                 <table id="main-table" className="table table-striped">
@@ -487,25 +471,22 @@ class CustomerMenuItemList extends React.Component {
                         <th>Description</th>
                         <th>Price</th>
                         <th>Quantity</th>
-                        <th />
-                        <th />
+                        <th/>
+                        <th/>
                     </tr>
                     {menuItems}
                     </tbody>
                 </table>
-                <div>
-                    {navLinks}
-                </div>
+
             </div>
         )
     }
 }
 
-class CustomerMenuItem extends React.Component {
+export class CustomerMenuItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {menuItemTags: []};
-        // this.handleDelete = this.handleDelete.bind(this);
         this.requestTags = this.requestTags.bind(this);
     }
 
@@ -525,7 +506,10 @@ class CustomerMenuItem extends React.Component {
      * Link to Fetch API Introduction: https://developers.google.com/web/updates/2015/03/introduction-to-fetch
      */
     requestTags() {
-        fetch(this.props.menuItem.entity._links.tags.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
+        fetch(this.props.menuItem.entity._links.tags.href, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        })
             .then(
                 response => {
                     if (response.status !== 200) {
@@ -541,7 +525,7 @@ class CustomerMenuItem extends React.Component {
                     });
                 }
             )
-            .catch(function(err) {
+            .catch(function (err) {
                 console.log('Fetch Error :-S', err);
             });
     }
@@ -555,9 +539,9 @@ class CustomerMenuItem extends React.Component {
      *
      * Link to componentDidMount() docs: https://reactjs.org/docs/react-component.html#componentdidmount
      */
-    componentDidMount() {
-        this.requestTags();
-    }
+    // componentDidMount() {
+    //     this.requestTags();
+    // }
 
     /**
      * render - Render a React element into the DOM in the supplied container and return a reference to the component
@@ -566,23 +550,37 @@ class CustomerMenuItem extends React.Component {
      * entry in the list - this includes the majority of information about it, along with an update and delete button,
      * that call the onUpdate and onDelete methods defined in App.js, respectively.
      */
-    render(){
-
-        const tags = this.state.menuItemTags.map((tag, index) =>
-            <span key={"menu-item-list-tag-" + tag._links.self.href + "-menu-item-" + this.props.menuItem.entity._links.self.href}>
-                {index === this.state.menuItemTags.length -1 ? tag.name : tag.name + ', '}
-            </span>
-        );
+    render() {
+        //
+        // const tags = this.state.menuItemTags.map((tag, index) =>
+        //     <span key={"menu-item-list-tag-" + tag._links.self.href + "-menu-item-" + this.props.menuItem.entity._links.self.href}>
+        //         {index === this.state.menuItemTags.length -1 ? tag.name : tag.name + ', '}
+        //     </span>
+        // );
+        {/*        <div>
+            <h1>{this.props.menuItem.entity.name}</h1>
+            <h1>{this.props.menuItem.entity.description}</h1>
+            <h1>{this.props.menuItem.entity.price}</h1>
+        </div>*/
+        }
 
         return (
-            <tr>
-                <td>{tags}</td>
-                <td>{this.props.menuItem.entity.name}</td>
-                <td>{this.props.menuItem.entity.description}</td>
-                <td>{this.props.menuItem.entity.price}</td>
-                <td>{this.props.menuItem.entity.inventory}</td>
 
-            </tr>
+            <div className="gridViewItem">
+                <img className="itemImage" draggable="false" src="./img/4.jpg"/>
+                <div className="overlay">
+                    <div className="text">{this.props.menuItem.entity.name}</div>
+                    <div className="text">{this.props.menuItem.entity.description}</div>
+                    <div className="text">{this.props.menuItem.entity.price}</div>
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <button className="add-to-cart-button" title="Add to cart">
+                            <i className="fa fa-shopping-cart" style={{fontSize: '20px'}}/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
         )
     }
 

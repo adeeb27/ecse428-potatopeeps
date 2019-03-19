@@ -2,16 +2,12 @@
 
 /** ----- NPM PACKAGE IMPORTS -----**/
 import React from "react";
-import Select from "react-select";
-import ReactDOM from "react-dom";
-import Button from "./Customer";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
 import "../../resources/static/css/customerLanding.css";
 import "../../resources/static/css/manager.css";
 import "../../resources/static/css/style.css";
 import "../../resources/static/css/external/bootstrap.min.css";
-
+import {CustomerMenuItem} from "./subcomponents/MenuItem";
+import {ManagerCreateTagDialog} from "./subcomponents/Tag"
 
 /**
  * This JS file contains all code related to the rendering of the 'Customer' perspective.
@@ -21,34 +17,12 @@ import "../../resources/static/css/external/bootstrap.min.css";
  */
 
 /***
- * Holds entire page view.
+ * Holds entire page view. Customer Landing page
  * TODO: should include search by Tag bar (drop-down selectable items)
  * @See Tag
  *
  */
 export class Customer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {pageSize: 10, selectedView: 'Customer'};
-    }
-
-    componentDidMount() {
-        this.props.loadResourceFromServer('menuItems', this.state.pageSize);
-        this.props.loadResourceFromServer('tags', this.state.pageSize);
-    }
-
-    render() {
-        return (
-            <CustomerLanding/>
-        )
-    }
-
-}
-
-
-export class CustomerLanding extends React.Component {
-
-
     constructor(props) {
         super(props);
         this.mainPage = 0;
@@ -59,19 +33,17 @@ export class CustomerLanding extends React.Component {
         this.mainCourse = 5;
         this.drink = 6;
         this.dessert = 7;
-        this.state = {pageNum: this.mainPage};
+        this.state = { selectedView: 'Customer', pageNum: this.mainPage};
         this.handleClick = this.handleClick.bind(this);
     }
 
-    // handleClick(pageType, e) {
-    //
-    //     this.state = {pageName: pageType};
-    //     this.setState(this.state)
-    //
-    // }
+
+    componentDidMount() {
+        this.props.loadResourceFromServer('menuItems', this.state.pageSize);
+        this.props.loadResourceFromServer('tags', this.state.pageSize);
+    }
 
     handleClick(button) {
-
         this.state = {pageNum: button};
         this.setState( this.state )
 
@@ -183,8 +155,20 @@ export class CustomerLanding extends React.Component {
             );
         } else if (this.state.pageNum == this.appetizer || this.state.pageNum == this.mainCourse ||
             this.state.pageNum == this.dessert || this.state.pageNum == this.drink) {
+            //TODO: Insert filtering of menuitems by tag, and pass that into menuItems
             return (
-                <CustomerMenu/>
+                <CustomerMenu selectedView={this.state.selectedView}
+                              menuItems={this.props.menuItems} //I.E. pass filtered menuItems here
+                              pageSize={this.props.pageSize}
+                              attributes={this.props.attributes}
+                              menuItemAttributes={this.props.menuItemAttributes}
+                              menuItemLinks={this.props.menuItemLinks}
+                              onNavigate={this.props.onNavigate}
+                              updatePageSize={this.props.updatePageSize}
+                              onUpdate={this.props.onUpdate}
+                              onDelete={this.props.onDelete}
+                              tags={this.props.tags}/>
+
             )
         }
         else if (this.state.pageNum == this.cartNum) {
@@ -216,25 +200,28 @@ export class CustomerLanding extends React.Component {
 export class CustomerMenu extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {pageSize: 10, selectedView: 'Customer'};
-        this.state = {clicked: false};
+        this.state = {pageSize: 10, clicked: false};
         this.handleClick = this.handleClick.bind(this);
 
     }
 
     handleClick() {
-        // this.setState({
-        //     clicked: true
-        //
-        // });
         this.state = {clicked: true};
-        this.setState(this.state)
-        this.setState()
+        this.setState(this.state);
 
     }
 
     render() {
+
+        const menuItems = this.props.menuItems.map(menuItem =>
+            <CustomerMenuItem key={menuItem.entity._links.self.href}
+                              menuItem={menuItem}
+                              menuItemAttributes={this.props.menuItemAttributes}
+            />
+        );
+
         if (!this.state.clicked.valueOf()) {
+            console.log(this.props.tags);
             return (
                 <div>
                     <title>Menu for Customer</title>
@@ -249,96 +236,14 @@ export class CustomerMenu extends React.Component {
                                 <a href="#/customer" onClick={this.handleClick} className="back"
                                    data-transition="slide-from-top"/>
                                 <section>
-                                    <h1>Category 1</h1>
-                                    <h3 className="page-badge">Healthy and Fresh</h3>
+
+                                    <h1>Test Category</h1>
+                                    <h3 className="page-badge">Healthy and Fresh</h3> //TODO: remove
                                 </section>
                             </header>
                             <div className="content-wrap full-width">
                                 <div className="gridViewContainer">
-                                    <div className="gridViewItem">
-                                        <img className="itemImage" draggable="false" src="./img/4.jpg"/>
-                                        <div className="overlay">
-                                            <div className="text">Hello World</div>
-                                            <div className="text">$10.99</div>
-                                            <div style={{display: 'flex', justifyContent: 'center'}}>
-                                                <button className="add-to-cart-button" title="Add to cart">
-                                                    <i className="fa fa-shopping-cart" style={{fontSize: '20px'}}/>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="gridViewItem">
-                                        <img className="itemImage" draggable="false" src="./img/3.jpg"/>
-                                        <div className="overlay">
-                                            <div className="text">Hello World</div>
-                                            <div className="text">$10.99</div>
-                                            <div style={{display: 'flex', justifyContent: 'center'}}>
-                                                <button className="add-to-cart-button" title="Add to cart">
-                                                    <i className="fa fa-shopping-cart" style={{fontSize: '20px'}}/>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="gridViewItem">
-                                        <img className="itemImage" draggable="false" src="./img/2.jpg"/>
-                                        <div className="overlay">
-                                            <div className="text">Hello World</div>
-                                            <div className="text">$10.99</div>
-                                            <div style={{display: 'flex', justifyContent: 'center'}}>
-                                                <button className="add-to-cart-button" title="Add to cart">
-                                                    <i className="fa fa-shopping-cart" style={{fontSize: '20px'}}/>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="gridViewItem">
-                                        <img className="itemImage" draggable="false" src="./img/5.jpg"/>
-                                        <div className="overlay">
-                                            <div className="text">Hello World</div>
-                                            <div className="text">$10.99</div>
-                                            <div style={{display: 'flex', justifyContent: 'center'}}>
-                                                <button className="add-to-cart-button" title="Add to cart">
-                                                    <i className="fa fa-shopping-cart" style={{fontSize: '20px'}}/>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="gridViewItem">
-                                        <img className="itemImage" draggable="false" src="./img/6.jpg"/>
-                                        <div className="overlay">
-                                            <div className="text">Hello World</div>
-                                            <div className="text">$10.99</div>
-                                            <div style={{display: 'flex', justifyContent: 'center'}}>
-                                                <button className="add-to-cart-button" title="Add to cart">
-                                                    <i className="fa fa-shopping-cart" style={{fontSize: '20px'}}/>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="gridViewItem">
-                                        <img className="itemImage" draggable="false" src="./img/4.jpg"/>
-                                        <div className="overlay">
-                                            <div className="text">Hello World</div>
-                                            <div className="text">$10.99</div>
-                                            <div style={{display: 'flex', justifyContent: 'center'}}>
-                                                <button className="add-to-cart-button" title="Add to cart">
-                                                    <i className="fa fa-shopping-cart" style={{fontSize: '20px'}}/>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="gridViewItem">
-                                        <img className="itemImage" draggable="false" src="./img/2.jpg"/>
-                                        <div className="overlay">
-                                            <div className="text">Hello World</div>
-                                            <div className="text">$10.99</div>
-                                            <div style={{display: 'flex', justifyContent: 'center'}}>
-                                                <button className="add-to-cart-button" title="Add to cart">
-                                                    <i className="fa fa-shopping-cart" style={{fontSize: '20px'}}/>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {menuItems}
                                 </div>
                                 <footer>
                                     <div className="signature">
@@ -383,7 +288,7 @@ export class CustomerMenu extends React.Component {
             );
         } else if (this.state.clicked.valueOf()) {
             return (
-                <CustomerLanding/>
+                <Customer/>
             )
         }
     }
