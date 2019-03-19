@@ -7,9 +7,4 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface DiningSessionRepository extends PagingAndSortingRepository<DiningSession, Long> {
-
-    List<DiningSession> findAllByDateAfter(LocalDateTime dateTime);
-
-    List<DiningSession> findAllByDateBefore(LocalDateTime dateTime);
-
 }

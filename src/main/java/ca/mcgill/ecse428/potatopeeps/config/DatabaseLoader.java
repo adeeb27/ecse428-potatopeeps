@@ -1,5 +1,6 @@
 package ca.mcgill.ecse428.potatopeeps.config;
 
+import ca.mcgill.ecse428.potatopeeps.diningsession.DiningSession;
 import ca.mcgill.ecse428.potatopeeps.diningsession.DiningSessionRepository;
 import ca.mcgill.ecse428.potatopeeps.menuitem.MenuItem;
 import ca.mcgill.ecse428.potatopeeps.menuitem.MenuItemRepository;
@@ -34,6 +35,12 @@ public class DatabaseLoader implements CommandLineRunner {
     // stored directly to the connected database.
     @Override
     public void run(String... strings) {
+
+            DiningSession[] diningSessions = new DiningSession[10];
+            for(int i = 0; i < diningSessions.length; i++){
+                diningSessions[i] = new DiningSession(i + 1);
+                this.diningSessionRepository.save(diningSessions[i]);
+            }
 
             Tag[] tags = new Tag[7];
             tags[0] = new Tag("Appetizer");
