@@ -36,10 +36,12 @@ export class Customer extends React.Component {
     }
 
     render() {
+        //TODO: note passing customerDS to the <customer tag, however diningSessionLinks/Attributes arent parsed
+        const customerDS = this.props.filterDiningSessionList('ta_status');
         return (
             <TableNumberSelect
                 handleTableNumberSelect={this.handleTableNumberSelect}
-                diningSessions={this.props.diningSessions}
+                diningSessions={customerDS}
                 diningSessionAttributes={this.props.diningSessionAttributes}
                 history={this.props.history}
                 onUpdate={this.props.onUpdate}/>
@@ -65,6 +67,7 @@ class TableNumberSelect extends React.Component{
         updatedDiningSession['diningSessionStatus'] = 'ACTIVE';
         updatedDiningSession['serviceRequestStatus'] = 'INACTIVE';
         updatedDiningSession['billRequestStatus'] = 'INACTIVE';
+        updatedDiningSession['tableAssignmentStatus'] = 'ASSIGNED';
 
         let oldDiningSession = this.props.diningSessions.find(function(session) {
             return session.entity.tableNumber === parseInt(selectedTableNumber, 10);
@@ -76,6 +79,8 @@ class TableNumberSelect extends React.Component{
 
 
     render() {
+        //const unassigned = this.props.diningSessions.filter(session => session.entity.tableAssignmentStatus === "UNASSIGNED");
+        //console.log("Unassigned is: \n"+unassigned);
         return (
             <div id="main-stn" className={"page main-stn"}>
                 <title>Table number selection</title>

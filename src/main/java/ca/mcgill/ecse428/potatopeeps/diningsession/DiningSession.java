@@ -30,6 +30,17 @@ public class DiningSession implements Serializable {
     }
 
     /**
+     * This enum is needed such that we can keep track of when a diningsession,
+     * consequently when a table # has been assigned to a physical device
+     * since a dinging session might be inactive, but the table number is still assigned
+     *
+     * @author Gabriel
+     */
+    enum TableAssignmentStatus {
+        ASSIGNED, UNASSIGNED
+    }
+
+    /**
      * @param tableNumber will be parsed via React. Method TBD but should be able to track tableNumber
      *
      * I believe
@@ -39,6 +50,7 @@ public class DiningSession implements Serializable {
         this.diningSessionStatus = DiningSessionStatus.INACTIVE;
         this.serviceRequestStatus = ServiceRequestStatus.INACTIVE;
         this.billRequestStatus = BillRequestStatus.INACTIVE; //TODO: Check if these two settings are necessary
+        this.tableAssignmentStatus = TableAssignmentStatus.UNASSIGNED;
     }
 
 
@@ -63,6 +75,10 @@ public class DiningSession implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name="br_status")
     private BillRequestStatus billRequestStatus;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="ta_status")
+    private TableAssignmentStatus tableAssignmentStatus;
 
     @OneToMany(mappedBy="diningSession")
     private List<Order> orders;
