@@ -16,12 +16,6 @@ import {CustomerDiningSessionSelect} from "./subcomponents/DiningSession";
 /** ----- CSS/STYLING IMPORTS -----**/
 import "../../resources/static/css/select_table_num.css";
 
-/** ----- COMPONENT IMPORTS -----**/
-import {CustomerDiningSessionSelect} from "./subcomponents/DiningSession";
-
-/** ----- CSS/STYLING IMPORTS -----**/
-import "../../resources/static/css/select_table_num.css";
-
 /**
  * This JS file contains all code related to the rendering of the 'Customer' perspective.
  * Any components you wish to create related to this perspective should be developed within
@@ -150,7 +144,6 @@ export class CustomerLandingPage extends React.Component {
     }
 
     render(){
-        console.log("A\t"+this.props.location.state.tableNum);
         const tags = this.props.tags.map(tag =>
             <li key={"customer-landing-li-" + tag.entity._links.self.href}>
                <a href ="#" key={"customer-landing-a-" + tag.entity._links.self.href} onClick={(e) => this.handleTagClick(e, tag.entity.name)}  data-transition="slide-to-top" className="internal">
@@ -231,7 +224,6 @@ export class CustomerMenu extends React.Component {
     }
 
     render() {
-        console.log("B\t"+this.props.location.state.tableNum);
             return (
                 <div>
                     <div>
