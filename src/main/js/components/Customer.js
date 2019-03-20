@@ -16,6 +16,12 @@ import {CustomerDiningSessionSelect} from "./subcomponents/DiningSession";
 /** ----- CSS/STYLING IMPORTS -----**/
 import "../../resources/static/css/select_table_num.css";
 
+/** ----- COMPONENT IMPORTS -----**/
+import {CustomerDiningSessionSelect} from "./subcomponents/DiningSession";
+
+/** ----- CSS/STYLING IMPORTS -----**/
+import "../../resources/static/css/select_table_num.css";
+
 /**
  * This JS file contains all code related to the rendering of the 'Customer' perspective.
  * Any components you wish to create related to this perspective should be developed within

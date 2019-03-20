@@ -9,8 +9,6 @@ import { faUser, faKey, faWindowClose } from '@fortawesome/free-solid-svg-icons'
  import "../../resources/static/css/login.css";
 import "../../resources/static/css/select-task.css";
 
-
-
 /**
  * This JS file contains all code related to the rendering of the 'Login' perspective.
  *
