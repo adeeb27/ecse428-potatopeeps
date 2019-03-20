@@ -2,11 +2,13 @@
 
 /** ----- NPM PACKAGE IMPORTS -----**/
 import React from "react";
-import "../../resources/static/css/Customer.css";
-import "../../resources/static/css/manager.css";
 import "../../resources/static/css/style.css";
+import "../../resources/static/css/Customer.css";
 import "../../resources/static/css/external/bootstrap.min.css";
 import {MenuItemList} from "./subcomponents/MenuItem";
+import Button from "react-bootstrap/Button";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faShoppingCart, faDollarSign, faUser, faBell} from "@fortawesome/free-solid-svg-icons";
 
 /**
  * This JS file contains all code related to the rendering of the 'Customer' perspective.
@@ -55,7 +57,7 @@ export class CustomerLandingPage extends React.Component {
 
     handleTagClick(e, selectedTag){
         e.preventDefault();
-        this.props.filterMenuItemList([selectedTag]).then((response) => {
+        this.props.filterMenuItemList('Customer', [selectedTag]).then((response) => {
             this.props.history.push({
                 pathname: '/customer-menu',
                 state: {
@@ -71,12 +73,13 @@ export class CustomerLandingPage extends React.Component {
     render(){
         const tags = this.props.tags.map(tag =>
             <li key={"customer-landing-li-" + tag.entity._links.self.href}>
-               <a key={"customer-landing-a-" + tag.entity._links.self.href} onClick={(e) => this.handleTagClick(e, tag.entity.name)}  data-transition="slide-to-top" className="internal">
+               <a href ="#" key={"customer-landing-a-" + tag.entity._links.self.href} onClick={(e) => this.handleTagClick(e, tag.entity.name)}  data-transition="slide-to-top" className="internal">
                    <section key={"customer-landing-section-" + tag.entity._links.self.href}>
                        <h1 key={"customer-landing-h1-" + tag.entity._links.self.href}>{tag.entity.name}</h1>
-                       <button key={"customer-landing-h5-" + tag.entity._links.self.href} className="badge-rounded">
-                           {"View " + tag.entity.name + "s"}
-                       </button>
+                       <div>
+                           <h5 className="badge-rounded" key={"customer-landing-h5-" + tag.entity._links.self.href}>{"View " + tag.entity.name + "s"}</h5>
+
+                       </div>
                    </section>
                </a>
             </li>
@@ -88,17 +91,20 @@ export class CustomerLandingPage extends React.Component {
                 <div id="wrapper">
                     <main className="main-wrapper">
                         <header className="frontpage">
-                            <button className="landing-page-button" style={{zIndex: 1000}}>
-                                <i className="fas fa-user" style={{fontSize: '20px'}}>    Service Request</i>
-                            </button>
                             <a href="#" className="logo">
                                 <img src="./img/logo.png" alt="Home" />
                             </a>
                             <button className="landing-page-button" style={{zIndex: 1000}}>
-                                <i className="fas fa-dollar-sign" style={{fontSize: '20px'}}>    Bill Request</i>
+                                <FontAwesomeIcon icon={faBell} className="landing-page-header-button-icons"/>
+                                Request Service
                             </button>
                             <button className="landing-page-button" style={{zIndex: 1000}}>
-                                <i className="fa fa-shopping-cart" style={{fontSize: '20px'}} />
+                                <FontAwesomeIcon icon={faDollarSign} className="landing-page-header-button-icons"/>
+                                Request Bill
+                            </button>
+                            <button className="landing-page-button" style={{zIndex: 1000}}>
+                                <FontAwesomeIcon icon={faShoppingCart} className="landing-page-header-button-icons"/>
+                                View Your Cart
                             </button>
                         </header>
                         <nav className="strokes">
@@ -157,8 +163,6 @@ export class CustomerMenu extends React.Component {
                                           menuItems={this.props.location.state.menuItems}
                                           pageSize={this.state.pageSize}
                                           menuItemTags={this.props.menuItemTags}
-                                          onNavigate={this.props.onNavigate}
-                                          onDelete={this.props.onDelete}
                                           filterMenuItemList={this.props.filterMenuItemList}
                                           tagName={this.props.location.state.tagName}
                                           filterMenuitemList={this.props.location.state.filterMenuItemList}/>

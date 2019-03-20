@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faKey } from '@fortawesome/free-solid-svg-icons'
 
 /** ----- CSS/STYLING IMPORTS -----**/
-import "../../resources/static/css/login.css";
+// import "../../resources/static/css/login.css";
 
 /**
  * This JS file contains all code related to the rendering of the 'Login' perspective.
