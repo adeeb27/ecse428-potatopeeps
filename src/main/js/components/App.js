@@ -7,10 +7,10 @@ import {CSSTransition, TransitionGroup} from "react-transition-group";
 const root = "/api"; // Root is a variable used to provide pathing to the uriListConverter
 
 /** ----- COMPONENT IMPORTS -----**/
-import {Login} from "./Login";
+import {Login, SelectTask} from "./Login";
 import {Staff} from "./Staff";
 import {Manager} from "./Manager";
-import {Customer, CustomerMenu} from "./Customer";
+import {Customer, CustomerMenu, CustomerLandingPage} from "./Customer";
 
 /** ----- TUTORIAL API IMPORTS -----**/
 import follow from "../follow";
@@ -72,6 +72,7 @@ export class App extends React.Component {
         this.onNavigate = this.onNavigate.bind(this);
         this.updatePageSize = this.updatePageSize.bind(this);
         this.filterMenuItemList = this.filterMenuItemList.bind(this);
+        this.filterDiningSessionList = this.filterDiningSessionList.bind(this);
         this.loadResourceFromServer = this.loadResourceFromServer.bind(this);
     }
 
@@ -214,6 +215,40 @@ export class App extends React.Component {
         });
     }
 
+
+    /**
+     *  Function to filter a list DiningSessions, to be used by Customer (TableNumberSelect) & Staff
+     * @param option, defaulted to column name from DiningSession but holds no importance
+     *              Note: option must be passed in as a single 'qoute' not "qoute"
+     * @returns {Array} holding the filtered diningsessions
+     * @see Customer.js, Staff.js, DiningSession.java
+     * @author Gabriel
+     *
+     * TODO: validate props vs state, modify br_status & sr_status
+     */
+    filterDiningSessionList(option){
+        let filteredList = [];
+        switch(option){
+            case 'ta_status':
+                filteredList = this.state.diningSessions.filter(
+                    session => session.entity.tableAssignmentStatus === "UNASSIGNED");
+                break;
+            case 'br_status':
+                filteredList = this.state.diningSessions.filter(
+                    session => session.entity.billRequestStatus === "ACTIVE");
+                break;
+            case 'sr_status':
+                filteredList = this.state.diningSessions.filter(
+                    session => session.entity.serviceRequestStatus === "ACTIVE");
+                break;
+
+            default: //invalid option for filtering return all
+                console.log("ERROR: Invalid option for filterDiningSessionList returning default");
+                filteredList = this.state.diningSessions;
+        }
+        return filteredList
+    }
+
     filterMenuItemList(selectedView, selectedTags){
         let validMenuItems;
         if (selectedTags.length === 0) {
@@ -245,11 +280,7 @@ export class App extends React.Component {
                             return validMenuItems;
                         });
             }
-
-
         }
-
-
     }
 
     /**
@@ -458,13 +489,14 @@ export class App extends React.Component {
                     <TransitionGroup>
                         <CSSTransition key={location.pathname} timeout={30000} classNames="fade" >
                             <Switch location={location}>
-                                <Route exact path={"/login"} component={Login}/>
+                                <Route exact path={["/login", "/"]} component={Login}/>
                                 <Route path={"/customer"} render={(props) =>
                                     (<Customer loadResourceFromServer={this.loadResourceFromServer}
                                                                       onCreate={this.onCreate}
                                                                       onUpdate={this.onUpdate}
                                                                       onDelete={this.onDelete}
                                                                       onNavigate={this.onNavigate}
+                                                                      filterDiningSessionList={this.filterDiningSessionList}
                                                                       diningSessions={this.state.diningSessions}
                                                                       diningSessionLinks={this.state.diningSessionLinks}
                                                                       filterMenuItemList={this.filterMenuItemList}
@@ -511,20 +543,39 @@ export class App extends React.Component {
                                                                     {...props}/>)}/>
                                 <Route path={"/customer-menu"} render={(props) =>
                                     (<CustomerMenu loadResourceFromServer={this.loadResourceFromServer}
-                                            onCreate={this.onCreate}
-                                            onUpdate={this.onUpdate}
-                                            onDelete={this.onDelete}
-                                            onNavigate={this.onNavigate}
-                                            diningSessions={this.state.diningSessions}
-                                            diningSessionLinks={this.state.diningSessionLinks}
-                                            diningSessionAttributes={this.state.diningSessionAttributes}
-                                            orders={this.state.orders}
-                                            orderLinks={this.state.orderLinks}
-                                            orderAttributes={this.state.orderAttributes}
-                                            menuItemTags={this.state.menuItemTags}
-                                            selectedView={'Customer'}
-                                            filterMenuItemList={this.filterMenuItemList}
-                                            {...props}/>)}/>
+                                                                    onCreate={this.onCreate}
+                                                                    onUpdate={this.onUpdate}
+                                                                    onDelete={this.onDelete}
+                                                                    onNavigate={this.onNavigate}
+                                                                    diningSessions={this.state.diningSessions}
+                                                                    diningSessionLinks={this.state.diningSessionLinks}
+                                                                    diningSessionAttributes={this.state.diningSessionAttributes}
+                                                                    orders={this.state.orders}
+                                                                    orderLinks={this.state.orderLinks}
+                                                                    orderAttributes={this.state.orderAttributes}
+                                                                    menuItemTags={this.state.menuItemTags}
+                                                                    selectedView={'Customer'}
+                                                                    filterMenuItemList={this.filterMenuItemList}
+                                                                    {...props}/>)}/>
+                                <Route path={"/CustomerLanding"} render={(props) =>
+                                    (<CustomerLandingPage loadResourceFromServer={this.loadResourceFromServer}
+                                                   onCreate={this.onCreate}
+                                                   onUpdate={this.onUpdate}
+                                                   onDelete={this.onDelete}
+                                                   onNavigate={this.onNavigate}
+                                                   diningSessions={this.state.diningSessions}
+                                                   diningSessionLinks={this.state.diningSessionLinks}
+                                                   diningSessionAttributes={this.state.diningSessionAttributes}
+                                                   orders={this.state.orders}
+                                                   orderLinks={this.state.orderLinks}
+                                                   orderAttributes={this.state.orderAttributes}
+                                                   menuItems={this.props.menuItems}
+                                                   menuItemTags={this.state.menuItemTags}
+                                                   tags={this.state.tags}
+                                                   selectedView={'Customer'}
+                                                   filterMenuItemList={this.filterMenuItemList}
+                                                   {...props}/>)}/>
+                                <Route exact path={"/selectTask"} component={SelectTask}/>
                             </Switch>
                         </CSSTransition>
                     </TransitionGroup>

@@ -16,7 +16,7 @@ public class Order {
     }
 
     enum OrderStatus {
-        ONGOING, COMPLETED;
+        ORDERED, PROGRESS, READY, SERVED
     }
 
     /***
@@ -30,14 +30,7 @@ public class Order {
         this.price = price;
         this.quantity = quantity;
         this.menuItem = menuItem;
-        this.status = OrderStatus.ONGOING;
-        /* TODO: creation of dining session
-         *  Can either implement here, however running into issues saving to the other table
-         *  or have react create a diningsession and pass it in to the other constructor
-         */
-//        DiningSession dsession = new DiningSession(tableNumber);
-//        this.diningSessionRepository.save(dsession);
-//        this.diningSession = dsession;
+        this.status = OrderStatus.ORDERED;
     }
 
 
@@ -50,7 +43,7 @@ public class Order {
         this.quantity = quantity;
         this.menuItem = item;
         this.diningSession = session;
-        this.status = OrderStatus.ONGOING;
+        this.status = OrderStatus.ORDERED;
     }
 
     @Id
