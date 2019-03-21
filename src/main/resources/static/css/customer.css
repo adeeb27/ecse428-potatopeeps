@@ -1078,14 +1078,14 @@ Homepage navigation
 /* ----------------------------
 SELECT TABLE NUMBER VIEW STYLING
 ------------------------------- */
-.main-stn {
+.customer-page {
   background-image: url("../img/7.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   font-family: "Courier New", Courier, monospace;
 }
 
-#main-stn {
+.customer-page {
   background-image: url(../img/7.jpg);
   background-size: cover;
   height: 100%;

@@ -93,20 +93,22 @@ class TableNumberSelect extends React.Component{
 
     render() {
         return (
-            <div id="main-stn" className={"page main-stn"}>
-                <title>Table number selection</title>
-                <div className="background-stn">
-                    <div className="shadow-stn">
-                    </div>
-                    <div className="content-stn">
-                        <div className="h-item-stn">
-                            <h2 className="h2-stn">Please select a table number</h2>
+            <div className="page customer-page">
+                <div id="main-stn" className={"page main-stn"}>
+                    <title>Table number selection</title>
+                    <div className="background-stn">
+                        <div className="shadow-stn">
                         </div>
-                        <div className="table">
-                            <CustomerDiningSessionSelect diningSessions={this.props.diningSessions}/>
-                        </div>
-                        <div className="submit-button">
-                            <button type="button" className="submit-stn" onClick={this.handleTableNumberSelect}>Submit</button>
+                        <div className="content-stn">
+                            <div className="h-item-stn">
+                                <h2 className="h2-stn">Please select a table number</h2>
+                            </div>
+                            <div className="table">
+                                <CustomerDiningSessionSelect diningSessions={this.props.diningSessions}/>
+                            </div>
+                            <div className="submit-button">
+                                <button type="button" className="submit-stn" onClick={this.handleTableNumberSelect}>Submit</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -220,7 +222,7 @@ export class CustomerMenu extends React.Component {
 
     render() {
             return (
-                <div>
+                <div className="page customer-menu-page">
                     <div>
                         <main>
                             <header className="detail full">
