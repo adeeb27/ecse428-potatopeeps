@@ -7,7 +7,6 @@ import { faUser, faKey, faWindowClose } from '@fortawesome/free-solid-svg-icons'
 
 /** ----- CSS/STYLING IMPORTS -----**/
  import "../../resources/static/css/login.css";
-import "../../resources/static/css/select-task.css";
 
 /**
  * This JS file contains all code related to the rendering of the 'Login' perspective.
@@ -56,10 +55,10 @@ export class Login extends React.Component {
     render() {
         return (
             <div id="login-page" className={"page login-page"}>
-                <div className="loginbox">
-                    <div className="content">
-                        <form onSubmit={this.handleSubmit}>
-                            <h1>WELCOME</h1>
+                <div id="login-box">
+                    <div id="login-content">
+                        <form id="login-form" onSubmit={this.handleSubmit}>
+                            <h1 id="login-welcome-header">WELCOME</h1>
                             <div className="form-group">
                                 <FontAwesomeIcon icon={faUser}/>
                                 <input type="text" name="username" className="login-input" value={this.state.user} onChange={this.handleUserChange}/>

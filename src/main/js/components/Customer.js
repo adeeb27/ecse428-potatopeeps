@@ -2,20 +2,15 @@
 
 /** ----- NPM PACKAGE IMPORTS -----**/
 import React from "react";
-import "../../resources/static/css/style.css";
-import "../../resources/static/css/Customer.css";
-import "../../resources/static/css/external/bootstrap.min.css";
-import {MenuItemList} from "./subcomponents/MenuItem";
-import Button from "react-bootstrap/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faShoppingCart, faDollarSign, faUser, faBell} from "@fortawesome/free-solid-svg-icons";
 
 /** ----- COMPONENT IMPORTS -----**/
 import {CustomerDiningSessionSelect} from "./subcomponents/DiningSession";
+import {MenuItemList} from "./subcomponents/MenuItem";
 
 /** ----- CSS/STYLING IMPORTS -----**/
-import "../../resources/static/css/select_table_num.css";
-
+import "../../resources/static/css/customer.css";
 /**
  * This JS file contains all code related to the rendering of the 'Customer' perspective.
  * Any components you wish to create related to this perspective should be developed within

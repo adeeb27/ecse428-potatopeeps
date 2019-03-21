@@ -1,7 +1,7 @@
 /*@import "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";*/
 
 
-.loginbox {
+#login-box {
 	width: 660px;
 	height: 400px;
 	top: 50%;
@@ -14,7 +14,7 @@
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.content {
+#login-content {
 	width: 350px;
 	height: 400px;
 	margin-left: auto;
@@ -23,32 +23,32 @@
   	background-color: rgba(179, 230, 255, 0.5);
 }
 
-h1 {
+#login-form {
+	position: relative;
+  	top: 50%;
+  	transform: translateY(-50%);
+}
+
+#login-welcome-header {
 	margin: 0;
 	padding: 0 0 20px;
 	font-size: 35px;
 	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
 }
 
-form {
-	position: relative;
-  	top: 50%;
-  	transform: translateY(-50%);
-}
-
-.input-group input {
-	height: 30px;
-	width: 50%;
-	padding: 5px 10px;
-	margin: 0 0 10px;
-	border: none;
-	outline: none;
-	background: none;
-	color: white;
-	font-size: 20px;
-	border-bottom: 1px solid rgb(0, 122, 153);
-	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-}
+/*.input-group input {*/
+	/*height: 30px;*/
+	/*width: 50%;*/
+	/*padding: 5px 10px;*/
+	/*margin: 0 0 10px;*/
+	/*border: none;*/
+	/*outline: none;*/
+	/*background: none;*/
+	/*color: white;*/
+	/*font-size: 20px;*/
+	/*border-bottom: 1px solid rgb(0, 122, 153);*/
+	/*font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;*/
+/*}*/
 
 #login-page {
 	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
@@ -74,6 +74,39 @@ form {
 .login-input:focus{
 	outline: none !important;
 }
+
+/* ------------------------
+SELECT-TASK COMPONENT STYLING
+-------------------------- */
+
+.main-st {
+	height: 100%;
+	margin: 0;
+}
+
+#main-st {
+	height: 100%;
+	margin: 0;
+}
+
+.bg-st {
+	height: 100%;
+	background: url("../img/background1.jpg") no-repeat center;
+	background-size: cover;
+	text-align: center;
+}
+
+.column-st {
+	background-color: #000;
+	opacity: 0.6;
+}
+
+.column-st:hover {
+	opacity: 0.3;
+	transition: opacity 0.5s ease-in-out;
+}
+
+
 
 #select-task-header{
 	color: aliceblue;

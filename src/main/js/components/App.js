@@ -18,7 +18,6 @@ import client from "../client";
 import when from "when";
 
 /** ----- CSS/STYLING IMPORTS -----**/
-// import "../../resources/static/css/style.css"; /** TEMPORARILY REMOVED PENDING REFACTORING BY UI TEAM. **/
 import "../../resources/static/css/route-transition.css";
 
 /**
@@ -38,8 +37,6 @@ import "../../resources/static/css/route-transition.css";
  *
  * @Author Evan Bruchet, Gabriel Negash
 * */
-
-let validResources = [];
 
 export class App extends React.Component {
 
@@ -251,39 +248,6 @@ export class App extends React.Component {
         return filteredList
     }
 
-    /**
-     *  Function to filter a list DiningSessions, to be used by Customer (TableNumberSelect) & Staff
-     * @param option, defaulted to column name from DiningSession but holds no importance
-     *              Note: option must be passed in as a single 'qoute' not "qoute"
-     * @returns {Array} holding the filtered diningsessions
-     * @see Customer.js, Staff.js, DiningSession.java
-     * @author Gabriel
-     *
-     * TODO: validate props vs state, modify br_status & sr_status
-     */
-    filterDiningSessionList(option){
-        let filteredList = [];
-        switch(option){
-            case 'ta_status':
-                filteredList = this.state.diningSessions.filter(
-                    session => session.entity.tableAssignmentStatus === "UNASSIGNED");
-                break;
-            case 'br_status':
-                filteredList = this.state.diningSessions.filter(
-                    session => session.entity.billRequestStatus === "ACTIVE");
-                break;
-            case 'sr_status':
-                filteredList = this.state.diningSessions.filter(
-                    session => session.entity.serviceRequestStatus === "ACTIVE");
-                break;
-
-            default: //invalid option for filtering return all
-                console.log("ERROR: Invalid option for filterDiningSessionList returning default");
-                filteredList = this.state.diningSessions;
-        }
-        return filteredList
-    }
-
     filterMenuItemList(selectedView, selectedTags){
         let validMenuItems;
         if (selectedTags.length === 0) {
@@ -303,7 +267,6 @@ export class App extends React.Component {
                             return validMenuItems;
                         });
                 case('Manager'):
-                    let tagValues = selectedTags.map(selTag => selTag.label);
                     validMenuItems = this.state.menuItemTags
                         .filter(menuItemTag =>
                             selectedTags.map(selTag => selTag.label)
@@ -357,12 +320,11 @@ export class App extends React.Component {
      */
     onUpdate(resource, updatedResource, resourceType) {
         client({
-            method: 'PUT',
+            method: 'PATCH',
             path: resource.entity._links.self.href,
             entity: updatedResource,
             headers: {
                 'Content-Type': 'application/json'
-                // 'If-Match': menuItem.headers.Etag
             }
         }).done(() => {
             this.loadResourceFromServer(resourceType, this.state.pageSize);
@@ -524,7 +486,7 @@ export class App extends React.Component {
                     <TransitionGroup>
                         <CSSTransition key={location.pathname} timeout={30000} classNames="fade" >
                             <Switch location={location}>
-                                <Route exact path={["/login", "/"]} component={Login}/>
+                                <Route exact path={"/login"} component={Login}/>
                                 <Route path={"/customer"} render={(props) =>
                                     (<Customer loadResourceFromServer={this.loadResourceFromServer}
                                                                       onCreate={this.onCreate}

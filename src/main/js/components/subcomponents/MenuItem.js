@@ -3,13 +3,10 @@
 /** ----- NPM PACKAGE IMPORTS -----**/
 import React from "react";
 import ReactDOM from "react-dom";
+import Select from "react-select";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import "../../../resources/static/css/Customer.css";
-import "../../../resources/static/css/manager.css";
-import "../../../resources/static/css/style.css";
-import "../../../resources/static/css/external/bootstrap.min.css";
 import {
     faTrash, faEdit, faAngleDoubleLeft,
     faAngleDoubleRight, faAngleLeft, faAngleRight,
@@ -31,6 +28,7 @@ export class MenuItemList extends React.Component {
         /* Returns the Manager 'version' of the MenuItemList if the selectedView property is set to Manager. */
         if (this.props.selectedView === 'Manager')
             return (<ManagerMenuItemList menuItems={this.props.menuItems}
+                                         tags={this.props.tags}
                                          pageSize={this.props.pageSize}
                                          attributes={this.props.attributes}
                                          menuItemAttributes={this.props.menuItemAttributes}
@@ -52,8 +50,6 @@ export class MenuItemList extends React.Component {
                                           filterMenuItemList={this.props.filterMenuItemList}
                                           customerFilter={this.props.customerFilter}
                                           tagName={this.props.tagName}/>);
-
-
     }
 }
 
@@ -115,6 +111,7 @@ class ManagerMenuItemList extends React.Component {
             <ManagerMenuItem key={menuItem.entity._links.self.href}
                              menuItem={menuItem}
                              menuItemAttributes={this.props.menuItemAttributes}
+                             tags={this.props.tags}
                              onUpdate={this.props.onUpdate}
                              onDelete={this.props.onDelete}/>
         );
@@ -193,10 +190,8 @@ class ManagerMenuItem extends React.Component {
                     if (response.status !== 200) {
                         console.log('Looks like there was a problem. Status Code: ' +
                             response.status);
-                        return;
                     }
 
-                    // Examine the text in the response
                     response.json().then((data) => {
                         this.setState({menuItemTags: data._embedded.tags});
                     });
@@ -245,8 +240,11 @@ class ManagerMenuItem extends React.Component {
                 <td>{this.props.menuItem.entity.inventory}</td>
                 <td>
 
-                    <ManagerUpdateMenuItemDialog menuItem={this.props.menuItem}
+                    <ManagerUpdateMenuItemDialog tags={this.props.tags}
+                                                 menuItem={this.props.menuItem}
                                                  menuItemAttributes={this.props.menuItemAttributes}
+                                                 menuItemTags={this.state.menuItemTags}
+                                                 requestTags={this.requestTags}
                                                  onUpdate={this.props.onUpdate}/>
                 </td>
                 <td>
@@ -266,12 +264,16 @@ class ManagerMenuItem extends React.Component {
  *
  * @author Gabriel Negash, Evan Bruchet
  */
+let updateSelectTagPaths = [];
+
 class ManagerUpdateMenuItemDialog extends React.Component {
     constructor(props) {
         super(props);
+        this.state={selectedOptions: []};
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.handleSelectChange = this.handleSelectChange.bind(this);
         this.state = {modalIsOpen: false, show: false}; // Set the default state of every menu item's modal to be closed
     }
 
@@ -289,7 +291,6 @@ class ManagerUpdateMenuItemDialog extends React.Component {
         this.setState({show: true});
     }
 
-
     /**
      * handleSubmit - handles the submission of the update request on the given menuItem, by calling the onUpdate function
      * defined in App.js.
@@ -302,9 +303,22 @@ class ManagerUpdateMenuItemDialog extends React.Component {
             updatedMenuItem[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
         });
 
+        updatedMenuItem['tags'] = updateSelectTagPaths;
         this.props.onUpdate(this.props.menuItem, updatedMenuItem, 'menuItems');
+        this.props.requestTags('update');
+        setTimeout(() => {
+            this.props.requestTags('update')
+        }, 100);
+
         this.handleClose();
     }
+
+    handleSelectChange(selectedTags) {
+        updateSelectTagPaths = [];
+        this.setState({selectedOptions: selectedTags});
+        selectedTags.map(selectedTag => updateSelectTagPaths.push(selectedTag.key));
+    }
+
 
     /**
      * render - Render a React element into the DOM in the supplied container and return a reference to the component.
@@ -319,7 +333,7 @@ class ManagerUpdateMenuItemDialog extends React.Component {
                      className="form-group col">
                     <label key={"label-" + this.props.menuItem.entity._links.self.href + "-" + attribute}
                            htmlFor={"update-" + this.props.menuItem.entity._links.self.href + "-" + attribute}>
-                        {attribute.toUpperCase()}
+                        {attribute.charAt(0).toUpperCase() + attribute.slice(1)}
                     </label>
                     <input key={"input-" + this.props.menuItem.entity._links.self.href + "-" + attribute}
                            id={"update-" + this.props.menuItem.entity._links.self.href + "-" + attribute}
@@ -330,6 +344,16 @@ class ManagerUpdateMenuItemDialog extends React.Component {
             </div>
         );
 
+        const tagList = this.props.tags.map(tag =>
+            ({label: tag.entity.name, value: tag.entity.name, key: tag.entity._links.self.href}));
+
+        const existingTagList = this.props.tags.map(tag =>
+            ({label: tag.entity.name, value: tag.entity.name, key: tag.entity._links.self.href}))
+                .filter(tag => this.props.menuItemTags
+                    .map(menuItemTag => menuItemTag.name)
+                        .includes(tag.label));
+
+        const { selectedOptions } = this.state;
 
         return (
             <div>
@@ -342,6 +366,18 @@ class ManagerUpdateMenuItemDialog extends React.Component {
                     </Modal.Header>
                     <Modal.Body>
                         {inputs}
+                        <div className="row">
+                            <div className="form-group col">
+                                <label>
+                                    Tags
+                                </label>
+                                <Select value={selectedOptions}
+                                        defaultValue={existingTagList}
+                                        options={tagList}
+                                        onChange={selectedTags => this.handleSelectChange(selectedTags)}
+                                        isMulti />
+                            </div>
+                        </div>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={this.handleClose}>
@@ -355,7 +391,6 @@ class ManagerUpdateMenuItemDialog extends React.Component {
             </div>
         )
     }
-
 }
 
 
@@ -363,10 +398,17 @@ class ManagerUpdateMenuItemDialog extends React.Component {
  * Holds the code related to creating menu items from the Manager 'view'.
  * @author Ryan Dotsikas, Evan Bruchet
  */
+
+let selectedTagPaths = [];
+
 export class ManagerCreateMenuItemDialog extends React.Component {
     constructor(props) {
         super(props);
+        this.state={
+            selectedOptions: []
+        };
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSelectChange = this.handleSelectChange.bind(this);
     }
 
     handleSubmit(e) {
@@ -375,6 +417,9 @@ export class ManagerCreateMenuItemDialog extends React.Component {
         this.props.menuItemAttributes.forEach(attribute => {
             newMenuItem[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
         });
+
+        newMenuItem['tags'] = selectedTagPaths;
+
         this.props.onCreate(newMenuItem, 'menuItems');
 
         // clear out the dialog's inputs
@@ -382,6 +427,13 @@ export class ManagerCreateMenuItemDialog extends React.Component {
             ReactDOM.findDOMNode(this.refs[attribute]).value = '';
         });
 
+        this.setState({selectedOptions: []});
+    }
+
+    handleSelectChange(selectedTags) {
+        selectedTagPaths = [];
+        this.setState({selectedOptions: selectedTags});
+        selectedTags.map(selectedTag => selectedTagPaths.push(selectedTag.key));
     }
 
     /**
@@ -407,10 +459,27 @@ export class ManagerCreateMenuItemDialog extends React.Component {
             </div>
         );
 
+        const tagList = (this.props.tags.map(tag =>
+            ({label: tag.entity.name, value: tag.entity.name, key: tag.entity._links.self.href})
+        ));
+
+        const { selectedOptions } = this.state;
+
         return (
             <div className="col-12">
                 <form>
                     {formInputs}
+                    <div className="row">
+                        <div className="form-group col">
+                            <label>
+                                Tags
+                            </label>
+                            <Select value={selectedOptions}
+                                    options={tagList}
+                                    onChange={selectedTags => this.handleSelectChange(selectedTags)}
+                                    isMulti />
+                        </div>
+                    </div>
                     <div className="dropdown-divider"/>
                     <div className="row">
                         <div className="col">
