@@ -308,7 +308,7 @@ class ManagerUpdateMenuItemDialog extends React.Component {
         this.props.requestTags('update');
         setTimeout(() => {
             this.props.requestTags('update')
-        }, 100);
+        }, 500);
 
         this.handleClose();
     }
