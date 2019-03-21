@@ -7,7 +7,6 @@ import { faUser, faKey, faWindowClose } from '@fortawesome/free-solid-svg-icons'
 
 /** ----- CSS/STYLING IMPORTS -----**/
  import "../../resources/static/css/login.css";
-import "../../resources/static/css/select-task.css";
 
 /**
  * This JS file contains all code related to the rendering of the 'Login' perspective.
@@ -56,10 +55,10 @@ export class Login extends React.Component {
     render() {
         return (
             <div id="login-page" className={"page login-page"}>
-                <div className="loginbox">
-                    <div className="content">
-                        <form onSubmit={this.handleSubmit}>
-                            <h1>WELCOME</h1>
+                <div id="login-box">
+                    <div id="login-content">
+                        <form id="login-form" onSubmit={this.handleSubmit}>
+                            <h1 id="login-welcome-header">WELCOME</h1>
                             <div className="form-group">
                                 <FontAwesomeIcon icon={faUser}/>
                                 <input type="text" name="username" className="login-input" value={this.state.user} onChange={this.handleUserChange}/>
@@ -113,35 +112,37 @@ export class SelectTask extends React.Component {
     }
 
 
-
     render() {
         return (
-            <div id="main-st" className={"page main-st"}>
-                <div className="bg-st">
-                    <h1><FontAwesomeIcon icon={faWindowClose} id="select-task-cancel" onClick={this.cancel}/></h1>
-                    <h1 id="select-task-header">Select Task</h1>
-                    <div className="container-fluid h-100">
-                        <div className="row h-100">
-                            <div className="col-4 column-st" onClick={this.goToCustomerPage}>
-                                <div className="select-task-columns d-flex justify-content-center flex-column h-100">
-                                    Customer
+            <div className="page login-page">
+                <div id="main-st" className={"page main-st"}>
+                    <div className="bg-st">
+                        <h1><FontAwesomeIcon icon={faWindowClose} id="select-task-cancel" onClick={this.cancel}/></h1>
+                        <h1 id="select-task-header">Select Task</h1>
+                        <div className="container-fluid h-100">
+                            <div className="row h-100">
+                                <div className="col-4 column-st" onClick={this.goToCustomerPage}>
+                                    <div className="select-task-columns d-flex justify-content-center flex-column h-100">
+                                        Customer
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="col-4 column-st" onClick={this.goToStaffPage}>
-                                <div className="select-task-columns d-flex justify-content-center flex-column h-100">
-                                    Staff
+                                <div className="col-4 column-st" onClick={this.goToStaffPage}>
+                                    <div className="select-task-columns d-flex justify-content-center flex-column h-100">
+                                        Staff
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="col-4 column-st" onClick={this.goToManagerPage}>
-                                <div className="select-task-columns d-flex justify-content-center flex-column h-100">
-                                    Manager
+                                <div className="col-4 column-st" onClick={this.goToManagerPage}>
+                                    <div className="select-task-columns d-flex justify-content-center flex-column h-100">
+                                        Manager
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
+
          );
      }
 }

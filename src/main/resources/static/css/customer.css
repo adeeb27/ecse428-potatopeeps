@@ -4,127 +4,7 @@ Mixins, normalize and browser fixes.
 
 ----------------------------------------------- */
 
-/* Set default font family to sans-serif & prevent IOS text size adjus after orietnation change */
-html {
-  font-family: sans-serif;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-}
 
-/* Remove default body margin */
-body {
-  margin: 0;
-}
-/* HTML5 display definitions. */
-main,
-header,
-footer,
-section {
-  display: block;
-}
-/* Firefox @fontface cleanup */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-  font-weight: normal;
-}
-/* Normalize opentypes */
-html,
-body {
-  -webkit-font-feature-settings: "kern" 1, "liga" 1, "pnum" 1, "tnum" 0, "onum" 1, "lnum" 0, "dlig" 0;
-  font-feature-settings: "kern" 1, "liga" 1, "pnum" 1, "tnum" 0, "onum" 1, "lnum" 0, "dlig" 0;
-}
-h1,
-h2,
-h3 {
-  -webkit-font-feature-settings: "kern" 1, "liga" 1, "pnum" 1, "tnum" 0, "onum" 1, "lnum" 0, "dlig" 1;
-  font-feature-settings: "kern" 1, "liga" 1, "pnum" 1, "tnum" 0, "onum" 1, "lnum" 0, "dlig" 1;
-}
-
-/* --------------------------------------------
-
-Typography and styling for typograpic elements
-
------------------------------------------------ */
-/* Add font smoothing to typographic elements */
-p,
-span,
-a,
-h1,
-h2,
-h3,
-h4,
-h5,
-strong {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-/* Set lineheights and margins for elements*/
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-span {
-  line-height: 1.2;
-  margin: 0 0 .35em 0;
-}
-/* Set paragraph properties */
-p {
-  line-height: 1.7em;
-  text-align: left;
-  margin: 20px 0;
-}
-/* General header styling */
-h1 {
-  font-size: 38px;
-  font-size: 3.8rem;
-  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.4);
-  font-weight: 700;
-}
-h2 {
-  font-size: 26px;
-  font-size: 2.6rem;
-  font-weight: 700;
-}
-h3 {
-  font-size: 21px;
-  font-size: 2.1rem;
-}
-h4 {
-  font-size: 16px;
-  font-size: 1.6rem;
-}
-h5 {
-  font-size: 14px;
-  font-size: 1.4rem;
-}
-h6 {
-  font-size: 10px;
-  font-size: 1rem;
-}
-p,
-span {
-  font-size: 15px;
-  font-size: 1.5rem;
-}
-/* Style anchors in lists and paragraphs */
-p a,
-ul a,
-ol a {
-  text-decoration: underline;
-}
-/* Basic anchor styling and transitions */
-a {
-  text-decoration: none;
-  color: #6c9bae;
-}
 /* Styling for the signature shown in the footer */
 .signature {
   padding: 20px 0;
@@ -135,24 +15,22 @@ a {
   color: #e52f1b;
   letter-spacing: 2px;
   margin: 0;
+  font-size: 9px;
 }
 .signature h5 {
   font-size: 48px;
-  font-size: 4.8rem;
   font-family: 'kristimedium', serif;
   margin: 0 0 0 0;
 }
 @media only screen and (max-width: 667px) {
   .signature h5 {
     font-size: 30px;
-    font-size: 3rem;
   }
 }
 
 /* Styling for badges (element with background) and rounded corners */
 .page-badge {
   font-size: 14px;
-  font-size: 1.4rem;
   letter-spacing: 1px;
   display: inline-block;
   padding: .6em 1em;
@@ -225,7 +103,8 @@ Icon definitions & styling for easy use
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-i {
+
+i .fa, i .fas, i .far {
   display: inline-block;
   vertical-align: middle;
 }
@@ -242,22 +121,19 @@ Selections and general setup
   text-shadow: none;
 }
 
-html {
+.category-title, .cart-title {
+  font-size: 44px;
+}
+
+#wrapper {
   background-color: rgba(0, 0, 0, 0.95);
   font: normal 62.5%/1em 'montserratregular', sans-serif;
-  height: 100%;
   color: #FFFFFF;
-  overflow: hidden;
   line-height: 1.7;
 }
-/* Define the body styling and rules */
-body {
-  width: 100%;
-  height: 100%;
-}
-body main {
+
+.main-wrapper {
   font-size: 14px;
-  font-size: 1.4rem;
   z-index: 10;
   position: absolute;
   display: block;
@@ -268,11 +144,8 @@ body main {
   overflow: visible;
   overflow-y: scroll;
 }
-@media only screen and (max-width: 667px), only screen and (max-width: 667px) and (orientation : landscape), only screen and (min-width: 768px) and (max-width: 1024px) {
-  body main {
-    -webkit-overflow-scrolling: touch;
-  }
-}
+
+
 .hide {
   opacity: 0;
 }
@@ -288,11 +161,40 @@ body main {
 Homepage header (Which shows logo or back (X) button)
 
 ----------------------------------------------- */
-header {
-  position: relative;
-  /* Styling of the header for detail pages */
-}
 
+header .logo {
+  z-index: 11;
+  position: relative;
+  display: none;
+  cursor: auto;
+}
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation : landscape), only screen and (min-width: 1025px) {
+  header .logo {
+    display: block;
+  }
+}
+header .logo img {
+  width: auto;
+  margin: 25px;
+  max-height: 70px;
+  cursor: auto;
+}
+@media only screen and (min-width: 1025px) {
+  header .logo img {
+    max-width: 350px;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation : landscape) {
+  header .logo img {
+    max-width: 250px;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  header .logo img {
+    max-width: 150px;
+    margin: 50px 0 10px;
+  }
+}
 header .back {
   -webkit-transform: translateX(-50%);
   -ms-transform: translateX(-50%);
@@ -358,6 +260,7 @@ header.detail {
   text-align: center;
 }
 header.detail.full {
+  position: relative;
   background-color: rgba(0, 0, 0, 0.9);
 }
 header.detail * {
@@ -375,12 +278,7 @@ header.detail section {
 header.detail section h1 {
   margin: 0;
 }
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation : landscape), only screen and (min-width: 1025px) {
-  header.detail section h1 {
-    font-size: 44px;
-    font-size: 4.4rem;
-  }
-}
+
 @media only screen and (max-width: 667px) and (orientation : landscape) {
   header.detail {
     height: 70vh;
@@ -391,6 +289,14 @@ header.menu-header,
 header.content-header,
 header.contact-header {
   text-align: center;
+}
+
+.frontpage {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
 }
 
 
@@ -426,6 +332,7 @@ The background slideshow
   width: 100%;
   height: 100%;
   z-index: 0;
+  background-color: rgba(0, 0, 0, 0.95);
 }
 #slideshow li {
   background-size: cover;
@@ -441,41 +348,6 @@ The background slideshow
   animation: fadeIn 30s linear infinite 0s;
 
 }
-
-li#slideshow-5{
-  background-image: url(../img/5.jpg);
-  display: block;
-  z-index: 0;
-}
-
-li#slideshow-3{
-  background-image: url(../img/3.jpg);
-  display: block;
-  z-index: 0;
-  animation-delay: 6s;
-}
-
-li#slideshow-6{
-  background-image: url(../img/6.jpg);
-  display: block;
-  z-index: 0;
-  animation-delay: 12s;
-}
-
-li#slideshow-4{
-  background-image: url(../img/4.jpg);
-  display: block;
-  z-index: 0;
-  animation-delay: 18s;
-}
-
-#slideshow-2{
-  background-image: url(../img/2.jpg);
-  display: block;
-  z-index: 0;
-  animation-delay: 24s;
-}
-
 @-webkit-keyframes fadeIn {
   0% {
     opacity: 0;
@@ -623,7 +495,6 @@ Food Item
   padding: 11px;
   min-width: 77px;
   position: absolute;
-  left: 39%;
   top: 110%
 }
 
@@ -653,6 +524,7 @@ Food Item
   font-style: normal;
 }
 
+
 /* --------------------------------------------
 
 Cart
@@ -665,13 +537,13 @@ Cart
   margin-left: 0;
 }
 
-table {
+.cart-table {
     border-collapse: collapse;
     width: 88%;
     font-size: 18px;
 }
 
-.table thead th {
+.cart-table thead th {
     vertical-align: bottom;
     border-top: 2px solid #dee2e6;
     color: #000;
@@ -679,25 +551,25 @@ table {
     border-color: #dee2e6;
 }
 
-.table td, .table th {
-    padding: 1.55rem;
+.cart-table td, .cart-table th {
+    padding: 0.95rem;
     vertical-align: center;
     text-align: center;
     border-bottom: 1px solid #dee2e6;
 }
 
-.table th .item-preview {
+.cart-table th .item-preview {
   width: 90px;
   height: 60px;
   border-radius: 10px;
 }
 
-.table .fa-times-circle {
+.cart-table .fa-times-circle {
   font-size: 22px;
   cursor: pointer;
 }
 
-.table .fa-times-circle:hover {
+.cart-table .fa-times-circle:hover {
   color: rgba(229,56,36,0.8);
 }
 
@@ -781,7 +653,7 @@ input[type=number]::-webkit-outer-spin-button {
   padding: 0 6%;
 }
 
-.cart-help-button {
+.cart-help-button, .landing-page-button {
   color: #fff;
   cursor: pointer;
   margin-bottom: 10px;
@@ -882,8 +754,10 @@ select#soflow, select#soflow-color {
    -webkit-padding-end: 20px;
    -webkit-padding-start: 2px;
    -webkit-user-select: none;
-  background: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5) no-repeat 97% center;
-  border: 1px solid #AAA;
+   background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+   background-position: 97% center;
+   background-repeat: no-repeat;
+   border: 1px solid #AAA;
    color: #000;
    font-size: inherit;
    margin: 20px;
@@ -934,10 +808,343 @@ Requests
 }
 
 .answeringReq:hover .answerStatus {
-  transition: .5s ease;
+  transition: .2s ease;
   margin-top: -46px
 }
 
-#root, .App, .App > div:not(.nav), .page{
+
+/* --------------------------------------------
+
+Homepage navigation
+
+----------------------------------------------- */
+.strokes {
+  z-index: 1;
+  overflow-y: scroll;
+  position: relative;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation : landscape), only screen and (min-width: 1025px) {
+  .strokes {
+    position: absolute;
+    overflow-x: scroll;
+    overflow-y: hidden;
+  }
+}
+.strokes ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  white-space: nowrap;
+}
+.strokes ul li {
+  width: 100vw;
+  height: 25vh;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .strokes ul li {
+    height: 20vh;
+  }
+}
+.strokes ul li a {
+  -webkit-transition: background-color 0.4s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+  transition: background-color 0.4s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+  display: block;
   height: 100%;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+.strokes ul li a section {
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
+  position: relative;
+  top: 50%;
+}
+.strokes ul li a section h1 {
+  font-size: 24px;
+  letter-spacing: 0;
+}
+.strokes ul li a section h5 {
+  line-height: 1em;
+  margin-bottom: .1em;
+  font-size: 14px;
+}
+.strokes ul li a section * {
+  margin-top: 0;
+}
+.strokes ul li h6 {
+  font-weight: 100;
+  letter-spacing: 1px;
+  opacity: .7;
+}
+@media only screen and (max-width: 667px) and (orientation : landscape) {
+  .strokes ul li {
+    height: 35vh;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation : landscape), only screen and (min-width: 1025px) {
+  .strokes ul li {
+    display: inline-block;
+    width: 25vw;
+    height: 100vh;
+  }
+}
+@media only screen and (min-width: 1025px) {
+  .strokes ul li a {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  .strokes ul li a section * {
+    -webkit-transition: all 0.5s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+    transition: all 0.5s cubic-bezier(0.4, 0.01, 0.165, 0.99);
+    -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+    opacity: 0;
+  }
+  .strokes ul li a section h5 {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .strokes ul li a section h1 {
+    font-size: 28px;
+    opacity: 1;
+  }
+  .strokes ul li a:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #FFFFFF;
+  }
+  .strokes ul li a:hover section * {
+    opacity: 1;
+  }
+  .strokes ul li a:hover section h1 {
+    opacity: 1;
+  }
+  .strokes ul li a:hover section h5 {
+    -webkit-transform: translateY(-1);
+        -ms-transform: translateY(-1);
+            transform: translateY(-1);
+    opacity: 1;
+  }
+}
+
+.badge-rounded {
+  display: inline-block;
+  padding: .6em .9em;
+  background: rgba(229,56,36,0.8);
+  border-radius: 1em;
+  font-style: italic;
+  letter-spacing: 1px;
+  font-family: 'merriweather-italic', serif;
+}
+
+
+.notification-box {
+  position: fixed;
+  z-index: 99;
+  top: 21%;
+  left: 10.5%;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+}
+.notification-bell {
+  animation: bell 1s 1s both infinite;
+}
+.notification-bell * {
+  display: block;
+  margin: 0 auto;
+  background-color: #fff;
+  box-shadow: 0px 0px 15px #fff;
+}
+.bell-top {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px 3px 0 0;
+}
+.bell-middle {
+  width: 25px;
+  height: 25px;
+  margin-top: -1px;
+  border-radius: 12.5px 12.5px 0 0;
+}
+.bell-bottom {
+  position: relative;
+  z-index: 0;
+  width: 32px;
+  height: 2px;
+}
+.bell-bottom::before,
+.bell-bottom::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+}
+.bell-bottom::before {
+  left: 1px;
+  border-bottom: 4px solid #fff;
+  border-right: 0 solid transparent;
+  border-left: 4px solid transparent;
+}
+.bell-bottom::after {
+  right: 1px;
+  border-bottom: 4px solid #fff;
+  border-right: 4px solid transparent;
+  border-left: 0 solid transparent;
+}
+.bell-rad {
+  width: 8px;
+  height: 4px;
+  margin-top: 2px;
+  border-radius: 0 0 4px 4px;
+  animation: rad 1s 2s both infinite;
+}
+.notification-count {
+  position: absolute;
+  z-index: 1;
+  top: -6px;
+  right: -6px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 18px;
+  border-radius: 50%;
+  background-color: #ff4927;
+  color: #fff;
+  animation: zoom 3s 3s both infinite;
+}
+@keyframes bell {
+  0% { transform: rotate(0); }
+  10% { transform: rotate(30deg); }
+  20% { transform: rotate(0); }
+  80% { transform: rotate(0); }
+  90% { transform: rotate(-30deg); }
+  100% { transform: rotate(0); }
+}
+@keyframes rad {
+  0% { transform: translateX(0); }
+  10% { transform: translateX(6px); }
+  20% { transform: translateX(0); }
+  80% { transform: translateX(0); }
+  90% { transform: translateX(-6px); }
+  100% { transform: translateX(0); }
+}
+@keyframes zoom {
+  0% { opacity: 0; transform: scale(0); }
+  10% { opacity: 1; transform: scale(1); }
+  50% { opacity: 1; }
+  51% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes moon-moving {
+  0% {
+    transform: translate(-200%, 600%);
+  }
+  100% {
+    transform: translate(800%, -200%);
+  }
+}
+
+.landing-page-button:hover {
+  background-color: #fff;
+  color: black;
+  transition: .5s ease-in-out;
+}
+
+.landing-page-button:focus {
+  outline: none;
+}
+
+.customer-tag-buttons{
+  background: transparent !important;
+  color: white !important;
+}
+
+.customer-header-buttons{
+  font-size: 24px !important;
+}
+
+.landing-page-header-button-icons{
+  margin-right: 2px !important;
+}
+
+
+
+/* ----------------------------
+SELECT TABLE NUMBER VIEW STYLING
+------------------------------- */
+.customer-page {
+  background-image: url("../img/7.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.customer-page {
+  background-image: url(../img/7.jpg);
+  background-size: cover;
+  height: 100%;
+  background-repeat: no-repeat;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.h2-stn {
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.shadow-stn {
+  background-color: #000;
+  opacity: 0.7;
+}
+
+.content-stn {
+  margin-top: 100px;
+  display: block;
+  text-align: center;
+  position: absolute;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+}
+
+.h-item-stn {
+  font-size: 35px;
+  letter-spacing: -3px;
+  color: #fff;
+  z-index: 100;
+}
+
+.tableID-stn {
+  position: relative;
+  font-size: 15px;
+  width: 200px;
+  height: 30px;
+  color: black;
+  font-weight: 300;
+  background: rgb(192,192,192);
+  box-shadow: 1px 2px 10px -2px rgba(0,0,0,0.3);
+  border-radius: 30px;
+  padding: 2px 32px;
+  margin: 50px 2px;
+  transition: all 375ms ease-in-out;
+  border: 2px solid black;
+}
+
+.submit-stn {
+  color: black;
+  font-size: 110%;
+  border-radius: 4px;
+  background: rgb(192,192,192);
+  border-radius: 30px;
+  padding: 2px 32px;
+  margin: 10px 2px;
+  border: 2px solid black;
+  cursor: pointer;
+  font-family: "Courier New", Courier, monospace;
 }

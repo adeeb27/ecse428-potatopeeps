@@ -94,6 +94,7 @@ export class Manager extends React.Component {
                             <MenuItemList selectedView={this.state.selectedView}
                                           menuItems={this.props.menuItems}
                                           pageSize={this.state.pageSize}
+                                          tags={this.props.tags}
                                           menuItemAttributes={this.props.menuItemAttributes}
                                           menuItemLinks={this.props.menuItemLinks}
                                           onNavigate={this.props.onNavigate}
@@ -112,6 +113,8 @@ export class Manager extends React.Component {
                                     {/* Renders a ManagerCreateMenuItemDialog component here */}
                                     <ManagerCreateMenuItemDialog menuItemAttributes={this.props.menuItemAttributes}
                                                                  menuItemLinks={this.props.menuItemLinks}
+                                                                 tags={this.props.tags}
+                                                                 tagList={tagList}
                                                                  onCreate={this.props.onCreate}/>
                                 </div>
 
