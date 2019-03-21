@@ -1,0 +1,31 @@
+/* -----------------
+STAFF LANDING STYLING
+-------------------- */
+.staff-slideshow-elements{
+    display: block;
+    z-index: 0;
+}
+
+#staff-slideshow-element-first{
+    background-image: url(../img/5.jpg);
+}
+
+#staff-slideshow-element-second{
+    background-image: url(../img/3.jpg);
+    animation-delay: 6s !important;
+}
+
+#staff-slideshow-element-third{
+    background-image: url(../img/6.jpg);
+    animation-delay: 12s !important;
+}
+
+#staff-slideshow-element-fourth{
+    background-image: url(../img/4.jpg);
+    animation-delay: 18s !important;
+}
+
+#staff-slideshow-element-fifth{
+    background-image: url(../img/2.jpg);
+    animation-delay: 24s !important;
+}

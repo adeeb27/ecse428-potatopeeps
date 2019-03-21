@@ -1,4 +1,11 @@
+/** ----- NPM PACKAGE IMPORTS -----**/
 import React from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+
+/** ----- COMPONENT IMPORTS -----**/
+
+/** ----- CSS/STYLING IMPORTS -----**/
+import "../../resources/static/css/staff.css";
 
 /**
  * This JS file contains all code related to the rendering of the 'Staff' perspective.
@@ -10,105 +17,114 @@ import React from "react";
 export class Staff extends React.Component {
     render() {
         return (
-            <div className={"page"}>
-                <StaffLanding/>
+            <div className={"page staff-page"}>
+                <StaffLanding orders={this.props.orders}
+                              orderAttributes={this.props.orderAttributes}
+                              diningSessions={this.props.diningSessions}
+                              diningSessionsAttributes={this.props.diningSessionAttributes}
+                              selectedView={this.props.selectedView}/>
             </div>
         )
     }
 }
 
 class StaffLanding extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleClickOrders = this.handleClickOrders.bind(this);
+        this.handleClickRequests = this.handleClickRequests.bind(this);
+    }
 
+    // Method called when attempting to navigate to the 'Staff Requests' page
+    handleClickRequests(){
+        this.props.history.push({
+            pathname: '/staff-requests',
+            state: {}
+        })
+    }
 
+    // Method called when attempting to navigate to the 'Staff Orders' page
+    handleClickOrders(){
+        this.props.history.push({
+            pathname: '/staff-orders',
+            state: {}
+        })
+    }
 
-    render(){
+    render() {
         return (
             <div>
-        <title>Menu for Staff</title>
-        <link rel="stylesheet" id="style-css" href="./asset/css/style.css" type="text/css" media="all" />
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossOrigin="anonymous" />
-        <div>
-          <main className>
-            <header className="detail full">
-              <a href="#" className="back" data-transition="slide-from-top" />
-              <section>
-                <h1>Category 1</h1>
-                <h3 className="page-badge">Healthy and Fresh</h3>    
-              </section>
-            </header>
-            <div className="content-wrap full-width">
-              <div className="gridViewContainer">
-                <div className="gridViewItem">               
-                  <img className="itemImage" draggable="false" src="./asset/4.jpg" />               
-                  <div className="overlay">
-                    <div className="text">Hello World</div>
-                    <div className="text">$10.99</div>
-                  </div> 
+                <title>Menu for Staff</title>
+                <div id="wrapper">
+                    <main className = "main-wrapper">
+                        <header className="frontpage">
+                            <a href="#" className="back" data-transition="slide-from-top"/>
+                            <section>
+                                <h1>Category 1</h1>
+                                <h3 className="page-badge">Healthy and Fresh</h3>
+                            </section>
+                        </header>
+                        <div className="content-wrap full-width">
+                            /* Deleted the sample list of menu items as we do not need to see the menu items from staff*/
+                            <footer>
+                                <div className="signature">
+                                    <h6>Sushi</h6>
+                                    <h5>PotatoPeeps</h5>
+                                </div>
+                            </footer>
+                        </div>
+                    </main>
                 </div>
-                <div className="gridViewItem">               
-                  <img className="itemImage" draggable="false" src="./asset/3.jpg" />               
-                  <div className="overlay">
-                    <div className="text">Hello World</div>
-                    <div className="text">$10.99</div>
-                  </div> 
-                </div>
-                <div className="gridViewItem">               
-                  <img className="itemImage" draggable="false" src="./asset/2.jpg" />               
-                  <div className="overlay">
-                    <div className="text">Hello World</div>
-                    <div className="text">$10.99</div>
-                  </div> 
-                </div>
-                <div className="gridViewItem">               
-                  <img className="itemImage" draggable="false" src="./asset/5.jpg" />               
-                  <div className="overlay">
-                    <div className="text">Hello World</div>
-                    <div className="text">$10.99</div>
-                  </div> 
-                </div>
-                <div className="gridViewItem">               
-                  <img className="itemImage" draggable="false" src="./asset/6.jpg" />               
-                  <div className="overlay">
-                    <div className="text">Hello World</div>
-                    <div className="text">$10.99</div>
-                  </div> 
-                </div>
-                <div className="gridViewItem">               
-                  <img className="itemImage" draggable="false" src="./asset/4.jpg" />               
-                  <div className="overlay">
-                    <div className="text">Hello World</div>
-                    <div className="text">$10.99</div>
-                  </div> 
-                </div>
-                <div className="gridViewItem">               
-                  <img className="itemImage" draggable="false" src="./asset/2.jpg" />               
-                  <div className="overlay">
-                    <div className="text">Hello World</div>
-                    <div className="text">$10.99</div>
-                  </div> 
-                </div>
-              </div>
-              <footer>
-                <div className="signature">
-                  <h6>Sushi</h6>
-                  <h5>PotatoPeeps</h5>
-                </div>
-              </footer>        
+                <ul id="slideshow">
+                    <li id="staff-slideshow-element-first" className="staff-slideshow-elements"/>
+                    <li id="staff-slideshow-element-second" className="staff-slideshow-elements"/>
+                    <li id="staff-slideshow-element-third" className="staff-slideshow-elements"/>
+                    <li id="staff-slideshow-element-fourth" className="staff-slideshow-elements"/>
+                    <li id="staff-slideshow-element-fifth" className="staff-slideshow-elements"/>
+                </ul>
             </div>
-          </main>
-        </div>
-        <a href="#" id="back-to-top">
-          <i className="icon bg icon-UpArrow" />
-        </a>		
-        <ul id="slideshow">
-          <li style={{backgroundImage: 'url("./asset/5.jpg")', display: 'block', zIndex: 0}} />
-          <li style={{backgroundImage: 'url("./asset/3.jpg")', display: 'block', zIndex: 0, animationDelay: '6s'}} />
-          <li style={{backgroundImage: 'url("./asset/6.jpg")', display: 'block', zIndex: 0, animationDelay: '12s'}} />
-          <li style={{backgroundImage: 'url("./asset/4.jpg")', display: 'block', zIndex: 0, animationDelay: '18s'}} />
-          <li style={{backgroundImage: 'url("./asset/2.jpg")', display: 'block', zIndex: 0, animationDelay: '24s'}} />
-        </ul>
-      </div>
         )
+    }
+}
+
+
+/**
+ * This component should contain the 'page' for the staff member to view all the current customer requests,
+ * either bill or service requests.
+ *
+ * See 'Customer-Menu' component in Customer.js for an example of how to navigate to this page and connect it
+ * to the Staff component above.
+ */
+export class StaffRequests extends React.Component {
+    constructor(props){
+        super(props);
+    }
+
+    render() {
+        return(
+          <div>
+
+          </div>
+        );
+    }
+}
+
+
+/**
+ * This component should contain the 'page' for the staff member to view all the current orders,
+ * generated by customers.
+ */
+export class StaffOrders extends React.Component {
+    constructor(props){
+        super(props);
+    }
+
+    render() {
+        return(
+            <div>
+
+            </div>
+        );
     }
 
 }

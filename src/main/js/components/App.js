@@ -8,7 +8,7 @@ const root = "/api"; // Root is a variable used to provide pathing to the uriLis
 
 /** ----- COMPONENT IMPORTS -----**/
 import {Login, SelectTask} from "./Login";
-import {Staff} from "./Staff";
+import {Staff, StaffOrders, StaffRequests} from "./Staff";
 import {Manager} from "./Manager";
 import {Customer, CustomerMenu, CustomerLandingPage} from "./Customer";
 
@@ -573,6 +573,9 @@ export class App extends React.Component {
                                                    filterMenuItemList={this.filterMenuItemList}
                                                    {...props}/>)}/>
                                 <Route exact path={"/selectTask"} component={SelectTask}/>
+                                <Route exact path={"/staff-requests"} component={StaffRequests}/>
+                                <Route exact path={"/staff-orders"} component={StaffOrders}/>
+
                             </Switch>
                         </CSSTransition>
                     </TransitionGroup>
