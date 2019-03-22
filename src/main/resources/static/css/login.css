@@ -89,7 +89,7 @@ SELECT-TASK COMPONENT STYLING
 	margin: 0;
 }
 
-.login-page {
+.select-page {
 	height: 100%;
 	background: url("../img/background1.jpg") no-repeat center;
 	background-size: cover;
@@ -104,6 +104,7 @@ SELECT-TASK COMPONENT STYLING
 .column-st:hover {
 	opacity: 0.3;
 	transition: opacity 0.5s ease-in-out;
+	cursor: pointer;
 }
 
 

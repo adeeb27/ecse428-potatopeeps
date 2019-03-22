@@ -114,7 +114,7 @@ export class SelectTask extends React.Component {
 
     render() {
         return (
-            <div className="page login-page">
+            <div className="page select-page">
                 <div id="main-st" className={"page main-st"}>
                     <div className="bg-st">
                         <h1><FontAwesomeIcon icon={faWindowClose} id="select-task-cancel" onClick={this.cancel}/></h1>
