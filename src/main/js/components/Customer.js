@@ -147,7 +147,7 @@ export class CustomerLandingPage extends React.Component {
                    <section key={"customer-landing-section-" + tag.entity._links.self.href}>
                        <h1 key={"customer-landing-h1-" + tag.entity._links.self.href}>{tag.entity.name}</h1>
                        <div>
-                           <h5 className="badge-rounded" key={"customer-landing-h5-" + tag.entity._links.self.href}>{"View " + tag.entity.name + "s"}</h5>
+                           <h5 className="staff-badge-rounded" key={"customer-landing-h5-" + tag.entity._links.self.href}>{"View " + tag.entity.name + "s"}</h5>
 
                        </div>
                    </section>
@@ -159,9 +159,9 @@ export class CustomerLandingPage extends React.Component {
             <div>
                 <title>Welcome to PotatoPeeps Sushi</title>
                 <div id="wrapper">
-                    <main className="main-wrapper">
-                        <header className="frontpage">
-                            <a href="#" className="logo">
+                    <main className="staff-main-wrapper">
+                        <header className="staff-frontpage">
+                            <a href="#" className="staff-logo">
                                 <img src="./img/logo.png" alt="Home" />
                             </a>
                             <button className="landing-page-button" style={{zIndex: 1000}}>
@@ -177,7 +177,7 @@ export class CustomerLandingPage extends React.Component {
                                 View Your Cart
                             </button>
                         </header>
-                        <nav className="strokes">
+                        <nav className="staff-strokes">
                             <ul id="navigation">
                                 {tags}
                             </ul>
@@ -185,7 +185,7 @@ export class CustomerLandingPage extends React.Component {
                     </main>
                 </div>
                 <a href="#" id="back-to-top">
-                    <i className="icon bg icon-UpArrow" />
+                    <i className="icon staff-bg staff-icon-UpArrow" />
                 </a>
                 <ul id="slideshow">
                     <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}} />
@@ -404,7 +404,7 @@ export class CustomerCartPage extends React.Component {
                         </div>
                     </main></div>
                 <a href="#" id="back-to-top">
-                    <i className="icon bg icon-UpArrow" />
+                    <i className="icon staff-bg staff-icon-UpArrow" />
                 </a>
                 <ul id="slideshow">
                     <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}} />

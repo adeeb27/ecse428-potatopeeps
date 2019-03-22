@@ -1,11 +1,12 @@
 /** ----- NPM PACKAGE IMPORTS -----**/
 import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faShoppingCart, faDollarSign, faUser, faBell} from "@fortawesome/free-solid-svg-icons";
 
 /** ----- COMPONENT IMPORTS -----**/
 
 /** ----- CSS/STYLING IMPORTS -----**/
-import "../../resources/static/css/staff.css";
+import "../../resources/static/css/customer.css";
 
 /**
  * This JS file contains all code related to the rendering of the 'Staff' perspective.
@@ -54,35 +55,30 @@ class StaffLanding extends React.Component {
     render() {
         return (
             <div>
-                <title>Menu for Staff</title>
-                <div id="wrapper">
-                    <main className = "main-wrapper">
-                        <header className="frontpage">
-                            <a href="#" className="back" data-transition="slide-from-top"/>
-                            <section>
-                                <h1>Category 1</h1>
-                                <h3 className="page-badge">Healthy and Fresh</h3>
-                            </section>
-                        </header>
-                        <div className="content-wrap full-width">
-                            /* Deleted the sample list of menu items as we do not need to see the menu items from staff*/
-                            <footer>
-                                <div className="signature">
-                                    <h6>Sushi</h6>
-                                    <h5>PotatoPeeps</h5>
-                                </div>
-                            </footer>
-                        </div>
-                    </main>
+                <title>Staff Landing Page</title>
+                {/*<FontAwesomeIcon icon={faBell} className="landing-page-header-button-icons"/>*/}
+                {/*<link rel="stylesheet" id="style-css" href="./css/staff.css" type="text/css" media="all"></link>l*/}
+                {/*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossOrigin="anonymous"></link>*/}
+                <div id = "staff-wrapper">
+                    {/*<main className="staff-main-wrapper">*/}
+
+                    <header className="staff-frontpage">
+                        <a href="#" className="staff-logo">
+                            <img src="./img/logo.png" alt="Home"/>
+                        </a>
+                    </header>
+                    <button>Request</button>
+                    <button>All Orders</button>
+                    <button>Menus</button>
+
                 </div>
-                <ul id="slideshow">
-                    <li id="staff-slideshow-element-first" className="staff-slideshow-elements"/>
-                    <li id="staff-slideshow-element-second" className="staff-slideshow-elements"/>
-                    <li id="staff-slideshow-element-third" className="staff-slideshow-elements"/>
-                    <li id="staff-slideshow-element-fourth" className="staff-slideshow-elements"/>
-                    <li id="staff-slideshow-element-fifth" className="staff-slideshow-elements"/>
-                </ul>
+                <a href="#" id="back-to-top">
+                    <i className="icon staff-bg staff-icon-UpArrow"></i>
+                </a>
+
             </div>
+
+
         )
     }
 }
