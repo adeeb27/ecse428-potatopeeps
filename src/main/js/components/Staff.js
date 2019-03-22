@@ -73,8 +73,20 @@ class StaffLanding extends React.Component {
                                 </div>
                             </footer>
                         </div>
+                        <StaffDiningSession
+                            selectedView={this.state.selectedView}
+                            diningSessions={this.props.diningSessions}
+                            pageSize={this.state.pageSize}
+                            diningSessionAttributes={this.props. diningSessionAttributes}
+                            diningSessionLinks={this.props.diningSessionLinks}
+                            onNavigate={this.props.onNavigate}
+                            updatePageSize={this.props.updatePageSize}
+                            onUpdate={this.props.onUpdate}
+                            onDelete={this.props.onDelete}
+                        />
                     </main>
                 </div>
+                
                 <ul id="slideshow">
                     <li id="staff-slideshow-element-first" className="staff-slideshow-elements"/>
                     <li id="staff-slideshow-element-second" className="staff-slideshow-elements"/>
