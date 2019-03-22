@@ -170,7 +170,11 @@ class ManagerMenuItem extends React.Component {
      * defined in App.js.
      */
     handleDelete() {
-        this.props.onDelete(this.props.menuItem, 'menuItems');
+
+        let confirmation = confirm("Are you sure you want to delete item?");
+        if (confirmation == true){
+            this.props.onDelete(this.props.menuItem, 'menuItems');
+        }
     }
 
     /**
