@@ -6,7 +6,7 @@ import {faShoppingCart, faDollarSign, faUser, faBell} from "@fortawesome/free-so
 /** ----- COMPONENT IMPORTS -----**/
 
 /** ----- CSS/STYLING IMPORTS -----**/
-import "../../resources/static/css/customer.css";
+import "../../resources/static/css/staff.css";
 
 /**
  * This JS file contains all code related to the rendering of the 'Staff' perspective.
@@ -56,26 +56,24 @@ class StaffLanding extends React.Component {
         return (
             <div>
                 <title>Staff Landing Page</title>
-                {/*<FontAwesomeIcon icon={faBell} className="landing-page-header-button-icons"/>*/}
-                {/*<link rel="stylesheet" id="style-css" href="./css/staff.css" type="text/css" media="all"></link>l*/}
-                {/*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossOrigin="anonymous"></link>*/}
                 <div id = "staff-wrapper">
-                    {/*<main className="staff-main-wrapper">*/}
-
                     <header className="staff-frontpage">
                         <a href="#" className="staff-logo">
                             <img src="./img/logo.png" alt="Home"/>
                         </a>
                     </header>
-                    <button>Request</button>
-                    <button>All Orders</button>
-                    <button>Menus</button>
-
+                    {/*<FontAwesomeIcon icon={faBell} className="landing-page-header-button-icons"/>*/}
                 </div>
-                <a href="#" id="back-to-top">
-                    <i className="icon staff-bg staff-icon-UpArrow"></i>
-                </a>
-
+                <div className="staff-navigation">
+                    <div className="staff-overlay">
+                        <div className="staff-nav-btn-wrapper">
+                            <button className="staff-nav-btn">Request</button>
+                        </div>
+                        <div className="staff-nav-btn-wrapper">
+                            <button className="staff-nav-btn">All Orders</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
 
