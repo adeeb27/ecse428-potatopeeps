@@ -1,6 +1,7 @@
 /** ----- NPM PACKAGE IMPORTS -----**/
 import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faShoppingCart, faDollarSign, faUser, faBell} from "@fortawesome/free-solid-svg-icons";
 
 /** ----- COMPONENT IMPORTS -----**/
 
@@ -18,7 +19,9 @@ export class Staff extends React.Component {
     render() {
         return (
             <div className={"page staff-page"}>
-                <StaffLanding orders={this.props.orders}
+                <StaffLanding history={this.props.history}
+                              orders={this.props.orders}
+                              onUpdate={this.props.onUpdate}
                               orderAttributes={this.props.orderAttributes}
                               diningSessions={this.props.diningSessions}
                               diningSessionsAttributes={this.props.diningSessionAttributes}
@@ -36,53 +39,53 @@ class StaffLanding extends React.Component {
     }
 
     // Method called when attempting to navigate to the 'Staff Requests' page
-    handleClickRequests(){
+    handleClickRequests(e) {
+        e.preventDefault();
         this.props.history.push({
             pathname: '/staff-requests',
-            state: {}
+            state: {onUpdate: this.props.onUpdate,
+                    diningSessions: this.props.diningSessions,
+                    diningSessionAttributes: this.props.diningSessionAttributes,
+                    selectedView: this.props.selectedView}
         })
     }
 
     // Method called when attempting to navigate to the 'Staff Orders' page
-    handleClickOrders(){
+    handleClickOrders(e) {
+        e.preventDefault();
         this.props.history.push({
             pathname: '/staff-orders',
-            state: {}
+            state: {onUpdate: this.props.onUpdate,
+                    orders: this.props.orders,
+                    orderAttributes: this.props.orderAttributes,
+                    selectedView: this.props.selectedView}
         })
     }
 
     render() {
         return (
             <div>
-                <title>Menu for Staff</title>
-                <div id="wrapper">
-                    <main className = "main-wrapper">
-                        <header className="frontpage">
-                            <a href="#" className="back" data-transition="slide-from-top"/>
-                            <section>
-                                <h1>Category 1</h1>
-                                <h3 className="page-badge">Healthy and Fresh</h3>
-                            </section>
-                        </header>
-                        <div className="content-wrap full-width">
-                            /* Deleted the sample list of menu items as we do not need to see the menu items from staff*/
-                            <footer>
-                                <div className="signature">
-                                    <h6>Sushi</h6>
-                                    <h5>PotatoPeeps</h5>
-                                </div>
-                            </footer>
-                        </div>
-                    </main>
+                <title>Staff Landing Page</title>
+                <div id="staff-wrapper">
+                    <header className="staff-frontpage">
+                        <a href="#" className="staff-logo">
+                            <img src="./img/logo.png" alt="Home"/>
+                        </a>
+                    </header>
                 </div>
-                <ul id="slideshow">
-                    <li id="staff-slideshow-element-first" className="staff-slideshow-elements"/>
-                    <li id="staff-slideshow-element-second" className="staff-slideshow-elements"/>
-                    <li id="staff-slideshow-element-third" className="staff-slideshow-elements"/>
-                    <li id="staff-slideshow-element-fourth" className="staff-slideshow-elements"/>
-                    <li id="staff-slideshow-element-fifth" className="staff-slideshow-elements"/>
-                </ul>
+                <div className="staff-navigation">
+                    <div className="staff-overlay">
+                        <div className="staff-nav-btn-wrapper">
+                            <button className="staff-nav-btn" onClick={this.handleClickRequests}>All Requests</button>
+                        </div>
+                        <div className="staff-nav-btn-wrapper">
+                            <button className="staff-nav-btn" onClick={this.handleClickOrders}>All Orders</button>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+
         )
     }
 }
@@ -96,15 +99,15 @@ class StaffLanding extends React.Component {
  * to the Staff component above.
  */
 export class StaffRequests extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
     }
 
     render() {
-        return(
-          <div>
+        return (
+            <div>
 
-          </div>
+            </div>
         );
     }
 }
@@ -115,12 +118,12 @@ export class StaffRequests extends React.Component {
  * generated by customers.
  */
 export class StaffOrders extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
     }
 
     render() {
-        return(
+        return (
             <div>
 
             </div>

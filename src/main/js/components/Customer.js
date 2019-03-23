@@ -20,7 +20,7 @@ import "../../resources/static/css/customer.css";
 /***
  *
  * Holds entire page view. Starting off with the Customer Landing page
- * @Author Adeeb Ibne Amjad, Dibbo Ritwik
+ * @Author Adeeb Ibne Amjad, Dibbo Ritwik, Evan Bruchet, Gabriel Negash
  *
  */
 
@@ -38,15 +38,7 @@ export class Customer extends React.Component {
     }
 
     render() {
-        //TODO: note passing customerDS to the <customer tag, however diningSessionLinks/Attributes arent parsed
         const customerDS = this.props.filterDiningSessionList('ta_status');
-        /* TODO: figure out where to place the customerlandingpage tag or refactor via history.push
-                    <CustomerLandingPage history={this.props.history}
-                                 selectedView={this.state.selectedView}
-                                 menuItems={this.props.menuItems}
-                                 filterMenuItemList={this.props.filterMenuItemList}
-                                 tags={this.props.tags}/>
-         */
         return(
         <TableNumberSelect
             handleTableNumberSelect={this.handleTableNumberSelect}
@@ -83,9 +75,8 @@ class TableNumberSelect extends React.Component{
         });
 
         this.props.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
-        //this.props.history.push('/CustomerLanding');
         this.props.history.push({
-            pathname: '/CustomerLanding',
+            pathname: '/customer-landing',
             state: {tableNum: selectedTableNumber} //TODO: make use of tableNum via this.props.location.state.tableNum
         });
     }
@@ -147,7 +138,7 @@ export class CustomerLandingPage extends React.Component {
                    <section key={"customer-landing-section-" + tag.entity._links.self.href}>
                        <h1 key={"customer-landing-h1-" + tag.entity._links.self.href}>{tag.entity.name}</h1>
                        <div>
-                           <h5 className="badge-rounded" key={"customer-landing-h5-" + tag.entity._links.self.href}>{"View " + tag.entity.name + "s"}</h5>
+                           <h5 className="staff-badge-rounded" key={"customer-landing-h5-" + tag.entity._links.self.href}>{"View " + tag.entity.name + "s"}</h5>
 
                        </div>
                    </section>
@@ -159,9 +150,9 @@ export class CustomerLandingPage extends React.Component {
             <div>
                 <title>Welcome to PotatoPeeps Sushi</title>
                 <div id="wrapper">
-                    <main className="main-wrapper">
-                        <header className="frontpage">
-                            <a href="#" className="logo">
+                    <main className="staff-main-wrapper">
+                        <header className="staff-frontpage">
+                            <a href="#" className="staff-logo">
                                 <img src="./img/logo.png" alt="Home" />
                             </a>
                             <button className="landing-page-button" style={{zIndex: 1000}}>
@@ -177,7 +168,7 @@ export class CustomerLandingPage extends React.Component {
                                 View Your Cart
                             </button>
                         </header>
-                        <nav className="strokes">
+                        <nav className="staff-strokes">
                             <ul id="navigation">
                                 {tags}
                             </ul>
@@ -185,7 +176,7 @@ export class CustomerLandingPage extends React.Component {
                     </main>
                 </div>
                 <a href="#" id="back-to-top">
-                    <i className="icon bg icon-UpArrow" />
+                    <i className="icon staff-bg staff-icon-UpArrow" />
                 </a>
                 <ul id="slideshow">
                     <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}} />
@@ -215,7 +206,7 @@ export class CustomerMenu extends React.Component {
 
     handleCloseMenu(){
         this.props.history.push({
-            pathname: '/CustomerLanding',
+            pathname: '/customer-landing',
             state: {tableNum: this.props.location.state.tableNum} //TODO: make use of tableNum via this.props.location.state.tableNum
         });
     }
@@ -404,7 +395,7 @@ export class CustomerCartPage extends React.Component {
                         </div>
                     </main></div>
                 <a href="#" id="back-to-top">
-                    <i className="icon bg icon-UpArrow" />
+                    <i className="icon staff-bg staff-icon-UpArrow" />
                 </a>
                 <ul id="slideshow">
                     <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}} />
