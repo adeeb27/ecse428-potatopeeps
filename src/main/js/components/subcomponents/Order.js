@@ -15,17 +15,21 @@ export class Order extends React.Component {
     }
 
     componentDidMount() {
-        this.props.loadResourceFromServer('/orders', 20);
-        this.props.loadResourceFromServer('/diningSessions', 20);
+        this.props.loadResourceFromServer('orders', 20);
+        this.props.loadResourceFromServer('diningSessions', 20);
     }
 
+    /**
+     * Used for testing only (can delete after verify that submitOrdersToDB works)
+     * @param e
+     */
     testSubmit(e) {
         e.preventDefault();
         // FOR TESTING
         var list = [
-            1,
+            2,
             [
-                ["http://localhost:8080/api/menuItems/1", 3]
+                ["http://localhost:8080/api/menuItems/2", 5]
             ]
         ];
         this.submitOrdersToDB(list);
@@ -37,42 +41,45 @@ export class Order extends React.Component {
      * menuItems is a 2d array containing the pairs (menuItem URL, quantity)
      */
     submitOrdersToDB(list) {
-        console.log("IN ORDER SUBMIT METHOD");
-        var tableNum = list[0];
-        var menuItems = list[1];
-
-        var diningSessionUrl = "http://localhost:8080/api/diningSessions/1"; // TO-DO get the correct one based on tableNum
-        var diningSessions = [];
+        // Wait 1 second before submitting to allow resources to load in componentDidMount
         setTimeout( () => {
-            diningSessions = this.props.diningSessions;
-            console.log(this.props.diningSessions.length);
+            console.log("IN ORDER SUBMIT METHOD");
+            var tableNum = list[0];
+            var menuItems = list[1];
+
+            // Find the correct dining session href
+            var diningSessionUrl = "";
+            var diningSessions = this.props.diningSessions;
             for (var j = 0, length = diningSessions.length; j < length; j++) {
-                console.log("TEST");
-                console.log(diningSessions);
+                if (diningSessions[j].entity.tableNumber === tableNum) {
+                    console.log("FOUND IT: " + diningSessions[j].entity._links.self.href)
+                    diningSessionUrl = diningSessions[j].entity._links.self.href;
+                }
             }
-        }, 5000);
+            console.log(diningSessionUrl);
 
-        for (var i = 0, length = menuItems.length; i < length; i++) {
-            const newOrder = {};
-            var menuItemUrl = menuItems[i][0];
-            var quantity = menuItems[i][1];
-            this.requestMenuItem(menuItemUrl);
+            for (var i = 0, length = menuItems.length; i < length; i++) {
+                const newOrder = {};
+                var menuItemUrl = menuItems[i][0];
+                var quantity = menuItems[i][1];
 
-            // Wait for requestMenuItem to save the menu item in state
-            setTimeout( () => {
-                console.log(this.state.menuItem);
-                console.log(this.state.menuItem.price);
-                newOrder['price'] = newOrder['[price'] + this.state.menuItem.price;
-                newOrder['status'] = 'ORDERED';
-                newOrder['quantity'] = quantity;
-                newOrder['menuItem'] = menuItemUrl;
-                newOrder['diningSession'] = diningSessionUrl;
+                this.requestMenuItem(menuItemUrl);
 
-                // Create the order in DB
-                this.props.onCreate(newOrder, "orders");
-            }, 5000);
+                // Wait 1 second so that the menu item is loaded into state.menuItem
+                setTimeout( () => {
+                    console.log(this.state.menuItem);
 
-        }
+                    newOrder['price'] = newOrder['[price'] + this.state.menuItem.price;
+                    newOrder['status'] = 'ORDERED';
+                    newOrder['quantity'] = quantity;
+                    newOrder['menuItem'] = menuItemUrl;
+                    newOrder['diningSession'] = diningSessionUrl;
+
+                    // Create the order in DB
+                    this.props.onCreate(newOrder, "orders");
+                }, 1000);
+            }
+        }, 1000);
     }
 
     /**
