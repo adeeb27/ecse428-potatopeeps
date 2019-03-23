@@ -3,6 +3,7 @@ import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 /** ----- COMPONENT IMPORTS -----**/
+import {CustomerDiningSessionSelect, StaffDiningSessionPage, StaffDiningSession} from "./subcomponents/DiningSession";
 
 /** ----- CSS/STYLING IMPORTS -----**/
 import "../../resources/static/css/staff.css";
@@ -15,16 +16,31 @@ import "../../resources/static/css/staff.css";
  */
 
 export class Staff extends React.Component {
+
+    constructor(props){
+        super(props);
+        this.state = {pageSize: 30, selectedView: 'Staff'};
+    }
     render() {
         return (
             <div className={"page staff-page"}>
-                <StaffLanding orders={this.props.orders}
-                              orderAttributes={this.props.orderAttributes}
-                              diningSessions={this.props.diningSessions}
-                              diningSessionsAttributes={this.props.diningSessionAttributes}
-                              selectedView={this.props.selectedView}/>
+                <StaffDiningSessionPage
+                            selectedView={this.props.selectedView}
+                            diningSessions={this.props.diningSessions}
+                            // pageSize={this.state.pageSize}
+                            diningSessionAttributes={this.props. diningSessionAttributes}
+                            diningSessionLinks={this.props.diningSessionLinks}
+                            // onNavigate={this.props.onNavigate}
+                            // updatePageSize={this.props.updatePageSize}
+                            onUpdate={this.props.onUpdate}
+                            onDelete={this.props.onDelete}/>
+                
             </div>
         )
+    }
+
+    componentDidMount() {
+        this.props.loadResourceFromServer('diningSessions', this.state.pageSize);
     }
 }
 
@@ -66,6 +82,7 @@ class StaffLanding extends React.Component {
                         </header>
                         <div className="content-wrap full-width">
                             /* Deleted the sample list of menu items as we do not need to see the menu items from staff*/
+
                             <footer>
                                 <div className="signature">
                                     <h6>Sushi</h6>
@@ -73,17 +90,7 @@ class StaffLanding extends React.Component {
                                 </div>
                             </footer>
                         </div>
-                        <StaffDiningSession
-                            selectedView={this.state.selectedView}
-                            diningSessions={this.props.diningSessions}
-                            pageSize={this.state.pageSize}
-                            diningSessionAttributes={this.props. diningSessionAttributes}
-                            diningSessionLinks={this.props.diningSessionLinks}
-                            onNavigate={this.props.onNavigate}
-                            updatePageSize={this.props.updatePageSize}
-                            onUpdate={this.props.onUpdate}
-                            onDelete={this.props.onDelete}
-                        />
+                        
                     </main>
                 </div>
                 
@@ -94,6 +101,7 @@ class StaffLanding extends React.Component {
                     <li id="staff-slideshow-element-fourth" className="staff-slideshow-elements"/>
                     <li id="staff-slideshow-element-fifth" className="staff-slideshow-elements"/>
                 </ul>
+                
             </div>
         )
     }
