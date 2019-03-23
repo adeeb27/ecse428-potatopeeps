@@ -20,7 +20,7 @@ import "../../resources/static/css/customer.css";
 /***
  *
  * Holds entire page view. Starting off with the Customer Landing page
- * @Author Adeeb Ibne Amjad, Dibbo Ritwik
+ * @Author Adeeb Ibne Amjad, Dibbo Ritwik, Evan Bruchet, Gabriel Negash
  *
  */
 
@@ -38,15 +38,7 @@ export class Customer extends React.Component {
     }
 
     render() {
-        //TODO: note passing customerDS to the <customer tag, however diningSessionLinks/Attributes arent parsed
         const customerDS = this.props.filterDiningSessionList('ta_status');
-        /* TODO: figure out where to place the customerlandingpage tag or refactor via history.push
-                    <CustomerLandingPage history={this.props.history}
-                                 selectedView={this.state.selectedView}
-                                 menuItems={this.props.menuItems}
-                                 filterMenuItemList={this.props.filterMenuItemList}
-                                 tags={this.props.tags}/>
-         */
         return(
         <TableNumberSelect
             handleTableNumberSelect={this.handleTableNumberSelect}
@@ -83,9 +75,8 @@ class TableNumberSelect extends React.Component{
         });
 
         this.props.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
-        //this.props.history.push('/CustomerLanding');
         this.props.history.push({
-            pathname: '/CustomerLanding',
+            pathname: '/customer-landing',
             state: {tableNum: selectedTableNumber} //TODO: make use of tableNum via this.props.location.state.tableNum
         });
     }
@@ -215,7 +206,7 @@ export class CustomerMenu extends React.Component {
 
     handleCloseMenu(){
         this.props.history.push({
-            pathname: '/CustomerLanding',
+            pathname: '/customer-landing',
             state: {tableNum: this.props.location.state.tableNum} //TODO: make use of tableNum via this.props.location.state.tableNum
         });
     }

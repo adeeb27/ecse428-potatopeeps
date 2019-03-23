@@ -40,7 +40,7 @@ export class Login extends React.Component {
         if((this.state.user).toString().trim() === "user" && (this.state.password).toString().trim() === "password"){
             console.log('redirecting...');
             this.setState({user: "", password:""});
-            this.props.history.push('/selectTask');
+            this.props.history.push('/select-task');
         }
         else if((this.state.user).toString().trim() !== "user"){
             alert("Invalid User Name");
