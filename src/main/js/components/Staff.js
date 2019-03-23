@@ -16,6 +16,15 @@ import "../../resources/static/css/staff.css";
  */
 
 export class Staff extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {selectedView: 'Staff'};
+    }
+
+    componentDidMount() {
+        this.props.loadResourceFromServer('diningSessions', this.state.pageSize)
+    }
+
     render() {
         return (
             <div className={"page staff-page"}>
@@ -101,6 +110,13 @@ class StaffLanding extends React.Component {
 export class StaffRequests extends React.Component {
     constructor(props) {
         super(props);
+        this.handleCloseMenu = this.handleCloseMenu.bind(this);
+    }
+
+    handleCloseMenu(){
+        this.props.history.push({
+            pathname: '/staff'
+        });
     }
 
     render() {
@@ -109,7 +125,7 @@ export class StaffRequests extends React.Component {
                 <div id="wrapper">
                     <main className="main-wrapper">
                         <header className="detail full">
-                            <a className="back" href="#" data-transition="slide-from-top" />
+                            <a className="back" onClick={this.handleCloseMenu} data-transition="slide-from-top" />
                             <section>
                                 <h1 className="category-title">Requests</h1>
                                 <h3 className="page-badge">Bill and more</h3>
@@ -212,8 +228,8 @@ export class StaffRequests extends React.Component {
                         </div>
                     </main>
                 </div>
-                <a id="back-to-top" href="#">
-                    <i className="icon bg icon-UpArrow" />
+                <a href="#" id="back-to-top">
+                    <i className="icon staff-bg staff-icon-UpArrow" />
                 </a>
             </div>
     );
