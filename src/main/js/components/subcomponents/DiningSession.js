@@ -105,10 +105,6 @@ export class StaffDiningSession extends React.Component{
     }
     render(){
         return (
-        // <div>
-        //     <div className="text">Table {this.props.diningSession.entity.tableNumber}</div>
-        //     <div className="text">{this.props.diningSession.entity.price}</div>
-        // </div>
             <div className="gridViewItem">               
                     <img className="itemImage" draggable="false" src="./asset/3.jpg" />               
                     <div className="overlay">
@@ -127,13 +123,20 @@ export class StaffDiningSession extends React.Component{
     handleClick(){
         //TODO navigate to specific orders for diningSessions
         // onclick={handleClick}
+        console.log("in handle click");
+        
         this.handleCloseMenu();
+        console.log("after handleClose");
     }
 
     handleCloseMenu(){
-        this.props.history.push({
-            pathname: ('/tables/'), // + this.props.diningSession.entity.tableNumber
-            state: {diningSession : this.props.diningSession} //TODO: make use of tableNum via this.props.location.state.tableNum
-        });
-}
+        console.log("in handleClose");
+        this.props.history.push('/tables');
+        //     {
+        //     pathname: ('/tables/')} // + this.props.diningSession.entity.tableNumber
+        //     // state: {diningSession : this.props.diningSession} //TODO: make use of tableNum via this.props.location.state.tableNum
+        //     // }
+        // );
+        console.log("after history push");
+    }
 }

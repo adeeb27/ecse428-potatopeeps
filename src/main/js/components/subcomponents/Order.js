@@ -51,16 +51,21 @@ export class DiningSessionOrders extends React.Component{
 
     render(){
         // const orders = 
-        this.requestOrders();
+        // this.requestOrders();
         return (
-            <StaffOrderList
-                orders={this.state.orders}
-            />
-        )
+            <div>test garbage</div>
+            // <div className="blahblah">
+            //     <p>test garbage</p>
+            //     <StaffOrderList
+            //         orders={this.state.orders}
+            //     />
+            // </div>
+            
+        );
     }
 
     requestOrders(){
-        fetch(this.props.location.diningSession.entity._links.orders.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
+        fetch(this.props.location.state.diningSession.entity._links.orders.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
            .then(
                response => {
                    if (!response.ok) {
@@ -77,6 +82,7 @@ export class DiningSessionOrders extends React.Component{
                                 orders : data._embedded.orders
                             }
                         );
+                        console.log("in render");
                    });
                }
            )
@@ -212,7 +218,7 @@ export class StaffOrder extends Order{
                     </select>
                 </td>
             </tr>
-        )
+        );
     }
 
     handleSelectChange(event){

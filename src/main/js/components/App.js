@@ -573,7 +573,7 @@ export class App extends React.Component {
                                                    selectedView={'Customer'}
                                                    filterMenuItemList={this.filterMenuItemList}
                                                    {...props}/>)}/>
-                                <Route path={"/tables/"} render={(props) =>
+                                <Route path={"/tables"} render={(props) =>
                                     (<DiningSessionOrders loadResourceFromServer={this.loadResourceFromServer}
                                                    onCreate={this.onCreate}
                                                    onUpdate={this.onUpdate}
