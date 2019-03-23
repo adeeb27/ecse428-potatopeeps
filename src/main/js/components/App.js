@@ -216,10 +216,6 @@ export class App extends React.Component {
     updateDiningSession(diningSession, updatedDiningSession, option, string) {
 
         updatedDiningSession['tableNumber'] = diningSession.tableNumber;
-        updatedDiningSession['diningSessionStatus'] = diningSession.diningSessionStatus;
-        updatedDiningSession['serviceRequestStatus'] = diningSession.serviceRequestStatus;
-        updatedDiningSession['billRequestStatus'] = diningSession.billRequestStatus;
-        updatedDiningSession['tableAssignmentStatus'] = diningSession.tableAssignmentStatus;
         switch (option) {
             case 'diningSessionStatus':
                 updatedDiningSession['diningSessionStatus'] = string;
@@ -238,8 +234,6 @@ export class App extends React.Component {
 
 
     }
-
-    // let validResources = [];
 
     /**
      *  Function to filter a list DiningSessions, to be used by Customer (TableNumberSelect) & Staff
@@ -578,7 +572,9 @@ export class App extends React.Component {
                                                    orders={this.state.orders}
                                                    orderLinks={this.state.orderLinks}
                                                    orderAttributes={this.state.orderAttributes}
+                                                   menuItems={this.state.menuItems}
                                                    menuItemTags={this.state.menuItemTags}
+                                                   tags={this.state.tags}
                                                    selectedView={'Customer'}
                                                    filterMenuItemList={this.filterMenuItemList}
                                                    {...props}/>)}/>
