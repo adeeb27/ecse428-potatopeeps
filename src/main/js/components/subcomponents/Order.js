@@ -11,10 +11,17 @@ export class Order extends React.Component {
         this.submitOrdersToDB = this.submitOrdersToDB.bind(this);
         this.requestMenuItem = this.requestMenuItem.bind(this);
         this.requestDiningSession = this.requestDiningSession.bind(this);
+        this.testSubmit = this.testSubmit.bind(this);
     }
 
     componentDidMount() {
-        //TEST: this.requestMenuItem("http://localhost:8080/api/menuItems/1");
+        this.props.loadResourceFromServer('/orders', 20);
+        this.props.loadResourceFromServer('/diningSessions', 20);
+    }
+
+    testSubmit(e) {
+        e.preventDefault();
+        // FOR TESTING
         var list = [
             1,
             [
@@ -35,23 +42,36 @@ export class Order extends React.Component {
         var menuItems = list[1];
 
         var diningSessionUrl = "http://localhost:8080/api/diningSessions/1"; // TO-DO get the correct one based on tableNum
+        var diningSessions = [];
+        setTimeout( () => {
+            diningSessions = this.props.diningSessions;
+            console.log(this.props.diningSessions.length);
+            for (var j = 0, length = diningSessions.length; j < length; j++) {
+                console.log("TEST");
+                console.log(diningSessions);
+            }
+        }, 5000);
 
         for (var i = 0, length = menuItems.length; i < length; i++) {
             const newOrder = {};
             var menuItemUrl = menuItems[i][0];
             var quantity = menuItems[i][1];
-            console.log(menuItemUrl);
             this.requestMenuItem(menuItemUrl);
 
-            console.log(this.state.menuItem);
-            newOrder['price'] = newOrder['[price'] + this.state.menuItem.price;
-            newOrder['status'] = 'ORDERED';
-            newOrder['quantity'] = quantity;
-            newOrder['menuItem'] = menuItemUrl;
-            newOrder['diningSession'] = diningSessionUrl;
+            // Wait for requestMenuItem to save the menu item in state
+            setTimeout( () => {
+                console.log(this.state.menuItem);
+                console.log(this.state.menuItem.price);
+                newOrder['price'] = newOrder['[price'] + this.state.menuItem.price;
+                newOrder['status'] = 'ORDERED';
+                newOrder['quantity'] = quantity;
+                newOrder['menuItem'] = menuItemUrl;
+                newOrder['diningSession'] = diningSessionUrl;
 
-            // Create the order in DB
-            //this.props.onCreate(newOrder, "orders");
+                // Create the order in DB
+                this.props.onCreate(newOrder, "orders");
+            }, 5000);
+
         }
     }
 
@@ -112,6 +132,11 @@ export class Order extends React.Component {
      * @returns {null}
      */
     render() {
-        return null;
+        return (
+            <div>
+                <button type="button" onClick={this.testSubmit}>Test</button>
+            </div>
+        )
+        //return null;
     }
 }
