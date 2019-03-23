@@ -117,13 +117,6 @@ export class Manager extends React.Component {
                                                                  tagList={tagList}
                                                                  onCreate={this.props.onCreate}/>
                                 </div>
-
-                                <div className="row mt-3">
-                                    {/* Renders a ManagerCreateTagDialog component here */}
-                                    <ManagerCreateTagDialog
-                                        onCreate = {this.props.onCreate}
-                                        tagAttributes = {this.props.tagAttributes}/>
-                                </div>
                             </div>
 
                         </div>
