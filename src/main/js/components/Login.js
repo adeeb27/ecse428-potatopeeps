@@ -119,7 +119,7 @@ export class SelectTask extends React.Component {
                     <div className="bg-st h-100">
                         <h1><FontAwesomeIcon icon={faWindowClose} id="select-task-cancel" onClick={this.cancel}/></h1>
                         <h1 id="select-task-header">Select Task</h1>
-                        <div className="container-fluid h-100">
+                        <div className="container-fluid h-75 top-drop">
                             <div className="row h-100">
                                 <div className="col-4 column-st h-100" onClick={this.goToCustomerPage}>
                                     <div className="select-task-columns d-flex justify-content-center flex-column h-100">

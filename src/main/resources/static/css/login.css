@@ -107,7 +107,9 @@ SELECT-TASK COMPONENT STYLING
 	cursor: pointer;
 }
 
-
+.top-drop {
+	top: 50%;
+}
 
 #select-task-header{
 	color: aliceblue;
