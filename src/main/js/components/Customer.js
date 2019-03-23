@@ -11,6 +11,10 @@ import {MenuItemList} from "./subcomponents/MenuItem";
 
 /** ----- CSS/STYLING IMPORTS -----**/
 import "../../resources/static/css/customer.css";
+import "../../resources/static/css/staff.css";
+
+
+import {Route} from "react-router-dom";
 /**
  * This JS file contains all code related to the rendering of the 'Customer' perspective.
  * Any components you wish to create related to this perspective should be developed within
@@ -35,6 +39,7 @@ export class Customer extends React.Component {
         this.props.loadResourceFromServer('menuItems', 30);
         this.props.loadResourceFromServer('diningSessions', this.state.pageSize)
         this.props.loadResourceFromServer('tags', this.state.pageSize);
+        this.props.loadResourceFromServer('orders', this.state.pageSize);
     }
 
     render() {
@@ -122,6 +127,7 @@ export class CustomerLandingPage extends React.Component {
     constructor(props) {
         super(props);
         this.handleTagClick = this.handleTagClick.bind(this);
+        this.handleReviewBill = this.handleReviewBill.bind(this);
     }
 
     handleTagClick(e, selectedTag){
@@ -138,6 +144,20 @@ export class CustomerLandingPage extends React.Component {
                     tableNum: this.props.location.state.tableNum}
             })
         });
+    }
+
+    handleReviewBill (e) {
+        e.preventDefault();
+        this.props.history.push({
+            pathname: '/customer-review-bill',
+            state: {
+
+                selectedView: this.props.selectedView,
+                tableNum: this.props.location.state.tableNum,
+                menuItem: this.props.location.state.menuItems}
+
+        });
+
     }
 
     render(){
@@ -168,7 +188,7 @@ export class CustomerLandingPage extends React.Component {
                                 <FontAwesomeIcon icon={faBell} className="landing-page-header-button-icons"/>
                                 Request Service
                             </button>
-                            <button className="landing-page-button" style={{zIndex: 1000}}>
+                            <button className="landing-page-button" onClick={this.handleReviewBill} style={{zIndex: 1000}}>
                                 <FontAwesomeIcon icon={faDollarSign} className="landing-page-header-button-icons"/>
                                 Request Bill
                             </button>
@@ -245,6 +265,99 @@ export class CustomerMenu extends React.Component {
             );
         }
 
+}
+
+export class CustomerReviewBill extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.handleCloseMenu = this.handleCloseMenu.bind(this);
+        this.totalPrice = 0;
+        let i;
+        for (i = 0; i < this.props.orders.length; i++) {
+            this.totalPrice = (this.props.orders[i].entity.quantity * this.props.orders[i].entity.price) + this.totalPrice;
+        }
+
+    }
+
+    handleCloseMenu(e){
+        this.props.history.push({
+            pathname: '/CustomerLanding',
+            state: {tableNum: this.props.location.state.tableNum}
+        });
+    }
+
+    render () {
+        const billItems = this.props.orders.map(billItem =>
+
+                    <tbody>
+                    <tr>
+                        <td>   </td>
+                        <td> {billItem.entity._links.menuItem.href.name}</td>
+                        <td>{"$" + billItem.entity.price} </td>
+                        <td> {billItem.entity.quantity}  </td>
+                        <td> {"$" + billItem.entity.quantity * billItem.entity.price} </td>
+                    </tr>
+                    </tbody>
+
+        );
+
+        return (
+                    <div>
+                        <title>Customer Final Bill</title>
+                        {/*<link rel="stylesheet" id="style-css" href="./asset/css/Staff.css" type="text/css" media="all" />*/}
+                        {/*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossOrigin="anonymous" />*/}
+                        <div id="wrapper">
+                            <main className="main-wrapper">
+                                <header className="detail full">
+                                    <a className="back" onClick={this.handleCloseMenu} data-transition="slide-from-top" />
+                                    <section>
+                                        <h1 className="category-title">{"Final Bill for Table " + this.props.location.state.tableNum}</h1>
+                                        {/*<h3 className="page-badge">5 Items in Total</h3>*/}
+                                    </section>
+                                </header>
+                                <div className="content-wrap full-width">
+                                    <div className="table-container">
+                                        <table className="order-table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col" />
+                                                <th scope="col">Item</th>
+                                                <th scope="col">Price</th>
+                                                <th scope="col">Quantity</th>
+                                                <th scope="col">Total</th>
+                                            </tr>
+                                            </thead>
+                                            {billItems}
+
+                                        </table>
+                                    </div>
+                                    <div className="button-container orderDetail">
+                                        <span className="cart-total name">Grand Total: </span>
+                                        <span className="cart-total amount">{"$" + this.totalPrice}</span>
+                                    </div>
+                                    <footer>
+                                        <div className="signature">
+                                            <h6>Sushi</h6>
+                                            <h5>PotatoPeeps</h5>
+                                        </div>
+                                    </footer>
+                                </div>
+                            </main></div>
+                        <a href="#" id="back-to-top">
+                            <i className="icon bg icon-UpArrow" />
+                        </a>
+                        <ul id="slideshow">
+                            <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}} />
+                            <li style={{backgroundImage: 'url("./img/3.jpg")', display: 'block', zIndex: 0, animationDelay: '6s'}} />
+                            <li style={{backgroundImage: 'url("./img/6.jpg")', display: 'block', zIndex: 0, animationDelay: '12s'}} />
+                            <li style={{backgroundImage: 'url("./img/4.jpg")', display: 'block', zIndex: 0, animationDelay: '18s'}} />
+                            <li style={{backgroundImage: 'url("./img/2.jpg")', display: 'block', zIndex: 0, animationDelay: '24s'}} />
+                        </ul>
+                    </div>
+
+        );
+    }
 }
 
 // TODO: Implement functionality, take help from the above classes if necessary

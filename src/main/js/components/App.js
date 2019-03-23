@@ -10,7 +10,7 @@ const root = "/api"; // Root is a variable used to provide pathing to the uriLis
 import {Login, SelectTask} from "./Login";
 import {Staff} from "./Staff";
 import {Manager} from "./Manager";
-import {Customer, CustomerMenu, CustomerLandingPage} from "./Customer";
+import {Customer, CustomerMenu, CustomerLandingPage, CustomerReviewBill} from "./Customer";
 
 /** ----- TUTORIAL API IMPORTS -----**/
 import follow from "../follow";
@@ -572,6 +572,24 @@ export class App extends React.Component {
                                                    selectedView={'Customer'}
                                                    filterMenuItemList={this.filterMenuItemList}
                                                    {...props}/>)}/>
+                                <Route path={"/customer-review-bill"} render={(props) =>
+                                    (<CustomerReviewBill loadResourceFromServer={this.loadResourceFromServer}
+                                                          onCreate={this.onCreate}
+                                                          onUpdate={this.onUpdate}
+                                                          onDelete={this.onDelete}
+                                                          onNavigate={this.onNavigate}
+                                                          diningSessions={this.state.diningSessions}
+                                                          diningSessionLinks={this.state.diningSessionLinks}
+                                                          diningSessionAttributes={this.state.diningSessionAttributes}
+                                                          orders={this.state.orders}
+                                                          orderLinks={this.state.orderLinks}
+                                                          orderAttributes={this.state.orderAttributes}
+                                                          menuItems={this.props.menuItems}
+                                                          menuItemTags={this.state.menuItemTags}
+                                                          tags={this.state.tags}
+                                                          selectedView={'Customer'}
+                                                          filterMenuItemList={this.filterMenuItemList}
+                                                          {...props}/>)}/>
                                 <Route exact path={"/selectTask"} component={SelectTask}/>
                             </Switch>
                         </CSSTransition>
