@@ -33,7 +33,8 @@ export class Staff extends React.Component {
                             // onNavigate={this.props.onNavigate}
                             // updatePageSize={this.props.updatePageSize}
                             onUpdate={this.props.onUpdate}
-                            onDelete={this.props.onDelete}/>
+                            onDelete={this.props.onDelete}
+                            history={this.props.history}/>
                 
             </div>
         )

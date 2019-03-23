@@ -11,6 +11,7 @@ import {Login, SelectTask} from "./Login";
 import {Staff, StaffOrders, StaffRequests} from "./Staff";
 import {Manager} from "./Manager";
 import {Customer, CustomerMenu, CustomerLandingPage} from "./Customer";
+import {DiningSessionOrders} from "./subcomponents/Order"
 
 /** ----- TUTORIAL API IMPORTS -----**/
 import follow from "../follow";
@@ -572,6 +573,25 @@ export class App extends React.Component {
                                                    selectedView={'Customer'}
                                                    filterMenuItemList={this.filterMenuItemList}
                                                    {...props}/>)}/>
+                                <Route path={"/tables/"} render={(props) =>
+                                    (<DiningSessionOrders loadResourceFromServer={this.loadResourceFromServer}
+                                                   onCreate={this.onCreate}
+                                                   onUpdate={this.onUpdate}
+                                                   onDelete={this.onDelete}
+                                                   onNavigate={this.onNavigate}
+                                                   diningSessions={this.state.diningSessions}
+                                                   diningSessionLinks={this.state.diningSessionLinks}
+                                                   diningSessionAttributes={this.state.diningSessionAttributes}
+                                                   orders={this.state.orders}
+                                                   orderLinks={this.state.orderLinks}
+                                                   orderAttributes={this.state.orderAttributes}
+                                                   menuItems={this.props.menuItems}
+                                                   menuItemTags={this.state.menuItemTags}
+                                                   tags={this.state.tags}
+                                                   selectedView={'Staff'}
+                                                   filterMenuItemList={this.filterMenuItemList}
+                                                   location={this.props.location}
+                                                   {...props}/>)}/>                   
                                 <Route exact path={"/selectTask"} component={SelectTask}/>
                                 <Route exact path={"/staff-requests"} component={StaffRequests}/>
                                 <Route exact path={"/staff-orders"} component={StaffOrders}/>

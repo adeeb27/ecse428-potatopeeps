@@ -49,7 +49,7 @@ export class StaffDiningSessionPage extends React.Component{
                 key={session.entity._links.self.href}
                 diningSession={session}
                 diningSessionAttributes={this.props.diningSessionAttributes}
-
+                history = {this.props.history}
             />
 
         )
@@ -98,6 +98,11 @@ export class StaffDiningSessionPage extends React.Component{
 
 export class StaffDiningSession extends React.Component{
 
+    constructor(props){
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+        this.handleCloseMenu = this.handleCloseMenu.bind(this);
+    }
     render(){
         return (
         // <div>
@@ -111,7 +116,7 @@ export class StaffDiningSession extends React.Component{
                         <div className="text">{this.props.diningSession.entity.price}</div>
                         <div style={{display: 'flex', justifyContent: 'center'}}>
                         <button className="view-detail-button" title="View details">
-                            <i className="view-order" style={{fontSize: '20px'}} >View</i>
+                            <i className="view-order" style={{fontSize: '20px'}} onClick={this.handleClick}>View</i>
                         </button>
                         </div>
                     </div> 
@@ -122,5 +127,13 @@ export class StaffDiningSession extends React.Component{
     handleClick(){
         //TODO navigate to specific orders for diningSessions
         // onclick={handleClick}
+        this.handleCloseMenu();
     }
+
+    handleCloseMenu(){
+        this.props.history.push({
+            pathname: ('/tables/'), // + this.props.diningSession.entity.tableNumber
+            state: {diningSession : this.props.diningSession} //TODO: make use of tableNum via this.props.location.state.tableNum
+        });
+}
 }

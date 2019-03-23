@@ -40,20 +40,27 @@ export class OrderList extends React.Component {
     }
 }
 
-class DiningSessionOrders extends React.Component{
+export class DiningSessionOrders extends React.Component{
     constructor(props){
         super(props);       //assume the following props are passed in: diningSession
         this.state = {
-            orders : []
+            orders : [],
         }
+        this.requestOrders = this.requestOrders.bind(this);
     }
 
     render(){
         // const orders = 
+        this.requestOrders();
+        return (
+            <StaffOrderList
+                orders={this.state.orders}
+            />
+        )
     }
 
     requestOrders(){
-        fetch(this.props.diningSessino.entity._links.orders.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
+        fetch(this.props.location.diningSession.entity._links.orders.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
            .then(
                response => {
                    if (!response.ok) {
@@ -78,16 +85,20 @@ class DiningSessionOrders extends React.Component{
            });
    }
 
-   filterOrderList(sessionId){
-        let filteredList = [];
-        this.state.orders.filterorder( order => order.entity.s === tableNumber());
-        filteredList = this.state.diningSessions;
-        this.setState({
-            status: this.state.status,
-            quantity: this.props.order.quantity,
-            orders: filteredList
-        })
-    }
+//    filterOrderList(sessionId){
+//         let filteredList = [];
+//         this.state.orders.filterorder( order => order.entity.s === tableNumber());
+//         filteredList = this.state.diningSessions;
+//         this.setState({
+//             status: this.state.status,
+//             quantity: this.props.order.quantity,
+//             orders: filteredList
+//         })
+//     }
+
+    // componentDidMount(){
+    //     requestOrders();
+    // }
 }
 class StaffOrderList extends React.Component{
     constructor(props){
@@ -109,7 +120,7 @@ class StaffOrderList extends React.Component{
         )
 
         return (
-            <div class="table-container">
+            <div className="table-container">
 					<table class="order-table">
 						<thead>
 							<tr>

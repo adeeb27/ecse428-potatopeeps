@@ -110,9 +110,10 @@ public class DatabaseLoader implements CommandLineRunner {
             orders[8] = new Order(menuItems[11].getPrice(), 1, menuItems[11], diningSessions[4]);
             orders[9] = new Order(menuItems[9].getPrice(), 1, menuItems[9], diningSessions[4]);
             for (Order order : orders) {
-                if(!orderRepository.existsById(order.getId())){
-                	orderRepository.save(order);
-                }
+            	orderRepository.save(order);
+//                if(!orderRepository.existsById(order.getId())){
+//                	orderRepository.save(order);
+//                }
             }
     }
 
