@@ -215,11 +215,11 @@ export class App extends React.Component {
 
     updateDiningSession(diningSession, updatedDiningSession, option, string) {
 
-        updatedDiningSession['tableNumber'] = diningSession.entity.tableNumber;
-        updatedDiningSession['diningSessionStatus'] = diningSession.entity.diningSessionStatus;
-        updatedDiningSession['serviceRequestStatus'] = diningSession.entity.serviceRequestStatus;
-        updatedDiningSession['billRequestStatus'] = diningSession.entity.billRequestStatus;
-        updatedDiningSession['tableAssignmentStatus'] = diningSession.entity.tableAssignmentStatus;
+        updatedDiningSession['tableNumber'] = diningSession.tableNumber;
+        updatedDiningSession['diningSessionStatus'] = diningSession.diningSessionStatus;
+        updatedDiningSession['serviceRequestStatus'] = diningSession.serviceRequestStatus;
+        updatedDiningSession['billRequestStatus'] = diningSession.billRequestStatus;
+        updatedDiningSession['tableAssignmentStatus'] = diningSession.tableAssignmentStatus;
         switch (option) {
             case 'diningSessionStatus':
                 updatedDiningSession['diningSessionStatus'] = string;

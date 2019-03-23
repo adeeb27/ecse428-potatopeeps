@@ -89,7 +89,7 @@ class TableNumberSelect extends React.Component{
 
         this.props.history.push({
             pathname: '/CustomerLanding',
-            state: {tableNum: selectedTableNumber, currentDiningSession: oldDiningSession} //TODO: make use of tableNum via this.props.location.state.tableNum
+            state: {tableNum: selectedTableNumber, currentDiningSession: updatedDiningSession, oldDiningSess: oldDiningSession}//TODO: make use of tableNum via this.props.location.state.tableNum
         });
     }
 
@@ -121,10 +121,9 @@ class TableNumberSelect extends React.Component{
 }
 
 export class CustomerLandingPage extends React.Component {
-    
+
     constructor(props) {
         super(props);
-        const diningSesssion=this.props.location.state.currentDiningSession;
         this.handleTagClick = this.handleTagClick.bind(this);
 
         this.handleClick=this.handleClick.bind(this);
@@ -134,8 +133,8 @@ export class CustomerLandingPage extends React.Component {
         e.preventDefault();
         const updatedDiningSession = {};
 
-        this.props.updateDiningSession(diningSesssion,updatedDiningSession,'serviceRequestStatus','ACTIVE');
-        this.props.onUpdate(this.props.location.state.diningSession, updatedDiningSession, 'diningSessions');
+        this.props.updateDiningSession(this.props.location.state.currentDiningSession, updatedDiningSession,'serviceRequestStatus','ACTIVE');
+        this.props.onUpdate(this.props.location.state.oldDiningSess, updatedDiningSession, 'diningSessions');
 
     }
 
