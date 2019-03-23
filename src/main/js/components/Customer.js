@@ -5,6 +5,7 @@ import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faShoppingCart, faDollarSign, faUser, faBell} from "@fortawesome/free-solid-svg-icons";
 
+
 /** ----- COMPONENT IMPORTS -----**/
 import {CustomerDiningSessionSelect} from "./subcomponents/DiningSession";
 import {MenuItemList} from "./subcomponents/MenuItem";
@@ -33,7 +34,7 @@ export class Customer extends React.Component {
 
     componentDidMount() {
         this.props.loadResourceFromServer('menuItems', 30);
-        this.props.loadResourceFromServer('diningSessions', this.state.pageSize)
+        this.props.loadResourceFromServer('diningSessions', this.state.pageSize);
         this.props.loadResourceFromServer('tags', this.state.pageSize);
     }
 
@@ -85,9 +86,10 @@ class TableNumberSelect extends React.Component{
 
         this.props.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
         //this.props.history.push('/CustomerLanding');
+
         this.props.history.push({
             pathname: '/CustomerLanding',
-            state: {tableNum: selectedTableNumber, diningSession: oldDiningSession} //TODO: make use of tableNum via this.props.location.state.tableNum
+            state: {tableNum: selectedTableNumber, currentDiningSession: oldDiningSession} //TODO: make use of tableNum via this.props.location.state.tableNum
         });
     }
 
@@ -119,16 +121,22 @@ class TableNumberSelect extends React.Component{
 }
 
 export class CustomerLandingPage extends React.Component {
-
+    
     constructor(props) {
         super(props);
+        const diningSesssion=this.props.location.state.currentDiningSession;
         this.handleTagClick = this.handleTagClick.bind(this);
+
         this.handleClick=this.handleClick.bind(this);
     }
 
     handleClick(e){
         e.preventDefault();
-        this.props.location.state.diningSession.entity.serviceRequestStatus='ACTIVE';
+        const updatedDiningSession = {};
+
+        this.props.updateDiningSession(diningSesssion,updatedDiningSession,'serviceRequestStatus','ACTIVE');
+        this.props.onUpdate(this.props.location.state.diningSession, updatedDiningSession, 'diningSessions');
+
     }
 
     handleTagClick(e, selectedTag){
