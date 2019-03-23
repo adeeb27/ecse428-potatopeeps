@@ -554,7 +554,7 @@ export class App extends React.Component {
                                                                     selectedView={'Customer'}
                                                                     filterMenuItemList={this.filterMenuItemList}
                                                                     {...props}/>)}/>
-                                <Route path={"/CustomerLanding"} render={(props) =>
+                                <Route path={"/customer-landing"} render={(props) =>
                                     (<CustomerLandingPage loadResourceFromServer={this.loadResourceFromServer}
                                                    onCreate={this.onCreate}
                                                    onUpdate={this.onUpdate}
@@ -572,7 +572,7 @@ export class App extends React.Component {
                                                    selectedView={'Customer'}
                                                    filterMenuItemList={this.filterMenuItemList}
                                                    {...props}/>)}/>
-                                <Route exact path={"/selectTask"} component={SelectTask}/>
+                                <Route exact path={"/select-task"} component={SelectTask}/>
                                 <Route exact path={"/staff-requests"} component={StaffRequests}/>
                                 <Route exact path={"/staff-orders"} component={StaffOrders}/>
 
