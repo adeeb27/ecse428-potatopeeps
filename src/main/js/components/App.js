@@ -11,6 +11,7 @@ import {Login, SelectTask} from "./Login";
 import {Staff} from "./Staff";
 import {Manager} from "./Manager";
 import {Customer, CustomerMenu, CustomerLandingPage} from "./Customer";
+import {Order} from "./subcomponents/Order"
 
 /** ----- TUTORIAL API IMPORTS -----**/
 import follow from "../follow";
@@ -572,6 +573,18 @@ export class App extends React.Component {
                                                    selectedView={'Customer'}
                                                    filterMenuItemList={this.filterMenuItemList}
                                                    {...props}/>)}/>
+                                <Route path={"/order"} render={(props) =>
+                                    (<Order loadResourceFromServer={this.loadResourceFromServer}
+                                                          onCreate={this.onCreate}
+                                                          onUpdate={this.onUpdate}
+                                                          onDelete={this.onDelete}
+                                                          onNavigate={this.onNavigate}
+                                                          diningSessions={this.state.diningSessions}
+                                                          diningSessionLinks={this.state.diningSessionLinks}
+                                                          diningSessionAttributes={this.state.diningSessionAttributes}
+                                                          selectedView={'Order'}
+                                                          filterMenuItemList={this.filterMenuItemList}
+                                                          {...props}/>)}/>
                                 <Route exact path={"/selectTask"} component={SelectTask}/>
                             </Switch>
                         </CSSTransition>
