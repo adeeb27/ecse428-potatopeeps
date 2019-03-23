@@ -61,7 +61,7 @@ Transitions & Animations
 Icon definitions & styling for easy use
 
 ----------------------------------------------- */
-.icon.staff-bg {
+.icon.bg {
   -webkit-transform: translateY(-70%);
   -ms-transform: translateY(-70%);
   transform: translateY(-70%);
@@ -74,13 +74,13 @@ Icon definitions & styling for easy use
   border-radius: 50%;
   background-color: rgba(229,56,36,0.8);
 }
-.icon.staff-bg:before {
+.icon.bg:before {
   line-height: 60px;
   vertical-align: middle;
   display: block;
   text-align: center;
 }
-.icon.staff-icon-UpArrow:before {
+.icon.icon-UpArrow:before {
   content: "\5e";
 }
 .icon:before {
@@ -125,14 +125,14 @@ Selections and general setup
   font-size: 44px;
 }
 
-#staff-wrapper {
+#wrapper {
   background-color: rgba(0, 0, 0, 0.95);
   font: normal 62.5%/1em 'montserratregular', sans-serif;
   color: #FFFFFF;
   line-height: 1.7;
 }
 
-.staff-main-wrapper {
+.main-wrapper {
   font-size: 14px;
   z-index: 10;
   position: absolute;
@@ -162,35 +162,35 @@ Homepage header (Which shows logo or back (X) button)
 
 ----------------------------------------------- */
 
-header .staff-logo {
+header .logo {
   z-index: 11;
   position: relative;
   display: none;
   cursor: auto;
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation : landscape), only screen and (min-width: 1025px) {
-  header .staff-logo {
+  header .logo {
     display: block;
   }
 }
-header .staff-logo img {
+header .logo img {
   width: auto;
   margin: 25px;
   max-height: 70px;
   cursor: auto;
 }
 @media only screen and (min-width: 1025px) {
-  header .staff-logo img {
+  header .logo img {
     max-width: 350px;
   }
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation : landscape) {
-  header .staff-logo img {
+  header .logo img {
     max-width: 250px;
   }
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
-  header .staff-logo img {
+  header .logo img {
     max-width: 150px;
     margin: 50px 0 10px;
   }
@@ -284,14 +284,14 @@ header.detail section h1 {
     height: 70vh;
   }
 }
-header.staff-frontpage,
+header.frontpage,
 header.menu-header,
 header.content-header,
 header.contact-header {
   text-align: center;
 }
 
-.staff-frontpage {
+.frontpage {
   position: relative;
   display: flex;
   justify-content: space-around;
@@ -403,7 +403,7 @@ Misc elements & helpers
   right: 5%;
   opacity: 0;
 }
-#back-to-top .icon.staff-bg {
+#back-to-top .icon.bg {
   -webkit-transform: translateY(0);
   -ms-transform: translateY(0);
   transform: translateY(0);
@@ -818,7 +818,7 @@ Requests
 Homepage navigation
 
 ----------------------------------------------- */
-.staff-strokes {
+.strokes {
   z-index: 1;
   overflow-y: scroll;
   position: relative;
@@ -828,19 +828,19 @@ Homepage navigation
   left: 0;
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation : landscape), only screen and (min-width: 1025px) {
-  .staff-strokes {
+  .strokes {
     position: absolute;
     overflow-x: scroll;
     overflow-y: hidden;
   }
 }
-.staff-strokes ul {
+.strokes ul {
   margin: 0;
   padding: 0;
   list-style: none;
   white-space: nowrap;
 }
-.staff-strokes ul li {
+.strokes ul li {
   width: 100vw;
   height: 25vh;
   text-align: center;
@@ -848,11 +848,11 @@ Homepage navigation
   overflow: hidden;
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
-  .staff-strokes ul li {
+  .strokes ul li {
     height: 20vh;
   }
 }
-.staff-strokes ul li a {
+.strokes ul li a {
   -webkit-transition: background-color 0.4s cubic-bezier(0.4, 0.01, 0.165, 0.99);
   transition: background-color 0.4s cubic-bezier(0.4, 0.01, 0.165, 0.99);
   display: block;
@@ -860,72 +860,72 @@ Homepage navigation
   color: #FFFFFF;
   text-decoration: none;
 }
-.staff-strokes ul li a section {
+.strokes ul li a section {
   -webkit-transform: translateY(-50%);
       -ms-transform: translateY(-50%);
           transform: translateY(-50%);
   position: relative;
   top: 50%;
 }
-.staff-strokes ul li a section h1 {
+.strokes ul li a section h1 {
   font-size: 24px;
   letter-spacing: 0;
 }
-.staff-strokes ul li a section h5 {
+.strokes ul li a section h5 {
   line-height: 1em;
   margin-bottom: .1em;
   font-size: 14px;
 }
-.staff-strokes ul li a section * {
+.strokes ul li a section * {
   margin-top: 0;
 }
-.staff-strokes ul li h6 {
+.strokes ul li h6 {
   font-weight: 100;
   letter-spacing: 1px;
   opacity: .7;
 }
 @media only screen and (max-width: 667px) and (orientation : landscape) {
-  .staff-strokes ul li {
+  .strokes ul li {
     height: 35vh;
   }
 }
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation : landscape), only screen and (min-width: 1025px) {
-  .staff-strokes ul li {
+  .strokes ul li {
     display: inline-block;
     width: 25vw;
     height: 100vh;
   }
 }
 @media only screen and (min-width: 1025px) {
-  .staff-strokes ul li a {
+  .strokes ul li a {
     background-color: rgba(0, 0, 0, 0);
   }
-  .staff-strokes ul li a section * {
+  .strokes ul li a section * {
     -webkit-transition: all 0.5s cubic-bezier(0.4, 0.01, 0.165, 0.99);
     transition: all 0.5s cubic-bezier(0.4, 0.01, 0.165, 0.99);
     -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
     opacity: 0;
   }
-  .staff-strokes ul li a section h5 {
+  .strokes ul li a section h5 {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  .staff-strokes ul li a section h1 {
+  .strokes ul li a section h1 {
     font-size: 28px;
     opacity: 1;
   }
-  .staff-strokes ul li a:hover {
+  .strokes ul li a:hover {
     background-color: rgba(0, 0, 0, 0.5);
     color: #FFFFFF;
   }
-  .staff-strokes ul li a:hover section * {
+  .strokes ul li a:hover section * {
     opacity: 1;
   }
-  .staff-strokes ul li a:hover section h1 {
+  .strokes ul li a:hover section h1 {
     opacity: 1;
   }
-  .staff-strokes ul li a:hover section h5 {
+  .strokes ul li a:hover section h5 {
     -webkit-transform: translateY(-1);
         -ms-transform: translateY(-1);
             transform: translateY(-1);
@@ -933,7 +933,7 @@ Homepage navigation
   }
 }
 
-.staff-badge-rounded {
+.badge-rounded {
   display: inline-block;
   padding: .6em .9em;
   background: rgba(229,56,36,0.8);
@@ -944,7 +944,7 @@ Homepage navigation
 }
 
 
-.staff-notification-box {
+.notification-box {
   position: fixed;
   z-index: 99;
   top: 21%;
@@ -953,58 +953,58 @@ Homepage navigation
   height: 50px;
   text-align: center;
 }
-.staff-notification-bell {
+.notification-bell {
   animation: bell 1s 1s both infinite;
 }
-.staff-notification-bell * {
+.notification-bell * {
   display: block;
   margin: 0 auto;
   background-color: #fff;
   box-shadow: 0px 0px 15px #fff;
 }
-.staff-bell-top {
+.bell-top {
   width: 6px;
   height: 6px;
   border-radius: 3px 3px 0 0;
 }
-.staff-bell-middle {
+.bell-middle {
   width: 25px;
   height: 25px;
   margin-top: -1px;
   border-radius: 12.5px 12.5px 0 0;
 }
-.staff-bell-bottom {
+.bell-bottom {
   position: relative;
   z-index: 0;
   width: 32px;
   height: 2px;
 }
-.staff-bell-bottom::before,
-.staff-bell-bottom::after {
+.bell-bottom::before,
+.bell-bottom::after {
   content: '';
   position: absolute;
   top: -4px;
 }
-.staff-bell-bottom::before {
+.bell-bottom::before {
   left: 1px;
   border-bottom: 4px solid #fff;
   border-right: 0 solid transparent;
   border-left: 4px solid transparent;
 }
-.staff-bell-bottom::after {
+.bell-bottom::after {
   right: 1px;
   border-bottom: 4px solid #fff;
   border-right: 4px solid transparent;
   border-left: 0 solid transparent;
 }
-.staff-bell-rad {
+.bell-rad {
   width: 8px;
   height: 4px;
   margin-top: 2px;
   border-radius: 0 0 4px 4px;
   animation: rad 1s 2s both infinite;
 }
-.staff-notification-count {
+.notification-count {
   position: absolute;
   z-index: 1;
   top: -6px;
