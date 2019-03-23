@@ -15,7 +15,7 @@ import {
 
 /** ----- CSS/STYLING IMPORTS -----**/
 import "../../../resources/static/css/staff.css"
-
+//TODO filter for active
 export class CustomerDiningSessionSelect extends React.Component {
     constructor(props) {
         super(props);
@@ -66,6 +66,34 @@ export class StaffDiningSessionPage extends React.Component{
         )
     }
 
+//     requestOrders(){
+//         fetch(this.props.entity._links.tags.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
+//            .then(
+//                response => {
+//                    if (!response.ok) {
+//                        console.log('Looks like there was a problem. Status Code: ' +
+//                            response.status);
+//                        return;
+//                    }
+
+//                    // Examine the text in the response
+//                    response.json().then((data) => {
+//                        console.log(data._embedded.tags);
+//                        this.setState(
+//                            {
+//                                 status: this.state.status,
+//                                 quantity: this.props.order.quantity,
+//                                 menuItem: data._embedded.menuItems
+//                             }
+//                         );
+//                    });
+//                }
+//            )
+//            .catch(function(err) {
+//                console.log('Fetch Error :-S', err);
+//            });
+//    }
+
 }
 
 export class StaffDiningSession extends React.Component{
@@ -92,7 +120,7 @@ export class StaffDiningSession extends React.Component{
     }
 
     handleClick(){
-        //navigate to page
+        //TODO navigate to specific orders for diningSessions
         // onclick={handleClick}
     }
 }
