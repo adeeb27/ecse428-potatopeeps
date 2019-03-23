@@ -607,10 +607,11 @@ export class CustomerMenuItem extends React.Component {
                         <div className="dropdown-divider"/>
                     </div>
                     <div className="text">{this.props.menuItem.entity.description}</div>
-                    <div className="text">{this.props.menuItem.entity.price}</div>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
+                        {/* <div className="price-text">{this.props.menuItem.entity.price}</div> */}
                         <button className="add-to-cart-button" title="Add to cart">
                             <FontAwesomeIcon icon={faPlus}/>
+                            <div className="price-text">{this.props.menuItem.entity.price}</div> 
                         </button>
                     </div>
                 </div>
