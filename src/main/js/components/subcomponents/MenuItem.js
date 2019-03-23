@@ -301,20 +301,74 @@ class ManagerUpdateMenuItemDialog extends React.Component {
      * @param e - the event passed upon clicking the update button - used to prevent the default form submission behaviour.
      */
     handleSubmit(e) {
-        e.preventDefault();
-        const updatedMenuItem = {};
-        this.props.menuItemAttributes.forEach(attribute => {
-            updatedMenuItem[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
-        });
+       e.preventDefault();
+       const updatedMenuItem = {};
+       var validationSuccess = 1;
+       this.props.menuItemAttributes.forEach(attribute => {
+           var specAttribute = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
+           switch(attribute.toString()){
+               case "price":
+                   try {
+                       var regex = new RegExp("^([0-9]*[.])?[0-9]+$");
+                       if (!regex.test(specAttribute)){
+                           throw Exception;
+                       }
+                   } catch (error) {
+                       alert("Price needs to be an integer or decimal value.");
+                       validationSuccess = 0;
+                   }
+                   break;
+               case "name":
+                   try {
+                       if (specAttribute === "" || specAttribute == null){
+                           throw Exception;
+                       }
+                   } catch (error) {
+                       alert("Name of item cannot be empty.");
+                       validationSuccess = 0;
+                   }
+                   break;
+               case "description":
+                   try {
+                       if (specAttribute === "" || specAttribute == null){
+                           throw Exception;
+                       }
+                   } catch (error) {
+                       alert("Description of item cannot be empty.");
+                       validationSuccess = 0;
+                   }
+                   break;
+               case "inventory":
+                   try {
+                       var regex = new RegExp("^[0-9]+$");
+                       if (!regex.test(specAttribute)){
+                           throw Exception;
+                       }
+                   } catch (error) {
+                       alert("Inventory needs to be an integer or decimal value.");
+                       validationSuccess = 0;
+                   }
+                   break;
+               default:
+                   console.log("Input validation failed.");
+                   validationSuccess = 0;
+                   break;
+           }
+
+           updatedMenuItem[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
+       });
 
         updatedMenuItem['tags'] = updateSelectTagPaths;
-        this.props.onUpdate(this.props.menuItem, updatedMenuItem, 'menuItems');
-        this.props.requestTags('update');
-        setTimeout(() => {
-            this.props.requestTags('update')
-        }, 500);
 
-        this.handleClose();
+       if(validationSuccess){
+           this.props.onUpdate(this.props.menuItem, updatedMenuItem, 'menuItems');
+            this.props.requestTags('update');
+            setTimeout(() => {
+                this.props.requestTags('update')
+            }, 500);
+
+            this.handleClose();
+       } 
     }
 
     handleSelectChange(selectedTags) {
@@ -416,23 +470,75 @@ export class ManagerCreateMenuItemDialog extends React.Component {
     }
 
     handleSubmit(e) {
-        e.preventDefault();
-        const newMenuItem = {};
-        this.props.menuItemAttributes.forEach(attribute => {
-            newMenuItem[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
-        });
+       e.preventDefault();
+       const newMenuItem = {};
+       var validationSuccess = 1;
+       this.props.menuItemAttributes.forEach(attribute => {
+           var specAttribute = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
+           switch(attribute.toString()){
+               case "price":
+                   try {
+                       var regex = new RegExp("^([0-9]*[.])?[0-9]+$");
+                       if (!regex.test(specAttribute)){
+                           throw Exception;
+                       }
+                   } catch (error) {
+                       alert("Price needs to be an integer or decimal value.");
+                       validationSuccess = 0;
+                   }
+                   break;
+               case "name":
+                   try {
+                       if (specAttribute === "" || specAttribute == null){
+                           throw Exception;
+                       }
+                   } catch (error) {
+                       alert("Name of item cannot be empty.");
+                       validationSuccess = 0;
+                   }
+                   break;
+               case "description":
+                   try {
+                       if (specAttribute === "" || specAttribute == null){
+                           throw Exception;
+                       }
+                   } catch (error) {
+                       alert("Description of item cannot be empty.");
+                       validationSuccess = 0;
+                   }
+                   break;
+               case "inventory":
+                   try {
+                       var regex = new RegExp("^[0-9]+$");
+                       if (!regex.test(specAttribute)){
+                           throw Exception;
+                       }
+                   } catch (error) {
+                       alert("Inventory needs to be an integer or decimal value.");
+                       validationSuccess = 0;
+                   }
+                   break;
+               default:
+                   console.log("Input validation failed.");
+                   validationSuccess = 0;
+                   break;
+           }
 
-        newMenuItem['tags'] = selectedTagPaths;
+           newMenuItem[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
+       });
 
-        this.props.onCreate(newMenuItem, 'menuItems');
+       newMenuItem['tags'] = selectedTagPaths;
 
-        // clear out the dialog's inputs
-        this.props.menuItemAttributes.forEach(attribute => {
-            ReactDOM.findDOMNode(this.refs[attribute]).value = '';
-        });
+       if(validationSuccess){
+           this.props.onCreate(newMenuItem, 'menuItems');
+           // clear out the dialog's inputs
+           this.props.menuItemAttributes.forEach(attribute => {
+               ReactDOM.findDOMNode(this.refs[attribute]).value = '';
+           });
 
-        this.setState({selectedOptions: []});
-    }
+           this.setState({selectedOptions: []});
+       }
+   }
 
     handleSelectChange(selectedTags) {
         selectedTagPaths = [];
