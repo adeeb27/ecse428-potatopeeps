@@ -4,6 +4,7 @@
 import React from "react"; // Imports the ReactJS Library; Link: https://reactjs.org/
 import {Route, NavLink, Switch} from "react-router-dom"; // Imports the React-Router Elements mentioned in Index.js
 import {CSSTransition, TransitionGroup} from "react-transition-group";
+
 const root = "/api"; // Root is a variable used to provide pathing to the uriListConverter
 
 /** ----- COMPONENT IMPORTS -----**/
@@ -21,7 +22,7 @@ import when from "when";
 import "../../resources/static/css/route-transition.css";
 
 /**
-* This file is the React JS equivalent of Java's 'main' method, and holds the majority of
+ * This file is the React JS equivalent of Java's 'main' method, and holds the majority of
  * our generic business logic (Creating, Updating, Deleting resources).
  *
  * The state of this Component contains and should contain virtually all of the information we intend on storing
@@ -36,7 +37,7 @@ import "../../resources/static/css/route-transition.css";
  * Link to ReactJS Documentation on Components & Props: https://reactjs.org/docs/components-and-props.html
  *
  * @Author Evan Bruchet, Gabriel Negash
-* */
+ * */
 
 export class App extends React.Component {
 
@@ -44,10 +45,10 @@ export class App extends React.Component {
      * The constructor below instantiates each of the state variables mentioned previously. These variables are then
      * selectively sent to the components Customer, Manager, Staff. Note some of these variables are NOT passed to the
      * Route components as they don't require all these variables. (Manager does not need to see DiningSessions for ex.)
-    * */
-    constructor(props){
+     * */
+    constructor(props) {
         super(props);
-        this.state ={
+        this.state = {
             diningSessions: [],
             diningSessionLinks: {},
             diningSessionAttributes: [],
@@ -86,7 +87,7 @@ export class App extends React.Component {
      *
      * Link to ReactJS/Spring DATA REST Tutorial: https://spring.io/guides/tutorials/react-and-spring-data-rest/#react-and-spring-data-rest-part-2
      */
-    loadResourceFromServer(resourceType, pageSize){
+    loadResourceFromServer(resourceType, pageSize) {
         follow(client, root, [
             {rel: resourceType, params: {size: pageSize}}]
         ).then(resourceCollection => {
@@ -95,7 +96,7 @@ export class App extends React.Component {
                 path: resourceCollection.entity._links.profile.href,
                 headers: {'Accept': 'application/schema+json'}
             }).then(resourceSchema => {
-                switch(resourceType){
+                switch (resourceType) {
                     case('diningSessions'):
                         this.diningSessionSchema = resourceSchema.entity;
                         this.diningSessionLinks = resourceCollection.entity._links;
@@ -116,7 +117,7 @@ export class App extends React.Component {
                 return resourceCollection;
             });
         }).then(resourceCollection => {
-            switch(resourceType){
+            switch (resourceType) {
                 case('diningSessions'):
                     return resourceCollection.entity._embedded.diningSessions.map(diningSession =>
                         client({
@@ -149,7 +150,7 @@ export class App extends React.Component {
         }).then(resourcePromises => {
             return when.all(resourcePromises);
         }).done(resources => {
-            switch(resourceType) {
+            switch (resourceType) {
                 case('diningSessions'):
                     this.setState({
                         diningSessions: resources,
@@ -212,7 +213,27 @@ export class App extends React.Component {
         });
     }
 
-    // let validResources = [];
+    updateDiningSession(diningSession, updatedDiningSession, option, string) {
+
+        updatedDiningSession['tableNumber'] = diningSession.tableNumber;
+        switch (option) {
+            case 'diningSessionStatus':
+                updatedDiningSession['diningSessionStatus'] = string;
+                break;
+            case 'serviceRequestStatus':
+                updatedDiningSession['serviceRequestStatus'] = string;
+                break;
+            case 'billRequestStatus':
+                updatedDiningSession['billRequestStatus'] = string;
+                break;
+            case 'tableAssignmentStatus':
+                updatedDiningSession['tableAssignmentStatus'] = string;
+                break;
+
+        }
+
+
+    }
 
     /**
      *  Function to filter a list DiningSessions, to be used by Customer (TableNumberSelect) & Staff
@@ -224,9 +245,9 @@ export class App extends React.Component {
      *
      * TODO: validate props vs state, modify br_status & sr_status
      */
-    filterDiningSessionList(option){
+    filterDiningSessionList(option) {
         let filteredList = [];
-        switch(option){
+        switch (option) {
             case 'ta_status':
                 filteredList = this.state.diningSessions.filter(
                     session => session.entity.tableAssignmentStatus === "UNASSIGNED");
@@ -248,14 +269,14 @@ export class App extends React.Component {
         return filteredList
     }
 
-    filterMenuItemList(selectedView, selectedTags){
+    filterMenuItemList(selectedView, selectedTags) {
         let validMenuItems;
         if (selectedTags.length === 0) {
             this.setState({menuItems: []});
             this.loadResourceFromServer('menuItems', this.state.pageSize);
             return Promise.resolve(this.state.menuItemTags); //TODO: Return MenuItems not MenuItemTags
-        } else{
-            switch(selectedView){
+        } else {
+            switch (selectedView) {
                 case('Customer'):
                     validMenuItems = this.state.menuItemTags
                         .filter(menuItemTag => selectedTags
@@ -348,7 +369,7 @@ export class App extends React.Component {
      */
     onDelete(deletedResource, resourceType) {
         client({method: 'DELETE', path: deletedResource.entity._links.self.href}).done(() => {
-            switch(resourceType){
+            switch (resourceType) {
                 case('diningSessions'):
                     this.loadResourceFromServer('diningSessions', this.state.pageSize);
                     break;
@@ -377,9 +398,10 @@ export class App extends React.Component {
      * @author Ryan Dotsikas, Evan Bruchet
      */
     onNavigate(navUri, resourceType) {
-        client({method: 'GET', path: navUri
+        client({
+            method: 'GET', path: navUri
         }).then(resourceCollection => {
-            switch(resourceType){
+            switch (resourceType) {
                 case('diningSessions'):
                     this.diningSessionLinks = resourceCollection.entity._links;
                     return resourceCollection.entity._embedded.diningSessions.map(diningSession =>
@@ -416,7 +438,7 @@ export class App extends React.Component {
         }).then(resourcePromises => {
             return when.all(resourcePromises);
         }).done(resources => {
-            switch(resourceType){
+            switch (resourceType) {
                 case('diningSessions'):
                     this.setState({
                         diningSessions: resources,
@@ -460,7 +482,6 @@ export class App extends React.Component {
     }
 
 
-
     /**
      * render - Render a React element into the DOM in the supplied container and return a reference to the component
      *
@@ -484,78 +505,63 @@ export class App extends React.Component {
 
                 <Route render={({location}) => (
                     <TransitionGroup>
-                        <CSSTransition key={location.pathname} timeout={30000} classNames="fade" >
+                        <CSSTransition key={location.pathname} timeout={30000} classNames="fade">
                             <Switch location={location}>
                                 <Route exact path={"/(login)?"} component={Login}/>
                                 <Route path={"/customer"} render={(props) =>
                                     (<Customer loadResourceFromServer={this.loadResourceFromServer}
-                                                                      onCreate={this.onCreate}
-                                                                      onUpdate={this.onUpdate}
-                                                                      onDelete={this.onDelete}
-                                                                      onNavigate={this.onNavigate}
-                                                                      filterDiningSessionList={this.filterDiningSessionList}
-                                                                      diningSessions={this.state.diningSessions}
-                                                                      diningSessionLinks={this.state.diningSessionLinks}
-                                                                      filterMenuItemList={this.filterMenuItemList}
-                                                                      menuItems={this.state.menuItems}
-                                                                      menuItemLinks={this.state.menuItemLinks}
-                                                                      menuItemAttributes={this.state.menuItemAttributes}
-                                                                      tags={this.state.tags}
-                                                                      tagLinks={this.state.tagLinks}
-                                                                      tagAttributes={this.state.tagAttributes}
-                                                                      diningSessionAttributes={this.state.diningSessionAttributes}
-                                                                      orders={this.state.orders}
-                                                                      orderLinks={this.state.orderLinks}
-                                                                      orderAttributes={this.state.orderAttributes}
-                                                                      selectedView={'Customer'}
-                                                                      {...props}/>)}/>
+                                               onCreate={this.onCreate}
+                                               onUpdate={this.onUpdate}
+                                               onDelete={this.onDelete}
+                                               onNavigate={this.onNavigate}
+
+                                               filterDiningSessionList={this.filterDiningSessionList}
+                                               diningSessions={this.state.diningSessions}
+                                               diningSessionLinks={this.state.diningSessionLinks}
+                                               filterMenuItemList={this.filterMenuItemList}
+                                               menuItems={this.state.menuItems}
+                                               menuItemLinks={this.state.menuItemLinks}
+                                               menuItemAttributes={this.state.menuItemAttributes}
+                                               tags={this.state.tags}
+                                               tagLinks={this.state.tagLinks}
+                                               tagAttributes={this.state.tagAttributes}
+                                               diningSessionAttributes={this.state.diningSessionAttributes}
+                                               orders={this.state.orders}
+                                               orderLinks={this.state.orderLinks}
+                                               orderAttributes={this.state.orderAttributes}
+                                               selectedView={'Customer'}
+                                               {...props}/>)}/>
                                 <Route path={"/manager"} render={(props) =>
                                     (<Manager loadResourceFromServer={this.loadResourceFromServer}
-                                                                      onCreate={this.onCreate}
-                                                                      onUpdate={this.onUpdate}
-                                                                      onDelete={this.onDelete}
-                                                                      onNavigate={this.onNavigate}
-                                                                      filterMenuItemList={this.filterMenuItemList}
-                                                                      menuItems={this.state.menuItems}
-                                                                      menuItemLinks={this.state.menuItemLinks}
-                                                                      menuItemAttributes={this.state.menuItemAttributes}
-                                                                      tags={this.state.tags}
-                                                                      tagLinks={this.state.tagLinks}
-                                                                      tagAttributes={this.state.tagAttributes}
-                                                                      selectedView={'Manager'}
-                                                                      {...props}/>)}/>
+                                              onCreate={this.onCreate}
+                                              onUpdate={this.onUpdate}
+                                              onDelete={this.onDelete}
+                                              onNavigate={this.onNavigate}
+                                              filterMenuItemList={this.filterMenuItemList}
+                                              menuItems={this.state.menuItems}
+                                              menuItemLinks={this.state.menuItemLinks}
+                                              menuItemAttributes={this.state.menuItemAttributes}
+                                              tags={this.state.tags}
+                                              tagLinks={this.state.tagLinks}
+                                              tagAttributes={this.state.tagAttributes}
+                                              selectedView={'Manager'}
+                                              {...props}/>)}/>
                                 <Route path={"/staff"} render={(props) =>
                                     (<Staff loadResourceFromServer={this.loadResourceFromServer}
-                                                                    onCreate={this.onCreate}
-                                                                    onUpdate={this.onUpdate}
-                                                                    onDelete={this.onDelete}
-                                                                    onNavigate={this.onNavigate}
-                                                                    diningSessions={this.state.diningSessions}
-                                                                    diningSessionLinks={this.state.diningSessionLinks}
-                                                                    diningSessionAttributes={this.state.diningSessionAttributes}
-                                                                    orders={this.state.orders}
-                                                                    orderLinks={this.state.orderLinks}
-                                                                    orderAttributes={this.state.orderAttributes}
-                                                                    selectedView={'Staff'}
-                                                                    {...props}/>)}/>
+                                            onCreate={this.onCreate}
+                                            onUpdate={this.onUpdate}
+                                            onDelete={this.onDelete}
+                                            onNavigate={this.onNavigate}
+                                            diningSessions={this.state.diningSessions}
+                                            diningSessionLinks={this.state.diningSessionLinks}
+                                            diningSessionAttributes={this.state.diningSessionAttributes}
+                                            orders={this.state.orders}
+                                            orderLinks={this.state.orderLinks}
+                                            orderAttributes={this.state.orderAttributes}
+                                            selectedView={'Staff'}
+                                            {...props}/>)}/>
                                 <Route path={"/customer-menu"} render={(props) =>
                                     (<CustomerMenu loadResourceFromServer={this.loadResourceFromServer}
-                                                                    onCreate={this.onCreate}
-                                                                    onUpdate={this.onUpdate}
-                                                                    onDelete={this.onDelete}
-                                                                    onNavigate={this.onNavigate}
-                                                                    diningSessions={this.state.diningSessions}
-                                                                    diningSessionLinks={this.state.diningSessionLinks}
-                                                                    diningSessionAttributes={this.state.diningSessionAttributes}
-                                                                    orders={this.state.orders}
-                                                                    orderLinks={this.state.orderLinks}
-                                                                    orderAttributes={this.state.orderAttributes}
-                                                                    menuItemTags={this.state.menuItemTags}
-                                                                    selectedView={'Customer'}
-                                                                    filterMenuItemList={this.filterMenuItemList}
-                                                                    {...props}/>)}/>
-                                <Route path={"/CustomerLanding"} render={(props) =>
-                                    (<CustomerLandingPage loadResourceFromServer={this.loadResourceFromServer}
                                                    onCreate={this.onCreate}
                                                    onUpdate={this.onUpdate}
                                                    onDelete={this.onDelete}
@@ -566,12 +572,31 @@ export class App extends React.Component {
                                                    orders={this.state.orders}
                                                    orderLinks={this.state.orderLinks}
                                                    orderAttributes={this.state.orderAttributes}
-                                                   menuItems={this.props.menuItems}
+                                                   menuItems={this.state.menuItems}
                                                    menuItemTags={this.state.menuItemTags}
                                                    tags={this.state.tags}
                                                    selectedView={'Customer'}
                                                    filterMenuItemList={this.filterMenuItemList}
                                                    {...props}/>)}/>
+                                <Route path={"/CustomerLanding"} render={(props) =>
+                                    (<CustomerLandingPage loadResourceFromServer={this.loadResourceFromServer}
+                                                          onCreate={this.onCreate}
+                                                          onUpdate={this.onUpdate}
+                                                          onDelete={this.onDelete}
+                                                          updateDiningSession={this.updateDiningSession}
+                                                          onNavigate={this.onNavigate}
+                                                          diningSessions={this.state.diningSessions}
+                                                          diningSessionLinks={this.state.diningSessionLinks}
+                                                          diningSessionAttributes={this.state.diningSessionAttributes}
+                                                          orders={this.state.orders}
+                                                          orderLinks={this.state.orderLinks}
+                                                          orderAttributes={this.state.orderAttributes}
+                                                          menuItems={this.props.menuItems}
+                                                          menuItemTags={this.state.menuItemTags}
+                                                          tags={this.state.tags}
+                                                          selectedView={'Customer'}
+                                                          filterMenuItemList={this.filterMenuItemList}
+                                                          {...props}/>)}/>
                                 <Route exact path={"/selectTask"} component={SelectTask}/>
                             </Switch>
                         </CSSTransition>
