@@ -101,6 +101,25 @@ class StaffLanding extends React.Component {
 export class StaffRequests extends React.Component {
     constructor(props) {
         super(props);
+        this.handleAnswerServiceRequest = this.handleAnswerServiceRequest.bind(this);
+    }
+
+    handleAnswerServiceRequest(tableNum, e) {
+        e.preventDefault();
+        const updatedDiningSession = {};
+
+        updatedDiningSession['tableNumber'] = tableNum;
+        updatedDiningSession['serviceRequestStatus'] = 'INACTIVE';
+
+        let oldDiningSession = this.props.diningSessions.find(function(session) {
+            return session.entity.tableNumber === parseInt(tableNum, 10);
+        });
+
+        this.props.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
+        this.props.history.push({
+            pathname: '/staff-requests',
+            //Any states that are defined in the constructor(props) above need to be passed in here
+        });
     }
 
     render() {
@@ -120,6 +139,25 @@ export class StaffRequests extends React.Component {
 export class StaffOrders extends React.Component {
     constructor(props) {
         super(props);
+        this.handleChangeOrderStatus = this.handleChangeOrderStatus.bind(this);
+    }
+
+    handleChangeOrderStatus(diningSession, selectedOrderID, selectedStatus, e) {
+        e.preventDefault();
+        const updatedOrder = {};
+
+        updatedOrder['dining_session_id'] = diningSession;
+        updatedOrder['order_item_id'] = selectedOrderID;
+        updatedOrder['status'] = selectedStatus;
+
+        let oldOrder = this.props.orders.find(function(session) {
+            return session.entity.orderID == parseInt(selectedOrderID, 10);
+        });
+        
+        this.props.onUpdate(oldOrder, updatedOrder, 'orders');
+        this.props.history.push({
+            pathname: '/staff-orders',
+        });
     }
 
     render() {
