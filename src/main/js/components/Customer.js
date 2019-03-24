@@ -29,7 +29,44 @@ export class Customer extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {selectedView: 'Customer'};
+        this.state = {selectedView: 'Customer',
+                      sentObject: {tableNum: 1, ordersToBeCreated: []},
+                      selectedTableNumber: 0
+        };
+        this.updateCustomerCart = this.updateCustomerCart.bind(this);
+    }
+
+    updateCustomerCart(menuItem){
+
+        let oldSentObject = this.state.sentObject;
+        let oldOrdersToBeCreated = [];
+        oldOrdersToBeCreated = oldSentObject.ordersToBeCreated;
+
+        let alreadyExists = false;
+
+        oldOrdersToBeCreated.forEach((oldOrderToBeCreated) => {
+           if(oldOrderToBeCreated.name === menuItem.entity.name){
+               console.log("Already exists.");
+               alreadyExists = true;
+           }
+        });
+
+        if(!alreadyExists){
+            let orderToBeCreated = {};
+            orderToBeCreated['quantity'] = 1;
+            orderToBeCreated['name'] = menuItem.entity.name;
+            orderToBeCreated['price'] = menuItem.entity.price;
+            orderToBeCreated['menuItemHref'] = menuItem.entity._links.self.href;
+
+            oldOrdersToBeCreated.push(orderToBeCreated);
+
+            this.setState({sentObject: {tableNum: this.state.selectedTableNumber, ordersToBeCreated: oldOrdersToBeCreated}});
+
+            setTimeout(() =>{
+                console.log("Current Sent Object: ", this.state.sentObject);
+                console.log("Order to be created: ", orderToBeCreated);
+            }, 3000)
+        }
     }
 
     componentDidMount() {
@@ -51,6 +88,7 @@ export class Customer extends React.Component {
         return(
         <TableNumberSelect
             handleTableNumberSelect={this.handleTableNumberSelect}
+            updateCustomerCart={this.updateCustomerCart}
             diningSessions={customerDS}
             diningSessionAttributes={this.props.diningSessionAttributes}
             history={this.props.history}
@@ -64,7 +102,6 @@ class TableNumberSelect extends React.Component{
     constructor(props){
         super(props);
         this.handleTableNumberSelect = this.handleTableNumberSelect.bind(this);
-
     }
 
 
@@ -72,7 +109,7 @@ class TableNumberSelect extends React.Component{
         e.preventDefault();
         const updatedDiningSession = {};
 
-        let selectedTableNumber = document.getElementById('table-select-dropdown').value
+        let selectedTableNumber = document.getElementById('table-select-dropdown').value;
 
         updatedDiningSession['tableNumber'] = selectedTableNumber;
         updatedDiningSession['diningSessionStatus'] = 'ACTIVE';
@@ -84,12 +121,17 @@ class TableNumberSelect extends React.Component{
             return session.entity.tableNumber === parseInt(selectedTableNumber, 10);
         });
 
+        this.setState({selectedTableNumber: selectedTableNumber});
+
         this.props.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
         //this.props.history.push('/CustomerLanding');
 
         this.props.history.push({
             pathname: '/CustomerLanding',
-            state: {tableNum: selectedTableNumber, currentDiningSession: updatedDiningSession, oldDiningSess: oldDiningSession}//TODO: make use of tableNum via this.props.location.state.tableNum
+            state: {tableNum: selectedTableNumber,
+                    currentDiningSession: updatedDiningSession,
+                    oldDiningSess: oldDiningSession,
+                    updateCustomerCart: this.props.updateCustomerCart}//TODO: make use of tableNum via this.props.location.state.tableNum
         });
     }
 
@@ -148,6 +190,7 @@ export class CustomerLandingPage extends React.Component {
                     menuItems: response,
                     selectedView: this.props.selectedView,
                     customerFilter: this.props.customerFilter,
+                    updateCustomerCart: this.props.location.state.updateCustomerCart,
                     filterMenuItemList: this.props.filterMenuItemList,
                     tableNum: this.props.location.state.tableNum}
             })
@@ -230,8 +273,9 @@ export class CustomerMenu extends React.Component {
     handleCloseMenu(){
         this.props.history.push({
             pathname: '/CustomerLanding',
-            state: {tableNum: this.props.location.state.tableNum} //TODO: make use of tableNum via this.props.location.state.tableNum
+            state: {tableNum: this.props.location.state.tableNum, updateCustomerCart: this.props.location.state.updateCustomerCart} //TODO: make use of tableNum via this.props.location.state.tableNum
         });
+
     }
 
     render() {
@@ -246,7 +290,8 @@ export class CustomerMenu extends React.Component {
                                     <h1>{this.props.location.state.tagName}</h1>
                                 </section>
                             </header>
-                            <MenuItemList selectedView={this.props.selectedView}
+                            <MenuItemList updateCustomerCart={this.props.location.state.updateCustomerCart}
+                                          selectedView={this.props.selectedView}
                                           menuItems={this.props.location.state.menuItems}
                                           pageSize={this.state.pageSize}
                                           menuItemTags={this.props.menuItemTags}

@@ -39,7 +39,8 @@ export class MenuItemList extends React.Component {
                                          onDelete={this.props.onDelete}/>);
         /* Returns the Customer 'version' of the MenuItemList if the selectedView property is set to Customer. */
         else if (this.props.selectedView === 'Customer')
-            return (<CustomerMenuItemList menuItems={this.props.menuItems}
+            return (<CustomerMenuItemList updateCustomerCart={this.props.updateCustomerCart}
+                                          menuItems={this.props.menuItems}
                                           pageSize={this.props.pageSize}
                                           attributes={this.props.attributes}
                                           menuItemAttributes={this.props.menuItemAttributes}
@@ -510,6 +511,7 @@ export class CustomerMenuItemList extends React.Component {
     render() {
         const menuItems = this.props.menuItems.map(menuItem =>
             <CustomerMenuItem key={menuItem.entity._links.self.href}
+                              updateCustomerCart={this.props.updateCustomerCart}
                               menuItem={menuItem}
                               menuItems={this.props.menuItems}
                               menuItemAttributes={this.props.menuItemAttributes}/>
@@ -538,6 +540,13 @@ export class CustomerMenuItem extends React.Component {
         super(props);
         this.state = {menuItemTags: []};
         this.requestTags = this.requestTags.bind(this);
+        this.handleMenuItemClick = this.handleMenuItemClick.bind(this);
+    }
+
+    handleMenuItemClick(e){
+        e.preventDefault();
+        console.log("Clicked Menu Item Click");
+        this.props.updateCustomerCart(this.props.menuItem);
     }
 
     /**
@@ -605,7 +614,7 @@ export class CustomerMenuItem extends React.Component {
                     <div className="text">{this.props.menuItem.entity.description}</div>
                     <div className="text">{this.props.menuItem.entity.price}</div>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
-                        <button className="add-to-cart-button" title="Add to cart">
+                        <button className="add-to-cart-button" title="Add to cart"  onClick={this.handleMenuItemClick}>
                             <FontAwesomeIcon icon={faPlus}/>
                         </button>
                     </div>
