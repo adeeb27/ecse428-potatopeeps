@@ -11,8 +11,7 @@ const root = "/api"; // Root is a variable used to provide pathing to the uriLis
 import {Login, SelectTask} from "./Login";
 import {Staff} from "./Staff";
 import {Manager} from "./Manager";
-import {Customer, CustomerMenu, CustomerLandingPage, CustomerCartPage} from "./Customer";
-import {Order} from "./subcomponents/Order";
+import {Customer, CustomerMenu, CustomerLandingPage, CustomerCartPage, CustomerReviewBill} from "./Customer";
 
 /** ----- TUTORIAL API IMPORTS -----**/
 import follow from "../follow";
@@ -66,8 +65,10 @@ export class App extends React.Component {
             pageSize: 10,
             selectedTableNumber: 1,
             sentObject: {tableNum: 1, ordersToBeCreated: []},
-            billObject: {billTotal: 0, ordersCreated: [],
-            customerSelectedTableNumber: 0}
+            billObject: {
+                billTotal: 0, ordersCreated: [],
+                customerSelectedTableNumber: 0
+            }
         };
         this.onCreate = this.onCreate.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
@@ -82,6 +83,7 @@ export class App extends React.Component {
         this.removeCartItem = this.removeCartItem.bind(this);
         this.submitOrders = this.submitOrders.bind(this);
         this.customerSelectTableNumber = this.customerSelectTableNumber.bind(this);
+        this.customerRequestsBill = this.customerRequestsBill.bind(this);
     }
 
 
@@ -488,7 +490,7 @@ export class App extends React.Component {
         }
     }
 
-    updateCustomerCart(menuItem){
+    updateCustomerCart(menuItem) {
         let oldSentObject = this.state.sentObject;
         let oldOrdersToBeCreated = [];
         oldOrdersToBeCreated = oldSentObject.ordersToBeCreated;
@@ -496,12 +498,12 @@ export class App extends React.Component {
         let alreadyExists = false;
 
         oldOrdersToBeCreated.forEach((oldOrderToBeCreated) => {
-            if(oldOrderToBeCreated.name === menuItem.entity.name){
+            if (oldOrderToBeCreated.name === menuItem.entity.name) {
                 alreadyExists = true;
             }
         });
 
-        if(!alreadyExists){
+        if (!alreadyExists) {
             let orderToBeCreated = {};
             orderToBeCreated['quantity'] = 1;
             orderToBeCreated['name'] = menuItem.entity.name;
@@ -511,55 +513,73 @@ export class App extends React.Component {
             oldOrdersToBeCreated.push(orderToBeCreated);
 
             let cartTotal = 0;
-            oldOrdersToBeCreated.forEach(function(oldOrder){
+            oldOrdersToBeCreated.forEach(function (oldOrder) {
                 cartTotal += oldOrder.orderTotal;
             });
 
-            this.setState({sentObject: {tableNum: this.state.customerSelectedTableNumber,
+            this.setState({
+                sentObject: {
+                    tableNum: this.state.customerSelectedTableNumber,
                     cartTotal: cartTotal,
-                    ordersToBeCreated: oldOrdersToBeCreated}});
+                    ordersToBeCreated: oldOrdersToBeCreated
+                }
+            });
         }
     }
 
-    updateOrderQuantity(quantity, index){
+    updateOrderQuantity(quantity, index) {
         let oldOrdersToBeCreated = this.state.sentObject.ordersToBeCreated;
         let name = oldOrdersToBeCreated[index].name;
         let price = oldOrdersToBeCreated[index].price;
         let href = oldOrdersToBeCreated[index].menuItemHref;
         let orderTotal = price * quantity;
-        oldOrdersToBeCreated[index] = {quantity: quantity, name: name, price: price, orderTotal: orderTotal, menuItemHref: href};
+        oldOrdersToBeCreated[index] = {
+            quantity: quantity,
+            name: name,
+            price: price,
+            orderTotal: orderTotal,
+            menuItemHref: href
+        };
 
         let cartTotal = 0;
-        oldOrdersToBeCreated.forEach(function(oldOrder) {
+        oldOrdersToBeCreated.forEach(function (oldOrder) {
             cartTotal += oldOrder.orderTotal;
         });
 
-        this.setState({sentObject: {tableNum: this.state.customerSelectedTableNumber,
+        this.setState({
+            sentObject: {
+                tableNum: this.state.customerSelectedTableNumber,
                 cartTotal: cartTotal,
-                ordersToBeCreated: oldOrdersToBeCreated}});
+                ordersToBeCreated: oldOrdersToBeCreated
+            }
+        });
     }
 
 
-    removeCartItem(e, index){
+    removeCartItem(e, index) {
         e.preventDefault();
         let oldOrdersToBeCreated = this.state.sentObject.ordersToBeCreated;
         let oldCartTotal = this.state.sentObject.cartTotal;
         let newCartTotal = oldCartTotal - oldOrdersToBeCreated[index].orderTotal;
         oldOrdersToBeCreated.splice(index, 1);
 
-        this.setState({sentObject:
-                {tableNum: this.state.customerSelectedTableNumber,
-                cartTotal: newCartTotal, ordersToBeCreated: oldOrdersToBeCreated}});
+        this.setState({
+            sentObject:
+                {
+                    tableNum: this.state.customerSelectedTableNumber,
+                    cartTotal: newCartTotal, ordersToBeCreated: oldOrdersToBeCreated
+                }
+        });
     }
 
-    submitOrders(e){
+    submitOrders(e) {
         e.preventDefault();
         let ordersToBeCreated = this.state.sentObject.ordersToBeCreated;
         let diningSessionsLength = this.state.diningSessions.length;
         let diningSessionUrl = "";
 
-        for(let i = 0; i < diningSessionsLength; i++){
-            if(this.state.diningSessions[i].entity.tableNumber === parseInt(this.state.customerSelectedTableNumber, 10))
+        for (let i = 0; i < diningSessionsLength; i++) {
+            if (this.state.diningSessions[i].entity.tableNumber === parseInt(this.state.customerSelectedTableNumber, 10))
                 diningSessionUrl = this.state.diningSessions[i].entity._links.self.href;
         }
 
@@ -584,9 +604,15 @@ export class App extends React.Component {
         let newBillTotal = this.state.billObject.billTotal + cartTotal;
         let ordersCreated = this.state.billObject.ordersCreated.concat(ordersToBeCreated);
 
-        setTimeout(() =>{
+        setTimeout(() => {
             this.setState({sentObject: {tableNum: thisStateSelectedTableNumber, cartTotal: 0, ordersToBeCreated: []}});
-            this.setState({billObject: {billTotal: newBillTotal, ordersCreated: ordersCreated}});
+            this.setState({
+                billObject: {
+                    tableNum: thisStateSelectedTableNumber,
+                    billTotal: newBillTotal,
+                    ordersCreated: ordersCreated
+                }
+            });
             console.log("Emptied Sent Object: ", this.state.sentObject);
             console.log("Bill Object: ", this.state.billObject);
         }, 1000)
@@ -594,7 +620,41 @@ export class App extends React.Component {
     }
 
 
-    customerSelectTableNumber(selectedTableNumber){
+    customerRequestsBill() {
+
+        let diningSessionUrl = "";
+        let diningSessionsLength = this.state.diningSessions.length;
+
+        let index = 0;
+        for (let i = 0; i < diningSessionsLength; i++) {
+            if (this.state.diningSessions[i].entity.tableNumber === parseInt(this.state.customerSelectedTableNumber, 10)) {
+                diningSessionUrl = this.state.diningSessions[i].entity._links.self.href;
+                index = i;
+                break;
+            }
+        }
+
+        let updatedDiningSession = {};
+
+        updatedDiningSession['tableNumber'] = parseInt(this.state.customerSelectedTableNumber, 10);
+        updatedDiningSession['billRequestStatus'] = 'ACTIVE';
+
+
+        this.onUpdate(this.state.diningSessions[index], updatedDiningSession, 'orders');
+        this.setState({
+            billObject: {
+                billTotal: 0,
+                ordersCreated: [],
+                customerSelectedTableNumber: parseInt(this.state.customerSelectedTableNumber, 10)
+            }
+        })
+
+
+        //    billObject: {billTotal: 0, ordersCreated: [],
+        //             customerSelectedTableNumber: 0}
+    }
+
+    customerSelectTableNumber(selectedTableNumber) {
         this.setState({customerSelectedTableNumber: selectedTableNumber});
     }
 
@@ -710,7 +770,7 @@ export class App extends React.Component {
                                                           orders={this.state.orders}
                                                           orderLinks={this.state.orderLinks}
                                                           orderAttributes={this.state.orderAttributes}
-                                                          menuItems={this.props.menuItems}
+                                                          menuItems={this.state.menuItems}
                                                           menuItemTags={this.state.menuItemTags}
                                                           tags={this.state.tags}
                                                           updateCustomerCart={this.updateCustomerCart}
@@ -719,30 +779,53 @@ export class App extends React.Component {
                                                           selectedView={'Customer'}
                                                           filterMenuItemList={this.filterMenuItemList}
                                                           {...props}/>)}/>
+                                <Route path={"/customer-review-bill"} render={(props) =>
+                                    (<CustomerReviewBill loadResourceFromServer={this.loadResourceFromServer}
+                                                         onCreate={this.onCreate}
+                                                         onUpdate={this.onUpdate}
+                                                         onDelete={this.onDelete}
+                                                         onNavigate={this.onNavigate}
+                                                         customerRequestsBill={this.customerRequestsBill}
+                                                         diningSessions={this.state.diningSessions}
+                                                         diningSessionLinks={this.state.diningSessionLinks}
+                                                         diningSessionAttributes={this.state.diningSessionAttributes}
+                                                         orders={this.state.orders}
+                                                         orderLinks={this.state.orderLinks}
+                                                         orderAttributes={this.state.orderAttributes}
+                                                         menuItems={this.props.menuItems}
+                                                         menuItemTags={this.state.menuItemTags}
+                                                         tags={this.state.tags}
+                                                         updateCustomerCart={this.updateCustomerCart}
+                                                         updateOrderQuantity={this.updateOrderQuantity}
+                                                         sentObject={this.state.sentObject}
+                                                         billObject={this.state.billObject}
+                                                         selectedView={'Customer'}
+                                                         filterMenuItemList={this.filterMenuItemList}
+                                                         {...props}/>)}/>
                                 <Route path={"/customer-view-cart"} render={(props) =>
                                     (<CustomerCartPage loadResourceFromServer={this.loadResourceFromServer}
-                                                          onCreate={this.onCreate}
-                                                          onUpdate={this.onUpdate}
-                                                          onDelete={this.onDelete}
-                                                          removeCartItem={this.removeCartItem}
-                                                          updateDiningSession={this.updateDiningSession}
-                                                          onNavigate={this.onNavigate}
-                                                          updateCustomerCart={this.updateCustomerCart}
-                                                          updateOrderQuantity={this.updateOrderQuantity}
-                                                          submitOrders={this.submitOrders}
-                                                          sentObject={this.state.sentObject}
-                                                          diningSessions={this.state.diningSessions}
-                                                          diningSessionLinks={this.state.diningSessionLinks}
-                                                          diningSessionAttributes={this.state.diningSessionAttributes}
-                                                          orders={this.state.orders}
-                                                          orderLinks={this.state.orderLinks}
-                                                          orderAttributes={this.state.orderAttributes}
-                                                          menuItems={this.props.menuItems}
-                                                          menuItemTags={this.state.menuItemTags}
-                                                          tags={this.state.tags}
-                                                          selectedView={'Customer'}
-                                                          filterMenuItemList={this.filterMenuItemList}
-                                                          {...props}/>)}/>
+                                                       onCreate={this.onCreate}
+                                                       onUpdate={this.onUpdate}
+                                                       onDelete={this.onDelete}
+                                                       removeCartItem={this.removeCartItem}
+                                                       updateDiningSession={this.updateDiningSession}
+                                                       onNavigate={this.onNavigate}
+                                                       updateCustomerCart={this.updateCustomerCart}
+                                                       updateOrderQuantity={this.updateOrderQuantity}
+                                                       submitOrders={this.submitOrders}
+                                                       sentObject={this.state.sentObject}
+                                                       diningSessions={this.state.diningSessions}
+                                                       diningSessionLinks={this.state.diningSessionLinks}
+                                                       diningSessionAttributes={this.state.diningSessionAttributes}
+                                                       orders={this.state.orders}
+                                                       orderLinks={this.state.orderLinks}
+                                                       orderAttributes={this.state.orderAttributes}
+                                                       menuItems={this.props.menuItems}
+                                                       menuItemTags={this.state.menuItemTags}
+                                                       tags={this.state.tags}
+                                                       selectedView={'Customer'}
+                                                       filterMenuItemList={this.filterMenuItemList}
+                                                       {...props}/>)}/>
                                 <Route exact path={"/selectTask"} component={SelectTask}/>
                             </Switch>
                         </CSSTransition>

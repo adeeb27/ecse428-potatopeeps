@@ -20,6 +20,10 @@ import {MenuItemList} from "./subcomponents/MenuItem";
 
 /** ----- CSS/STYLING IMPORTS -----**/
 import "../../resources/static/css/customer.css";
+import "../../resources/static/css/staff.css";
+
+
+import {Route} from "react-router-dom";
 /**
  * This JS file contains all code related to the rendering of the 'Customer' perspective.
  * Any components you wish to create related to this perspective should be developed within
@@ -70,7 +74,7 @@ class TableNumberSelect extends React.Component{
         super(props);
         this.handleTableNumberSelect = this.handleTableNumberSelect.bind(this);
     }
-    
+
     handleTableNumberSelect(e) {
         e.preventDefault();
         const updatedDiningSession = {};
@@ -136,6 +140,7 @@ export class CustomerLandingPage extends React.Component {
         this.handleTagClick = this.handleTagClick.bind(this);
         this.handleClick=this.handleClick.bind(this);
         this.handleViewCartClick = this.handleViewCartClick.bind(this);
+        this.handleReviewBill = this.handleReviewBill.bind(this);
     }
 
     handleClick(e){
@@ -145,6 +150,7 @@ export class CustomerLandingPage extends React.Component {
         this.props.updateDiningSession(this.props.location.state.currentDiningSession, updatedDiningSession,'serviceRequestStatus','ACTIVE');
         this.props.onUpdate(this.props.location.state.oldDiningSess, updatedDiningSession, 'diningSessions');
 
+        this.handleReviewBill = this.handleReviewBill.bind(this);
     }
 
     handleTagClick(e, selectedTag){
@@ -173,7 +179,20 @@ export class CustomerLandingPage extends React.Component {
                 customerFilter: this.props.customerFilter,
                 filterMenuItemList: this.props.filterMenuItemList,
             }
-        })
+        });
+    }
+
+    handleReviewBill (e) {
+        e.preventDefault();
+        this.props.history.push({
+            pathname: '/customer-review-bill',
+            state: {
+
+                selectedView: this.props.selectedView,
+                tableNum: this.props.location.state.tableNum,
+                menuItem: this.props.location.state.menuItems}
+
+        });
     }
 
     render(){
@@ -204,11 +223,11 @@ export class CustomerLandingPage extends React.Component {
                                 <FontAwesomeIcon icon={faBell} className="landing-page-header-button-icons"/>
                                 Request Service
                             </button>
-                            <button className="landing-page-button" style={{zIndex: 1000}}>
-                                <FontAwesomeIcon icon={faDollarSign} className="landing-page-header-button-icons"/>
-                                Request Bill
+                            <button className="landing-page-button" onClick={this.handleReviewBill} style={{zIndex: 1000}}>
+                                 <FontAwesomeIcon icon={faDollarSign} className="landing-page-header-button-icons"/>
+                                 Review Bill
                             </button>
-                            <button className="landing-page-button" style={{zIndex: 1000}} onClick={this.handleViewCartClick}>
+                            <button className="landing-page-button" onClick={this.handleViewCartClick} style={{zIndex: 1000}}>
                                 <FontAwesomeIcon icon={faShoppingCart} className="landing-page-header-button-icons"/>
                                 View Your Cart
                             </button>
@@ -286,6 +305,102 @@ export class CustomerMenu extends React.Component {
 
 }
 
+export class CustomerReviewBill extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.handleCloseMenu = this.handleCloseMenu.bind(this);
+    }
+
+    handleCloseMenu(e){
+        e.preventDefault();
+        this.props.history.push({
+            pathname: '/CustomerLanding',
+            state: {tableNum: this.props.location.state.tableNum}
+        });
+    }
+
+    handleRequestBill(e) {
+        e.preventDefault();
+        this.props.customerRequestsBill();
+    }
+
+    render () {
+
+        const billItems = this.props.billObject.ordersCreated.map(billItem =>
+
+            <tbody>
+            <tr>
+                <td>   </td>
+                <td key={billItem.menuItemHref + "-name"}> {billItem.name}</td>
+                <td key={billItem.menuItemHref + "-price"}>{"$" + billItem.price.toFixed(2)} </td>
+                <td key={billItem.menuItemHref + "-quantity"}> {billItem.quantity}  </td>
+                <td key={billItem.menuItemHref + "-full-price"}> {"$" + billItem.orderTotal.toFixed(2)} </td>
+            </tr>
+            </tbody>
+
+        );
+
+        return (
+                    <div>
+                        <title>Customer Final Bill</title>
+                        <div id="wrapper">
+                            <main className="main-wrapper">
+                                <header className="detail full">
+                                    <a className="back" onClick={this.handleCloseMenu} data-transition="slide-from-top" />
+                                    <section>
+                                        <h1 className="category-title">{"Your Final Bill: "}</h1>
+                                    </section>
+                                </header>
+                                <div className="content-wrap full-width">
+                                    <div className="table-container">
+                                        <table className="order-table">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col" />
+                                                <th scope="col">Item</th>
+                                                <th scope="col">Price</th>
+                                                <th scope="col">Quantity</th>
+                                                <th scope="col">Total</th>
+                                            </tr>
+                                            </thead>
+                                            {billItems}
+                                        </table>
+                                    </div>
+                                    <div className="button-container orderDetail">
+                                        <span className="cart-total name">Bill Total: </span>
+                                        <span className="cart-total amount">{"$" + this.props.billObject.billTotal.toFixed(2)}</span>
+                                    </div>
+
+                                    <footer>
+
+                                        <div className="signature">
+                                            <button className="landing-page-button" onClick={(e) => this.handleRequestBill(e)} style={{zIndex: 1000}}>
+                                                <FontAwesomeIcon icon={faDollarSign} className="landing-page-header-button-icons"/>
+                                                Request Bill
+                                            </button>
+                                            <h6>Sushi</h6>
+                                            <h5>PotatoPeeps</h5>
+                                        </div>
+                                    </footer>
+                                </div>
+                            </main></div>
+                        <a href="#" id="back-to-top">
+                            <i className="icon bg icon-UpArrow" />
+                        </a>
+                        <ul id="slideshow">
+                            <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}} />
+                            <li style={{backgroundImage: 'url("./img/3.jpg")', display: 'block', zIndex: 0, animationDelay: '6s'}} />
+                            <li style={{backgroundImage: 'url("./img/6.jpg")', display: 'block', zIndex: 0, animationDelay: '12s'}} />
+                            <li style={{backgroundImage: 'url("./img/4.jpg")', display: 'block', zIndex: 0, animationDelay: '18s'}} />
+                            <li style={{backgroundImage: 'url("./img/2.jpg")', display: 'block', zIndex: 0, animationDelay: '24s'}} />
+                        </ul>
+                    </div>
+
+        );
+    }
+}
+
 // TODO: Implement functionality, take help from the above classes if necessary
 export class CustomerCartPage extends React.Component {
     constructor(props) {
@@ -294,8 +409,6 @@ export class CustomerCartPage extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.onCartCloseClick = this.onCartCloseClick.bind(this);
         this.handleQuantityChangeClick = this.handleQuantityChangeClick.bind(this);
-        // this.calculateSingleOrderTotal = this.calculateSingleOrderTotal.bind(this);
-
     }
 
     handleClick() {
