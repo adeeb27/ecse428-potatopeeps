@@ -29,6 +29,16 @@ Mixins, normalize and browser fixes.
     color: white;
 }
 
+.staff-request-notification {
+    padding-left: 5em;
+}
+.staff-notification {
+    background-color: transparent;
+    border: 5px;
+    font-size: 12px;
+    color: white;
+}
+
 .staff-nav-btn-wrapper {
     padding: 100px;
 }
@@ -1040,11 +1050,11 @@ Homepage navigation
     border-radius: 0 0 4px 4px;
     animation: rad 1s 2s both infinite;
 }
-.staff-notification-count {
+.staff-notification-count1 {
     position: absolute;
     z-index: 1;
-    top: -6px;
-    right: -6px;
+    top: 23%;
+    right: 48%;
     width: 30px;
     height: 30px;
     line-height: 30px;
@@ -1052,8 +1062,22 @@ Homepage navigation
     border-radius: 50%;
     background-color: #ff4927;
     color: #fff;
-    animation: zoom 3s 3s both infinite;
 }
+
+.staff-notification-count2 {
+    position: absolute;
+    z-index: 1;
+    top: 57%;
+    right: 48%;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 18px;
+    border-radius: 50%;
+    background-color: #ff4927;
+    color: #fff;
+}
+
 @keyframes bell {
     0% { transform: rotate(0); }
     10% { transform: rotate(30deg); }
@@ -1070,13 +1094,7 @@ Homepage navigation
     90% { transform: translateX(-6px); }
     100% { transform: translateX(0); }
 }
-@keyframes zoom {
-    0% { opacity: 0; transform: scale(0); }
-    10% { opacity: 1; transform: scale(1); }
-    50% { opacity: 1; }
-    51% { opacity: 0; }
-    100% { opacity: 0; }
-}
+
 @keyframes moon-moving {
     0% {
         transform: translate(-200%, 600%);
