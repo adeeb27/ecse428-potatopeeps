@@ -16,6 +16,15 @@ import "../../resources/static/css/staff.css";
  */
 
 export class Staff extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {selectedView: 'Staff'};
+    }
+
+    componentDidMount() {
+        this.props.loadResourceFromServer('diningSessions', 10);
+    }
+
     render() {
         return (
             <div className={"page staff-page"}>
@@ -104,18 +113,21 @@ export class StaffRequests extends React.Component {
         this.handleAnswerServiceRequest = this.handleAnswerServiceRequest.bind(this);
     }
 
+
+    //
     handleAnswerServiceRequest(tableNum, e) {
-        e.preventDefault();
+        // e.preventDefault();
         const updatedDiningSession = {};
 
+        tableNum = 1;
         updatedDiningSession['tableNumber'] = tableNum;
         updatedDiningSession['serviceRequestStatus'] = 'INACTIVE';
 
-        let oldDiningSession = this.props.diningSessions.find(function(session) {
+        let oldDiningSession = this.props.location.state.diningSessions.find(function(session) {
             return session.entity.tableNumber === parseInt(tableNum, 10);
         });
-
-        this.props.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
+        
+        this.props.location.state.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
         this.props.history.push({
             pathname: '/staff-requests',
             //Any states that are defined in the constructor(props) above need to be passed in here
@@ -125,7 +137,7 @@ export class StaffRequests extends React.Component {
     render() {
         return (
             <div>
-
+                <button onClick={this.handleAnswerServiceRequest}>Asd</button>
             </div>
         );
     }
