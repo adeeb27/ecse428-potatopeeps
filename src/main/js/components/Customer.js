@@ -3,7 +3,15 @@
 /** ----- NPM PACKAGE IMPORTS -----**/
 import React from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faShoppingCart, faDollarSign, faUser, faBell} from "@fortawesome/free-solid-svg-icons";
+import {
+    faShoppingCart,
+    faDollarSign,
+    faUser,
+    faBell,
+    faUtensils,
+    faHashtag,
+    faCalculator
+} from "@fortawesome/free-solid-svg-icons";
 
 
 /** ----- COMPONENT IMPORTS -----**/
@@ -29,34 +37,31 @@ export class Customer extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {selectedView: 'Customer'};
+        this.state = {selectedView: 'Customer',
+                      sentObject: {tableNum: 1, ordersToBeCreated: []},
+                      selectedTableNumber: 0
+        };
     }
 
     componentDidMount() {
         this.props.loadResourceFromServer('menuItems', 30);
         this.props.loadResourceFromServer('diningSessions', this.state.pageSize);
         this.props.loadResourceFromServer('tags', this.state.pageSize);
+        this.props.loadResourceFromServer('orders', this.state.pageSize);
     }
 
     render() {
-        //TODO: note passing customerDS to the <customer tag, however diningSessionLinks/Attributes arent parsed
         const customerDS = this.props.filterDiningSessionList('ta_status');
-        /* TODO: figure out where to place the customerlandingpage tag or refactor via history.push
-                    <CustomerLandingPage history={this.props.history}
-                                 selectedView={this.state.selectedView}
-                                 menuItems={this.props.menuItems}
-                                 filterMenuItemList={this.props.filterMenuItemList}
-                                 tags={this.props.tags}/>
-         */
         return(
         <TableNumberSelect
+            customerSelectTableNumber={this.props.customerSelectTableNumber}
             handleTableNumberSelect={this.handleTableNumberSelect}
             diningSessions={customerDS}
             diningSessionAttributes={this.props.diningSessionAttributes}
             history={this.props.history}
             onUpdate={this.props.onUpdate}/>
         );
-    }
+    };
 }
 
 class TableNumberSelect extends React.Component{
@@ -64,15 +69,13 @@ class TableNumberSelect extends React.Component{
     constructor(props){
         super(props);
         this.handleTableNumberSelect = this.handleTableNumberSelect.bind(this);
-
     }
-
-
+    
     handleTableNumberSelect(e) {
         e.preventDefault();
         const updatedDiningSession = {};
 
-        let selectedTableNumber = document.getElementById('table-select-dropdown').value
+        let selectedTableNumber = document.getElementById('table-select-dropdown').value;
 
         updatedDiningSession['tableNumber'] = selectedTableNumber;
         updatedDiningSession['diningSessionStatus'] = 'ACTIVE';
@@ -84,12 +87,18 @@ class TableNumberSelect extends React.Component{
             return session.entity.tableNumber === parseInt(selectedTableNumber, 10);
         });
 
-        this.props.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
-        //this.props.history.push('/CustomerLanding');
+        this.props.customerSelectTableNumber(selectedTableNumber);
 
-        this.props.history.push({
-            pathname: '/CustomerLanding',
-            state: {tableNum: selectedTableNumber, currentDiningSession: updatedDiningSession, oldDiningSess: oldDiningSession}//TODO: make use of tableNum via this.props.location.state.tableNum
+        this.setState({
+        selectedTableNumber: selectedTableNumber
+        }, () => {
+            this.props.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
+            this.props.history.push({
+                pathname: '/CustomerLanding',
+                state: {selectedTableNumber: this.state.selectedTableNumber,
+                    currentDiningSession: updatedDiningSession,
+                    oldDiningSess: oldDiningSession,}
+            });
         });
     }
 
@@ -125,8 +134,8 @@ export class CustomerLandingPage extends React.Component {
     constructor(props) {
         super(props);
         this.handleTagClick = this.handleTagClick.bind(this);
-
         this.handleClick=this.handleClick.bind(this);
+        this.handleViewCartClick = this.handleViewCartClick.bind(this);
     }
 
     handleClick(e){
@@ -144,14 +153,27 @@ export class CustomerLandingPage extends React.Component {
             this.props.history.push({
                 pathname: '/customer-menu',
                 state: {
+                    selectedTableNumber: this.props.location.state.selectedTableNumber,
                     tagName: selectedTag,
                     menuItems: response,
                     selectedView: this.props.selectedView,
                     customerFilter: this.props.customerFilter,
-                    filterMenuItemList: this.props.filterMenuItemList,
-                    tableNum: this.props.location.state.tableNum}
+                    filterMenuItemList: this.props.filterMenuItemList,}
             })
         });
+    }
+
+    handleViewCartClick(e) {
+        e.preventDefault();
+        console.log("Handle View Cart Click: ", this.props.sentObject);
+        this.props.history.push({
+            pathname: '/customer-view-cart',
+            state: {
+                selectedView: this.props.selectedView,
+                customerFilter: this.props.customerFilter,
+                filterMenuItemList: this.props.filterMenuItemList,
+            }
+        })
     }
 
     render(){
@@ -186,7 +208,7 @@ export class CustomerLandingPage extends React.Component {
                                 <FontAwesomeIcon icon={faDollarSign} className="landing-page-header-button-icons"/>
                                 Request Bill
                             </button>
-                            <button className="landing-page-button" style={{zIndex: 1000}}>
+                            <button className="landing-page-button" style={{zIndex: 1000}} onClick={this.handleViewCartClick}>
                                 <FontAwesomeIcon icon={faShoppingCart} className="landing-page-header-button-icons"/>
                                 View Your Cart
                             </button>
@@ -230,8 +252,9 @@ export class CustomerMenu extends React.Component {
     handleCloseMenu(){
         this.props.history.push({
             pathname: '/CustomerLanding',
-            state: {tableNum: this.props.location.state.tableNum} //TODO: make use of tableNum via this.props.location.state.tableNum
+            state: {selectedTableNumber: this.props.location.state.selectedTableNumber,} //TODO: make use of tableNum via this.props.location.state.tableNum
         });
+
     }
 
     render() {
@@ -246,7 +269,9 @@ export class CustomerMenu extends React.Component {
                                     <h1>{this.props.location.state.tagName}</h1>
                                 </section>
                             </header>
-                            <MenuItemList selectedView={this.props.selectedView}
+                            <MenuItemList updateCustomerCart={this.props.updateCustomerCart}
+                                          selectedTableNumber={this.props.location.state.selectedTableNumber}
+                                          selectedView={this.props.selectedView}
                                           menuItems={this.props.location.state.menuItems}
                                           pageSize={this.state.pageSize}
                                           menuItemTags={this.props.menuItemTags}
@@ -267,132 +292,111 @@ export class CustomerCartPage extends React.Component {
         super(props);
         this.state = {clicked: false};
         this.handleClick = this.handleClick.bind(this);
+        this.onCartCloseClick = this.onCartCloseClick.bind(this);
+        this.handleQuantityChangeClick = this.handleQuantityChangeClick.bind(this);
+        // this.calculateSingleOrderTotal = this.calculateSingleOrderTotal.bind(this);
 
     }
 
     handleClick() {
         this.state = {clicked: true};
         this.setState(this.state);
-
     }
 
+    onCartCloseClick(e){
+        e.preventDefault();
+        this.props.history.push({
+            pathname: '/CustomerLanding',
+            state: {}
+        });
+    }
+
+    handleQuantityChangeClick(e, direction, index){
+        let quantity = 0;
+        switch(direction){
+            case('down'):
+                e.target.parentNode.querySelector('input[type=number]').stepDown();
+                quantity = e.target.parentNode.querySelector('input[type=number]').value;
+                this.props.updateOrderQuantity(quantity, index);
+                break;
+            case('up'):
+                e.target.parentNode.querySelector('input[type=number]').stepUp();
+                quantity = e.target.parentNode.querySelector('input[type=number]').value;
+                this.props.updateOrderQuantity(quantity, index);
+                break;
+        }
+    }
+
+
     render() {
+
+        const cartItems = this.props.sentObject.ordersToBeCreated.map((cartItem, index) =>
+           <tr className="customer-cart-table-rows" key={"cart-item-row-" + cartItem.name}>
+               <td key={"cart-item-td-1" + cartItem.name}/>
+               <td scope="row" key={"cart-item-td-2" + cartItem.name}>{cartItem.name}</td>
+               <td scope="row" key={"cart-item-td-3" + cartItem.name}>{"$" + cartItem.price.toFixed(2)}</td>
+               <td key={"cart-item-td-4" + cartItem.name}>
+                   <div className="number-input" key={"cart-item-td-4-div-" + cartItem.name}>
+                        <button onClick={(e) => this.handleQuantityChangeClick(e, 'down', index)}
+                                key={"cart-item-td-4-div-button-1-" + cartItem.name}/>
+                        <input className="quantity" min={1} name="quantity" defaultValue={1} type="number"
+                               key={"cart-item-td-4-div-input-1-" + cartItem.name}/>
+                        <button className="plus" onClick={(e) => this.handleQuantityChangeClick(e, 'up', index)}
+                                key={"cart-item-td-4-div-button-2-" + cartItem.name}/>
+                    </div>
+               </td>
+               <td>{"$" + cartItem.orderTotal.toFixed(2)}</td>
+               <td>
+                   <button className="btn btn-outline-danger" onClick={(e) => this.props.removeCartItem(e, index)}>
+                        Remove Cart Item
+                   </button>
+               </td>
+           </tr>
+
+        );
+
+
         return (
-            <div>
-                <title>Cart</title>
+            <div className="page customer-cart-page">
                 <div>
-                    <main className>
+                    <title>Cart</title>
+                    <main className="">
                         <header className="detail full">
-                            <a href="#/customer" className="back" data-transition="slide-from-top" />
+                            <a onClick={this.onCartCloseClick} className="back" data-transition="slide-from-top" />
                             <section>
                                 <h1>Cart</h1>
-                                <h3 className="page-badge">5 Items in Total</h3>
+                                <h3 className="page-badge">
+                                    {this.props.sentObject.ordersToBeCreated.length + " Items in Total"}
+                                </h3>
                             </section>
                         </header>
                         <div className="content-wrap full-width">
                             <div className="table-container">
-                                <table className="table">
+                                <table className="table" style={{color: 'white !important' }}>
                                     <thead>
-                                    <tr>
-                                        <th scope="col" />
-                                        <th scope="col">Item</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">Quantity</th>
-                                        <th scope="col">Total</th>
-                                        <th scope="col" />
+                                    <tr className="customer-cart-table-rows" style={{color: 'white !important' }}>
+                                        <th className="customer-cart-table-rows" scope="col" />
+                                        <th className="customer-cart-table-rows" scope="col">
+                                            <FontAwesomeIcon icon={faUtensils}/>
+                                            Item
+                                        </th>
+                                        <th className="customer-cart-table-rows" scope="col">
+                                            <FontAwesomeIcon icon={faDollarSign}/>
+                                            Price
+                                        </th>
+                                        <th className="customer-cart-table-rows" scope="col">
+                                            <FontAwesomeIcon icon={faHashtag}/>
+                                            Quantity
+                                        </th>
+                                        <th className="customer-cart-table-rows" scope="col">
+                                            <FontAwesomeIcon icon={faCalculator}/>
+                                            Total
+                                        </th>
+                                        <th className="customer-cart-table-rows" scope="col" />
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <th scope="row">
-                                            <img className="item-preview" src="./img/4.jpg" />
-                                        </th>
-                                        <td>Food Name</td>
-                                        <td>$58.00</td>
-                                        <td>
-                                            <div className="number-input">
-                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepDown()" />
-                                                <input className="quantity" min={0} name="quantity" defaultValue={1} type="number" />
-                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepUp()" className="plus" />
-                                            </div>
-                                        </td>
-                                        <td>$158.00</td>
-                                        <td>
-                                            <i className="far fa-times-circle" title="Remove" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">
-                                            <img className="item-preview" src="./img/4.jpg" />
-                                        </th>
-                                        <td>Food Name</td>
-                                        <td>$58.00</td>
-                                        <td>
-                                            <div className="number-input">
-                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepDown()" />
-                                                <input className="quantity" min={0} name="quantity" defaultValue={1} type="number" />
-                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepUp()" className="plus" />
-                                            </div>
-                                        </td>
-                                        <td>$158.00</td>
-                                        <td>
-                                            <i className="far fa-times-circle" title="Remove" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">
-                                            <img className="item-preview" src="./img/4.jpg" />
-                                        </th>
-                                        <td>Food Name</td>
-                                        <td>$58.00</td>
-                                        <td>
-                                            <div className="number-input">
-                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepDown()" />
-                                                <input className="quantity" min={0} name="quantity" defaultValue={1} type="number" />
-                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepUp()" className="plus" />
-                                            </div>
-                                        </td>
-                                        <td>$158.00</td>
-                                        <td>
-                                            <i className="far fa-times-circle" title="Remove" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">
-                                            <img className="item-preview" src="./img/4.jpg" />
-                                        </th>
-                                        <td>Food Name</td>
-                                        <td>$58.00</td>
-                                        <td>
-                                            <div className="number-input">
-                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepDown()" />
-                                                <input className="quantity" min={0} name="quantity" defaultValue={1} type="number" />
-                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepUp()" className="plus" />
-                                            </div>
-                                        </td>
-                                        <td>$158.00</td>
-                                        <td>
-                                            <i className="far fa-times-circle" title="Remove" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">
-                                            <img className="item-preview" src="./img/4.jpg" />
-                                        </th>
-                                        <td>Food Name</td>
-                                        <td>$58.00</td>
-                                        <td>
-                                            <div className="number-input">
-                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepDown()" />
-                                                <input className="quantity" min={0} name="quantity" defaultValue={1} type="number" />
-                                                <button onClick="this.parentNode.querySelector('input[type=number]').stepUp()" className="plus" />
-                                            </div>
-                                        </td>
-                                        <td>$158.00</td>
-                                        <td>
-                                            <i className="far fa-times-circle" title="Remove" />
-                                        </td>
-                                    </tr>
+                                    {cartItems}
                                     </tbody>
                                 </table>
                             </div>
@@ -400,13 +404,16 @@ export class CustomerCartPage extends React.Component {
                                 <button className="cart-help-button">
                                     <i className="fas fa-user" style={{fontSize: '20px'}}>    Request Staff</i>
                                 </button>
-                                <button className="cart-help-button">
+                                <button onClick={this.onCartCloseClick} className="cart-help-button">
                                     <i className="fas fa-sync-alt" style={{fontSize: '20px'}}>    Update Cart</i>
                                 </button>
-                                <span className="cart-total name">Cart Totals: </span>
-                                <span className="cart-total amount">$200.00</span>
-                                <button className="cart-help-button">
-                                    <i className="fas fa-cart-arrow-down" style={{fontSize: '20px'}}>    Place Order</i>
+                                <span className="cart-total-name customer-cart-table-rows">Cart Totals: </span>
+                                <span className="cart-total amount">
+                                    {(this.props.sentObject.ordersToBeCreated.length) === 0 ?
+                                        "0.00" : "$" + this.props.sentObject.cartTotal.toFixed(2)}
+                                </span>
+                                <button className="cart-help-button" onClick={this.props.submitOrders}>
+                                    <i className="fas fa-cart-arrow-down" style={{fontSize: '20px'}}>Place Your Order</i>
                                 </button>
                             </div>
                             <footer>
@@ -420,13 +427,6 @@ export class CustomerCartPage extends React.Component {
                 <a href="#" id="back-to-top">
                     <i className="icon bg icon-UpArrow" />
                 </a>
-                <ul id="slideshow">
-                    <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}} />
-                    <li style={{backgroundImage: 'url("./img/3.jpg")', display: 'block', zIndex: 0, animationDelay: '6s'}} />
-                    <li style={{backgroundImage: 'url("./img/6.jpg")', display: 'block', zIndex: 0, animationDelay: '12s'}} />
-                    <li style={{backgroundImage: 'url("./img/4.jpg")', display: 'block', zIndex: 0, animationDelay: '18s'}} />
-                    <li style={{backgroundImage: 'url("./img/2.jpg")', display: 'block', zIndex: 0, animationDelay: '24s'}} />
-                </ul>
             </div>
         );
     }
