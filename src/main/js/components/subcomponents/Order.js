@@ -44,45 +44,40 @@ export class Order extends React.Component {
      */
     submitOrdersToDB(list) {
         // Wait 1 second before submitting to allow resources to load in componentDidMount
-        setTimeout( () => {
+        setTimeout(() => {
             console.log("IN ORDER SUBMIT METHOD");
-            var tableNum = list[0];
-            var menuItems = list[1];
+            let tableNum = list[0];
+            let menuItems = list[1];
 
             // Find the correct dining session href
-            var diningSessionUrl = "";
-            var diningSessions = this.props.diningSessions;
-            for (var j = 0, length = diningSessions.length; j < length; j++) {
-                if (diningSessions[j].entity.tableNumber === tableNum) {
-                    console.log("FOUND IT: " + diningSessions[j].entity._links.self.href)
-                    diningSessionUrl = diningSessions[j].entity._links.self.href;
-                }
-            }
+            let diningSessionUrl = "";
+            let diningSessions = this.props.diningSessions;
 
-            for (var i = 0, length = menuItems.length; i < length; i++) {
+            diningSessionUrl = diningSessions.find(function(diningSession) {
+                return diningSession.entity.tableNumber === tableNum;
+            }).entity._links.self.href;
+
+
+            for (let i = 0, length = menuItems.length; i < length; i++) {
+                let oldMenuItem = this.state.menuItem;
                 let newOrder = {};
-                var menuItemUrl = menuItems[i][0];
-                var quantity = menuItems[i][1];
+                let menuItemUrl = menuItems[i][0];
+                let quantity = menuItems[i][1];
 
-                console.log(newOrder);
+                console.log("New Order: ", newOrder);
                 this.requestMenuItem(menuItemUrl);
-                console.log(menuItemUrl);
+
+                console.log("Menu Item URL: ", menuItemUrl);
 
                 // Wait 1 second so that the menu item is loaded into state.menuItem
-                setTimeout( () => {
-                    console.log(this.state.menuItem);
-
-                    newOrder['price'] = parseInt(quantity, 10) * parseInt(this.state.menuItem.price,10);
+                    console.log("State Menu Item: ", this.state.menuItem);
+                    newOrder['price'] = parseInt(quantity, 10) * parseFloat(this.state.menuItem.price);
                     newOrder['status'] = 'ORDERED';
                     newOrder['quantity'] = quantity;
                     newOrder['menuItem'] = menuItemUrl;
                     newOrder['diningSession'] = diningSessionUrl;
-
-                    console.log(newOrder);
                     // Create the order in DB
                     this.props.onCreate(newOrder, "orders");
-                    console.log(newOrder);
-                }, 1000);
             }
         }, 1000);
     }
@@ -102,11 +97,12 @@ export class Order extends React.Component {
                         console.log('Looks like there was a problem. Status Code: ' +
                             response.status);
                     }
-["http://localhost:8080/api/menuItems/2", 5]
                     response.json().then((data) => {
-                        console.log("DATA");
-                        console.log(data);
-                        this.setState({menuItem: data});
+                        return Promise.resolve(data)
+                            .then(data => {
+                                this.setState({menuItem: data});
+                                return data;
+                            });
                     });
                 }
             )
