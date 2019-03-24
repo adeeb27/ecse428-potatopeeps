@@ -85,9 +85,29 @@ export class StaffLanding extends React.Component {
                 <div className="staff-navigation">
                     <div className="staff-overlay">
                         <div className="staff-nav-btn-wrapper">
+                            <div className="notification-box">
+                                <span className="staff-notification-count1">0</span>
+                                <div className="staff-notification-bell">
+                                    <span className="staff-bell-top"></span>
+                                    <span className="staff-bell-middle"></span>
+                                    <span className="staff-bell-bottom"></span>
+                                    <span className="staff-bell-rad"></span>
+                                </div>
+
+                            </div>
                             <button className="staff-nav-btn" onClick={this.handleClickRequests}>All Requests</button>
                         </div>
                         <div className="staff-nav-btn-wrapper">
+                            <div className="notification-box">
+                                <span className="staff-notification-count2">0</span>
+                                <div className="staff-notification-bell">
+                                    <span className="staff-bell-top"></span>
+                                    <span className="staff-bell-middle"></span>
+                                    <span className="staff-bell-bottom"></span>
+                                    <span className="staff-bell-rad"></span>
+                                </div>
+
+                            </div>
                             <button className="staff-nav-btn" onClick={this.handleClickOrders}>All Orders</button>
                         </div>
                     </div>
