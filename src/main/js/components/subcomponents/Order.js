@@ -29,7 +29,9 @@ export class Order extends React.Component {
         var list = [
             2,
             [
-                ["http://localhost:8080/api/menuItems/2", 5]
+                ["http://localhost:8080/api/menuItems/2", 5],
+                ["http://localhost:8080/api/menuItems/1", 3],
+                ["http://localhost:8080/api/menuItems/5", 1]
             ]
         ];
         this.submitOrdersToDB(list);
@@ -56,27 +58,30 @@ export class Order extends React.Component {
                     diningSessionUrl = diningSessions[j].entity._links.self.href;
                 }
             }
-            console.log(diningSessionUrl);
 
             for (var i = 0, length = menuItems.length; i < length; i++) {
-                const newOrder = {};
+                let newOrder = {};
                 var menuItemUrl = menuItems[i][0];
                 var quantity = menuItems[i][1];
 
+                console.log(newOrder);
                 this.requestMenuItem(menuItemUrl);
+                console.log(menuItemUrl);
 
                 // Wait 1 second so that the menu item is loaded into state.menuItem
                 setTimeout( () => {
                     console.log(this.state.menuItem);
 
-                    newOrder['price'] = newOrder['[price'] + this.state.menuItem.price;
+                    newOrder['price'] = parseInt(quantity, 10) * parseInt(this.state.menuItem.price,10);
                     newOrder['status'] = 'ORDERED';
                     newOrder['quantity'] = quantity;
                     newOrder['menuItem'] = menuItemUrl;
                     newOrder['diningSession'] = diningSessionUrl;
 
+                    console.log(newOrder);
                     // Create the order in DB
                     this.props.onCreate(newOrder, "orders");
+                    console.log(newOrder);
                 }, 1000);
             }
         }, 1000);
@@ -97,8 +102,10 @@ export class Order extends React.Component {
                         console.log('Looks like there was a problem. Status Code: ' +
                             response.status);
                     }
-
+["http://localhost:8080/api/menuItems/2", 5]
                     response.json().then((data) => {
+                        console.log("DATA");
+                        console.log(data);
                         this.setState({menuItem: data});
                     });
                 }
