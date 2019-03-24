@@ -272,6 +272,8 @@ export class CustomerReviewBill extends React.Component {
     constructor(props) {
         super(props);
         this.handleCloseMenu = this.handleCloseMenu.bind(this);
+        this.state = { arrayToMapInRender: [] };
+        this.requestMenuItemsFromOrder = this.requestMenuItemsFromOrder.bind(this);
         this.totalPrice = 0;
         let i;
         for (i = 0; i < this.props.orders.length; i++) {
@@ -287,18 +289,56 @@ export class CustomerReviewBill extends React.Component {
         });
     }
 
-    render () {
-        const billItems = this.props.orders.map(billItem =>
 
-                    <tbody>
-                    <tr>
-                        <td>   </td>
-                        <td> {billItem.entity._links.menuItem.href.name}</td>
-                        <td>{"$" + billItem.entity.price} </td>
-                        <td> {billItem.entity.quantity}  </td>
-                        <td> {"$" + billItem.entity.quantity * billItem.entity.price} </td>
-                    </tr>
-                    </tbody>
+    componentDidMount() {
+        this.requestMenuItemsFromOrder();
+    }
+
+    requestMenuItemsFromOrder() {
+        let result = [];
+        this.props.orders.forEach(order => {
+            let menuItemLink = order.entity._links.menuItem.href;
+            let orderEntry = {name : 'An Error Occured', order:{}};
+            // let orderEntries = [{name : 'An Error Occured', order}]
+            fetch(menuItemLink, {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json'}
+            })
+                .then(
+                    response => {
+                        response.json().then((data) => {
+                            let menuItemName = data.name;
+                            orderEntry['name'] = menuItemName;
+                        });
+                    }
+                )
+                .catch(function (err) {
+                    console.log('Fetch Error :-S', err);
+                });
+
+            orderEntry['order'] = order;
+
+            result.push(orderEntry);
+        });
+
+        setTimeout(() => {
+            this.setState({arrayToMapInRender: result});
+        }, 5000);
+    }
+
+    render () {
+
+        const billItems = this.state.arrayToMapInRender.map(billItem =>
+
+            <tbody>
+            <tr>
+                <td>   </td>
+                <td> {billItem.name}</td>
+                <td>{"$" + billItem.order.entity.price} </td>
+                <td> {billItem.order.entity.quantity}  </td>
+                <td> {"$" + billItem.order.entity.quantity * billItem.order.entity.price} </td>
+            </tr>
+            </tbody>
 
         );
 
@@ -328,7 +368,7 @@ export class CustomerReviewBill extends React.Component {
                                                 <th scope="col">Total</th>
                                             </tr>
                                             </thead>
-                                            {billItems}
+                                            {this.billItems}
 
                                         </table>
                                     </div>
