@@ -81,7 +81,6 @@ export class StaffLanding extends React.Component {
     render() {
         let numBR = this.props.filterDiningSessionList("br_status").length;
         let numSR = this.props.filterDiningSessionList("sr_status").length;
-        let numAllReq = numBR + numSR;
         let numOR = this.props.orders.length;
         return (
             <div>
@@ -96,30 +95,17 @@ export class StaffLanding extends React.Component {
                 <div className="staff-navigation">
                     <div className="staff-overlay">
                         <div className="staff-nav-btn-wrapper">
-                            <div className="notification-box">
-                                <span className="staff-notification-count1">{numAllReq}</span>
-                                <div className="staff-notification-bell">
-                                    <span className="staff-bell-top"></span>
-                                    <span className="staff-bell-middle"></span>
-                                    <span className="staff-bell-bottom"></span>
-                                    <span className="staff-bell-rad"></span>
-                                </div>
-
-                            </div>
                             <button className="staff-nav-btn" onClick={this.handleClickRequests}>All Requests</button>
+                           <div >
+                               <span className="staff-notification">Service Requests: {numSR}</span>
+                                <span className="staff-notification staff-request-notification">Bill Requests: {numBR}</span>
+                           </div>
                         </div>
                         <div className="staff-nav-btn-wrapper">
-                            <div className="notification-box">
-                                <span className="staff-notification-count2">{numOR}</span>
-                                <div className="staff-notification-bell">
-                                    <span className="staff-bell-top"></span>
-                                    <span className="staff-bell-middle"></span>
-                                    <span className="staff-bell-bottom"></span>
-                                    <span className="staff-bell-rad"></span>
-                                </div>
-
-                            </div>
                             <button className="staff-nav-btn" onClick={this.handleClickOrders}>All Orders</button>
+                            <div >
+                                <span className="staff-notification">Orders: {numOR}</span>
+                            </div>
                         </div>
                     </div>
                 </div>

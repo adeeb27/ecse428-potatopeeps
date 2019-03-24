@@ -29,6 +29,16 @@ Mixins, normalize and browser fixes.
     color: white;
 }
 
+.staff-request-notification {
+    padding-left: 5em;
+}
+.staff-notification {
+    background-color: transparent;
+    border: 5px;
+    font-size: 12px;
+    color: white;
+}
+
 .staff-nav-btn-wrapper {
     padding: 100px;
 }
