@@ -189,9 +189,9 @@ export class CustomerLandingPage extends React.Component {
                                 Request Service
                             </button>
                             <button className="landing-page-button" onClick={this.handleReviewBill} style={{zIndex: 1000}}>
-                                <FontAwesomeIcon icon={faDollarSign} className="landing-page-header-button-icons"/>
-                                Request Bill
-                            </button>
+                            <FontAwesomeIcon icon={faDollarSign} className="landing-page-header-button-icons"/>
+                            Review Bill
+                        </button>
                             <button className="landing-page-button" style={{zIndex: 1000}}>
                                 <FontAwesomeIcon icon={faShoppingCart} className="landing-page-header-button-icons"/>
                                 View Your Cart
@@ -289,6 +289,10 @@ export class CustomerReviewBill extends React.Component {
         });
     }
 
+    handleRequestBill(e) {
+        e.preventDefault();
+    }
+
 
     componentDidMount() {
         setTimeout(() => {
@@ -298,9 +302,11 @@ export class CustomerReviewBill extends React.Component {
 
     requestMenuItemsFromOrder() {
         let result = [];
+
         this.props.orders.forEach(order => {
             let menuItemLink = order.entity._links.menuItem.href;
             let orderEntry = {name : 'Loading Item Name...', order:{}};
+
             fetch(menuItemLink, {
                 method: 'GET',
                 headers: {'Content-Type': 'application/json'}
@@ -380,8 +386,14 @@ export class CustomerReviewBill extends React.Component {
                                         <span className="cart-total name">Grand Total: </span>
                                         <span className="cart-total amount">{"$" + this.totalPrice}</span>
                                     </div>
+
                                     <footer>
+
                                         <div className="signature">
+                                            <button className="landing-page-button" onClick={this.handleRequestBill} style={{zIndex: 1000}}>
+                                                <FontAwesomeIcon icon={faDollarSign} className="landing-page-header-button-icons"/>
+                                                Request Bill
+                                            </button>
                                             <h6>Sushi</h6>
                                             <h5>PotatoPeeps</h5>
                                         </div>
