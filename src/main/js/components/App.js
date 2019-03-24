@@ -12,6 +12,7 @@ import {Login, SelectTask} from "./Login";
 import {Staff} from "./Staff";
 import {Manager} from "./Manager";
 import {Customer, CustomerMenu, CustomerLandingPage, CustomerCartPage} from "./Customer";
+import {Order} from "./subcomponents/Order";
 
 /** ----- TUTORIAL API IMPORTS -----**/
 import follow from "../follow";
@@ -64,7 +65,7 @@ export class App extends React.Component {
             tagAttributes: [],
             pageSize: 10,
             selectedTableNumber: 1,
-            sentObject: {tableNum: 1, ordersToBeCreated: []}
+            sentObject: {tableNum: 1, ordersToBeCreated: [],}
         };
         this.onCreate = this.onCreate.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
@@ -77,6 +78,7 @@ export class App extends React.Component {
         this.updateCustomerCart = this.updateCustomerCart.bind(this);
         this.updateOrderQuantity = this.updateOrderQuantity.bind(this);
         this.removeCartItem = this.removeCartItem.bind(this);
+        this.submitOrders = this.submitOrders.bind(this);
     }
 
 
@@ -554,6 +556,47 @@ export class App extends React.Component {
                 cartTotal: newCartTotal, ordersToBeCreated: oldOrdersToBeCreated}});
     }
 
+    submitOrders(e){
+        e.preventDefault();
+        let selectedTableNum = this.state.sentObject.tableNum;
+        let ordersToBeCreated = this.state.sentObject.ordersToBeCreated;
+
+        console.log("Selected Table Num: " + selectedTableNum);
+
+        console.log("Length of Dining Sessions: " + this.state.diningSessions.length);
+        let diningSessionsLength = this.state.diningSessions.length;
+        let diningSessionUrl = "";
+
+
+        for(let i = 0; i < diningSessionsLength; i++){
+            console.log("Yeet: ", this.state.diningSessions[i]);
+            if(this.state.diningSessions[i].entity.tableNumber == this.state.selectedTableNumber)
+                diningSessionUrl = this.state.diningSessions[i].entity._links.self.href;
+        }
+
+
+        ordersToBeCreated.forEach((order) => {
+            let newOrder = {};
+
+            console.log("Dining Session URL: ", diningSessionUrl);
+
+            newOrder['status'] = 'ORDERED';
+            newOrder['price'] = order.orderTotal;
+            newOrder['quantity'] = order.quantity;
+            newOrder['menuItem'] = order.menuItemHref;
+            newOrder['diningSession'] = diningSessionUrl;
+            this.onCreate(newOrder, "orders");
+        });
+
+
+        console.log("State Selected Table Number: " + this.state.selectedTableNumber);
+
+        setTimeout(() =>{
+            this.setState({sentObject: {tableNum: selectedTableNum, cartTotal: 0, ordersToBeCreated: []}});
+        }, 1000)
+        console.log("Emptied Sent Object: ", this.state.sentObject);
+    }
+
     /**
      * render - Render a React element into the DOM in the supplied container and return a reference to the component
      *
@@ -675,6 +718,28 @@ export class App extends React.Component {
                                                           selectedView={'Customer'}
                                                           filterMenuItemList={this.filterMenuItemList}
                                                           {...props}/>)}/>
+
+                                <Route path={"/order"} render={(props) =>
+                                    (<Order loadResourceFromServer={this.loadResourceFromServer}
+                                                          onCreate={this.onCreate}
+                                                          onUpdate={this.onUpdate}
+                                                          onDelete={this.onDelete}
+                                                          onNavigate={this.onNavigate}
+                                                          diningSessions={this.state.diningSessions}
+                                                          diningSessionLinks={this.state.diningSessionLinks}
+                                                          diningSessionAttributes={this.state.diningSessionAttributes}
+                                                          orders={this.state.orders}
+                                                          orderLinks={this.state.orderLinks}
+                                                          orderAttributes={this.state.orderAttributes}
+                                                          menuItems={this.props.menuItems}
+                                                          menuItemTags={this.state.menuItemTags}
+                                                          tags={this.state.tags}
+                                                          updateCustomerCart={this.updateCustomerCart}
+                                                          updateOrderQuantity={this.updateOrderQuantity}
+                                                          sentObject={this.state.sentObject}
+                                                          selectedView={'Order'}
+                                                          filterMenuItemList={this.filterMenuItemList}
+                                                          {...props}/>)}/>
                                 <Route path={"/customer-view-cart"} render={(props) =>
                                     (<CustomerCartPage loadResourceFromServer={this.loadResourceFromServer}
                                                           onCreate={this.onCreate}
@@ -685,6 +750,7 @@ export class App extends React.Component {
                                                           onNavigate={this.onNavigate}
                                                           updateCustomerCart={this.updateCustomerCart}
                                                           updateOrderQuantity={this.updateOrderQuantity}
+                                                          submitOrders={this.submitOrders}
                                                           sentObject={this.state.sentObject}
                                                           diningSessions={this.state.diningSessions}
                                                           diningSessionLinks={this.state.diningSessionLinks}

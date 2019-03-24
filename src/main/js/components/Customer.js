@@ -47,6 +47,7 @@ export class Customer extends React.Component {
         this.props.loadResourceFromServer('menuItems', 30);
         this.props.loadResourceFromServer('diningSessions', this.state.pageSize);
         this.props.loadResourceFromServer('tags', this.state.pageSize);
+        this.props.loadResourceFromServer('orders', this.state.pageSize);
     }
 
     render() {
@@ -409,7 +410,7 @@ export class CustomerCartPage extends React.Component {
                                     {(this.props.sentObject.ordersToBeCreated.length) === 0 ?
                                         "0.00" : "$" + this.props.sentObject.cartTotal.toFixed(2)}
                                 </span>
-                                <button className="cart-help-button">
+                                <button className="cart-help-button" onClick={this.props.submitOrders}>
                                     <i className="fas fa-cart-arrow-down" style={{fontSize: '20px'}}>Place Your Order</i>
                                 </button>
                             </div>
