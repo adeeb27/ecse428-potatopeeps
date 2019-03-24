@@ -41,6 +41,10 @@ export class StaffDiningSessionPage extends React.Component{
 
     constructor(props) {
         super(props);
+        this.state = {
+            show : false,
+            orders : []
+        }
     }
 
     render(){
@@ -53,6 +57,8 @@ export class StaffDiningSessionPage extends React.Component{
             />
 
         )
+        console.log("Sessions page:");
+        console.log(this.props.diningSession);
 
         //TODO review how to get number of diningSessions. Test whether this.props.diningSessions.size returns a number or undefined
         //TODO refactor the gridViewContainer into a DiningSessionList component
@@ -62,37 +68,15 @@ export class StaffDiningSessionPage extends React.Component{
                 <p>bananafofana {sessions.size} test</p>
                 
                 {sessions}
+                
             </div>
         )
     }
 
-//     requestOrders(){
-//         fetch(this.props.entity._links.tags.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
-//            .then(
-//                response => {
-//                    if (!response.ok) {
-//                        console.log('Looks like there was a problem. Status Code: ' +
-//                            response.status);
-//                        return;
-//                    }
-
-//                    // Examine the text in the response
-//                    response.json().then((data) => {
-//                        console.log(data._embedded.tags);
-//                        this.setState(
-//                            {
-//                                 status: this.state.status,
-//                                 quantity: this.props.order.quantity,
-//                                 menuItem: data._embedded.menuItems
-//                             }
-//                         );
-//                    });
-//                }
-//            )
-//            .catch(function(err) {
-//                console.log('Fetch Error :-S', err);
-//            });
-//    }
+    handleClose(){
+        //load orders
+        // const orders;
+    }
 
 }
 
@@ -101,9 +85,48 @@ export class StaffDiningSession extends React.Component{
     constructor(props){
         super(props);
         this.handleClick = this.handleClick.bind(this);
-        this.handleCloseMenu = this.handleCloseMenu.bind(this);
+        this.handleListOrders = this.handleListOrders.bind(this);
     }
+
+    requestOrders(){
+        fetch(this.props.diningSession.entity._links.orders.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
+            .then(
+                response => {
+                    if (!response.ok) {
+                        console.log('Looks like there was a problem. Status Code: ' +
+                            response.status);
+                        return;
+                    }
+
+                    // Examine the text in the response
+                    response.json().then((data) => {
+                        console.log(data._embedded.orders);
+                        this.setState(
+                            {
+                                orders : data._embedded.orders
+                            }
+                        );
+                    });
+                }
+            )
+            .catch(function(err) {
+                console.log('Fetch Error :-S', err);
+            });
+   }
+
+   //commented out after finding possible infinite loop in render to test what happens after removing loop
+//    componentDidMount(){
+//        requestOrders();
+//    }
+   
+
     render(){
+    //needs orders or diningSession
+        // const orderComponents = orders.map(order => 
+            
+        // )
+        console.log("Individual session:");
+        console.log(this.props.diningSession);
         return (
             <div className="gridViewItem">               
                     <img className="itemImage" draggable="false" src="./asset/3.jpg" />               
@@ -111,10 +134,11 @@ export class StaffDiningSession extends React.Component{
                         <div className="text">Table {this.props.diningSession.entity.tableNumber}</div>
                         <div className="text">{this.props.diningSession.entity.price}</div>
                         <div style={{display: 'flex', justifyContent: 'center'}}>
-                        <button className="view-detail-button" title="View details">
-                            <i className="view-order" style={{fontSize: '20px'}} onClick={this.handleClick}>View</i>
-                        </button>
+                            <button className="view-detail-button" title="View details">
+                                <i className="view-order" style={{fontSize: '20px'}} onClick={this.handleClick}>View</i>
+                            </button>
                         </div>
+                        
                     </div> 
             </div>
         )
@@ -125,18 +149,23 @@ export class StaffDiningSession extends React.Component{
         // onclick={handleClick}
         console.log("in handle click");
         
-        this.handleCloseMenu();
+        this.handleListOrders();
         console.log("after handleClose");
     }
 
-    handleCloseMenu(){
+    handleListOrders(){
         console.log("in handleClose");
-        this.props.history.push('/tables');
-        //     {
-        //     pathname: ('/tables/')} // + this.props.diningSession.entity.tableNumber
-        //     // state: {diningSession : this.props.diningSession} //TODO: make use of tableNum via this.props.location.state.tableNum
-        //     // }
-        // );
+        // '/tables');
+        this.props.history.push
+        (
+            {
+            pathname: ('/orders/'),
+            state: {diningSession : this.props.diningSession},
+            diningSession : this.props.diningSession
+            }    // + this.props.diningSession.entity.tableNumber
+            //TODO: make use of tableNum via this.props.location.state.tableNum
+        );
+        
         console.log("after history push");
     }
 }

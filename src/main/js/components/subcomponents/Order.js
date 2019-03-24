@@ -52,20 +52,25 @@ export class DiningSessionOrders extends React.Component{
     render(){
         // const orders = 
         // this.requestOrders();
+        console.log("DiningSession orders page");
+        console.log(this.props.diningSession);
+        console.log("All props");
+        console.log(this.props);
         return (
-            <div>test garbage</div>
-            // <div className="blahblah">
-            //     <p>test garbage</p>
-            //     <StaffOrderList
-            //         orders={this.state.orders}
-            //     />
-            // </div>
+            // <div>test garbage</div>
+            <div className="blahblah">
+                <StaffOrderList
+                    orders={this.state.orders}
+                />
+            </div>
             
         );
     }
 
     requestOrders(){
-        fetch(this.props.location.state.diningSession.entity._links.orders.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
+        // this.props.location.state.diningSession.entity._links.orders.href
+        console.log(this.props.location.diningSession);
+        fetch(this.props.location.diningSession.entity._links.orders.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
            .then(
                response => {
                    if (!response.ok) {
@@ -82,6 +87,8 @@ export class DiningSessionOrders extends React.Component{
                                 orders : data._embedded.orders
                             }
                         );
+                        console.log("In the render of Orders");
+                        console.log(this.state);
                         console.log("in render");
                    });
                }
@@ -89,6 +96,10 @@ export class DiningSessionOrders extends React.Component{
            .catch(function(err) {
                console.log('Fetch Error :-S', err);
            });
+   }
+
+   componentDidMount(){
+        this.requestOrders();
    }
 
 //    filterOrderList(sessionId){
@@ -114,9 +125,11 @@ class StaffOrderList extends React.Component{
 
     render(){
         //TODO need to filter orders by DiningSession
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        console.log(this.props);
         const orders = this.props.orders.map(order =>
             <StaffOrder 
-                key={order.entity._links.self.href}
+                key={order._links.self.href}
                 order={order}
                 orderAttributes={this.props.orderAttributes}
                 onUpdate={this.props.onUpdate}
@@ -127,7 +140,7 @@ class StaffOrderList extends React.Component{
 
         return (
             <div className="table-container">
-					<table class="order-table">
+					<table className="order-table">
 						<thead>
 							<tr>
 								<th scope="col"></th>
@@ -156,38 +169,6 @@ class Order extends React.Component{
             menuItem: {}
         };
     }
-
-//     requestMenuItem(){
-//         fetch(this.props.entity._links.tags.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
-//            .then(
-//                response => {
-//                    if (!response.ok) {
-//                        console.log('Looks like there was a problem. Status Code: ' +
-//                            response.status);
-//                        return;
-//                    }
-
-//                    // Examine the text in the response
-//                    response.json().then((data) => {
-//                        console.log(data._embedded.tags);
-//                        this.setState(
-//                            {
-//                                 status: this.state.status,
-//                                 quantity: this.props.order.quantity,
-//                                 menuItem: data._embedded.menuItems
-//                             }
-//                         );
-//                    });
-//                }
-//            )
-//            .catch(function(err) {
-//                console.log('Fetch Error :-S', err);
-//            });
-//    }
-
-    componentDidMount() {
-        this.requestMenuItem();
-    }
 }
 
 export class StaffOrder extends Order{
@@ -199,13 +180,13 @@ export class StaffOrder extends Order{
         return (
             <tr>
                 <th scope="row">
-                    <img class="item-preview" src="./asset/4.jpg"/>>
+                    <img className="item-preview" src="./asset/4.jpg"/>>
                 </th>
                 <td>{this.state.menuItem.name}</td>
                 <td>{this.props.price}</td>
                 <td>
-                    <div class="number-input">
-                        <input class="quantity" min="0" name="quantity" value={this.state.quantity} type="number" disabled/>>
+                    <div className="number-input">
+                        <input className="quantity" min="0" name="quantity" value={this.state.quantity} type="number" disabled/>>
                     </div>
                 </td>
                 <td>{this.state.props}</td>

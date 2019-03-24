@@ -573,12 +573,14 @@ export class App extends React.Component {
                                                    selectedView={'Customer'}
                                                    filterMenuItemList={this.filterMenuItemList}
                                                    {...props}/>)}/>
-                                <Route path={"/tables"} render={(props) =>
+                                    {/* <Route path={"/tables"} component={DiningSessionOrders} />  */}
+                                <Route exact path={"/orders"} render={(props) =>
                                     (<DiningSessionOrders loadResourceFromServer={this.loadResourceFromServer}
                                                    onCreate={this.onCreate}
                                                    onUpdate={this.onUpdate}
                                                    onDelete={this.onDelete}
                                                    onNavigate={this.onNavigate}
+                                                   diningSession={this.props.diningSession}
                                                    diningSessions={this.state.diningSessions}
                                                    diningSessionLinks={this.state.diningSessionLinks}
                                                    diningSessionAttributes={this.state.diningSessionAttributes}
