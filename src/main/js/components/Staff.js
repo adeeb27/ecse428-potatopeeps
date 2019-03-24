@@ -39,7 +39,7 @@ export class Staff extends React.Component {
     }
 }
 
-class StaffLanding extends React.Component {
+export class StaffLanding extends React.Component {
     constructor(props) {
         super(props);
         this.handleClickOrders = this.handleClickOrders.bind(this);
@@ -116,7 +116,8 @@ export class StaffRequests extends React.Component {
     }
 
 
-    handleBackClick() {
+    handleBackClick(e) {
+        e.preventDefault();
         this.props.history.push({
             pathname: '/staff-landing'
         });
