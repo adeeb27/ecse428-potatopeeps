@@ -57,8 +57,8 @@ export class StaffDiningSessionPage extends React.Component{
             />
 
         )
-        console.log("Sessions page:");
-        console.log(this.props.diningSession);
+        // console.log("Sessions page:");
+        // console.log(this.props.diningSession);
 
         //TODO review how to get number of diningSessions. Test whether this.props.diningSessions.size returns a number or undefined
         //TODO refactor the gridViewContainer into a DiningSessionList component
@@ -113,18 +113,7 @@ export class StaffDiningSession extends React.Component{
                 console.log('Fetch Error :-S', err);
             });
    }
-
-   //commented out after finding possible infinite loop in render to test what happens after removing loop
-//    componentDidMount(){
-//        requestOrders();
-//    }
-   
-
     render(){
-    //needs orders or diningSession
-        // const orderComponents = orders.map(order => 
-            
-        // )
         console.log("Individual session:");
         console.log(this.props.diningSession);
         return (
@@ -147,15 +136,13 @@ export class StaffDiningSession extends React.Component{
     handleClick(){
         //TODO navigate to specific orders for diningSessions
         // onclick={handleClick}
-        console.log("in handle click");
+        // console.log("in handle click");
         
         this.handleListOrders();
-        console.log("after handleClose");
+        // console.log("after handleClose");
     }
 
     handleListOrders(){
-        console.log("in handleClose");
-        // '/tables');
         this.props.history.push
         (
             {
@@ -166,6 +153,6 @@ export class StaffDiningSession extends React.Component{
             //TODO: make use of tableNum via this.props.location.state.tableNum
         );
         
-        console.log("after history push");
+        // console.log("after history push");
     }
 }
