@@ -11,7 +11,7 @@ const root = "/api"; // Root is a variable used to provide pathing to the uriLis
 import {Login, SelectTask} from "./Login";
 import {Staff} from "./Staff";
 import {Manager} from "./Manager";
-import {Customer, CustomerMenu, CustomerLandingPage} from "./Customer";
+import {Customer, CustomerMenu, CustomerLandingPage, CustomerCartPage} from "./Customer";
 
 /** ----- TUTORIAL API IMPORTS -----**/
 import follow from "../follow";
@@ -62,7 +62,9 @@ export class App extends React.Component {
             tags: [],
             tagLinks: {},
             tagAttributes: [],
-            pageSize: 10
+            pageSize: 10,
+            selectedTableNumber: 1,
+            sentObject: {tableNum: 1, ordersToBeCreated: []}
         };
         this.onCreate = this.onCreate.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
@@ -72,6 +74,9 @@ export class App extends React.Component {
         this.filterMenuItemList = this.filterMenuItemList.bind(this);
         this.filterDiningSessionList = this.filterDiningSessionList.bind(this);
         this.loadResourceFromServer = this.loadResourceFromServer.bind(this);
+        this.updateCustomerCart = this.updateCustomerCart.bind(this);
+        this.updateOrderQuantity = this.updateOrderQuantity.bind(this);
+        this.removeCartItem = this.removeCartItem.bind(this);
     }
 
 
@@ -482,6 +487,73 @@ export class App extends React.Component {
     }
 
 
+
+    updateCustomerCart(menuItem, selectedTableNumber){
+        let oldSentObject = this.state.sentObject;
+        let oldOrdersToBeCreated = [];
+        oldOrdersToBeCreated = oldSentObject.ordersToBeCreated;
+
+        let alreadyExists = false;
+
+        oldOrdersToBeCreated.forEach((oldOrderToBeCreated) => {
+            if(oldOrderToBeCreated.name === menuItem.entity.name){
+                console.log("Already exists.");
+                alreadyExists = true;
+            }
+        });
+
+        if(!alreadyExists){
+            let orderToBeCreated = {};
+            orderToBeCreated['quantity'] = 1;
+            orderToBeCreated['name'] = menuItem.entity.name;
+            orderToBeCreated['price'] = menuItem.entity.price;
+            orderToBeCreated['orderTotal'] = menuItem.entity.price;
+            orderToBeCreated['menuItemHref'] = menuItem.entity._links.self.href;
+            oldOrdersToBeCreated.push(orderToBeCreated);
+
+
+            let cartTotal = 0;
+            oldOrdersToBeCreated.forEach(function(oldOrder){
+                cartTotal += oldOrder.orderTotal;
+            });
+
+            this.setState({sentObject: {tableNum: selectedTableNumber,
+                    cartTotal: cartTotal,
+                    ordersToBeCreated: oldOrdersToBeCreated}});
+        }
+    }
+
+    updateOrderQuantity(quantity, index){
+        let oldOrdersToBeCreated = this.state.sentObject.ordersToBeCreated;
+        let name = oldOrdersToBeCreated[index].name;
+        let price = oldOrdersToBeCreated[index].price;
+        let href = oldOrdersToBeCreated[index].menuItemHref;
+        let orderTotal = price * quantity;
+        oldOrdersToBeCreated[index] = {quantity: quantity, name: name, price: price, orderTotal: orderTotal, menuItemHref: href};
+
+        let cartTotal = 0;
+        oldOrdersToBeCreated.forEach(function(oldOrder) {
+            cartTotal += oldOrder.orderTotal;
+        });
+
+        this.setState({sentObject: {tableNum: this.state.selectedTableNumber,
+                cartTotal: cartTotal,
+                ordersToBeCreated: oldOrdersToBeCreated}});
+    }
+
+
+    removeCartItem(e, index){
+        e.preventDefault();
+        let oldOrdersToBeCreated = this.state.sentObject.ordersToBeCreated;
+        let oldCartTotal = this.state.sentObject.cartTotal;
+        let newCartTotal = oldCartTotal - oldOrdersToBeCreated[index].orderTotal;
+        oldOrdersToBeCreated.splice(index, 1);
+
+        this.setState({sentObject:
+                {tableNum: this.state.selectedTableNumber,
+                cartTotal: newCartTotal, ordersToBeCreated: oldOrdersToBeCreated}});
+    }
+
     /**
      * render - Render a React element into the DOM in the supplied container and return a reference to the component
      *
@@ -575,6 +647,9 @@ export class App extends React.Component {
                                                    menuItems={this.state.menuItems}
                                                    menuItemTags={this.state.menuItemTags}
                                                    tags={this.state.tags}
+                                                   updateCustomerCart={this.updateCustomerCart}
+                                                   updateOrderQuantity={this.updateOrderQuantity}
+                                                   sentObject={this.state.sentObject}
                                                    selectedView={'Customer'}
                                                    filterMenuItemList={this.filterMenuItemList}
                                                    {...props}/>)}/>
@@ -585,6 +660,32 @@ export class App extends React.Component {
                                                           onDelete={this.onDelete}
                                                           updateDiningSession={this.updateDiningSession}
                                                           onNavigate={this.onNavigate}
+                                                          diningSessions={this.state.diningSessions}
+                                                          diningSessionLinks={this.state.diningSessionLinks}
+                                                          diningSessionAttributes={this.state.diningSessionAttributes}
+                                                          orders={this.state.orders}
+                                                          orderLinks={this.state.orderLinks}
+                                                          orderAttributes={this.state.orderAttributes}
+                                                          menuItems={this.props.menuItems}
+                                                          menuItemTags={this.state.menuItemTags}
+                                                          tags={this.state.tags}
+                                                          updateCustomerCart={this.updateCustomerCart}
+                                                          updateOrderQuantity={this.updateOrderQuantity}
+                                                          sentObject={this.state.sentObject}
+                                                          selectedView={'Customer'}
+                                                          filterMenuItemList={this.filterMenuItemList}
+                                                          {...props}/>)}/>
+                                <Route path={"/customer-view-cart"} render={(props) =>
+                                    (<CustomerCartPage loadResourceFromServer={this.loadResourceFromServer}
+                                                          onCreate={this.onCreate}
+                                                          onUpdate={this.onUpdate}
+                                                          onDelete={this.onDelete}
+                                                          removeCartItem={this.removeCartItem}
+                                                          updateDiningSession={this.updateDiningSession}
+                                                          onNavigate={this.onNavigate}
+                                                          updateCustomerCart={this.updateCustomerCart}
+                                                          updateOrderQuantity={this.updateOrderQuantity}
+                                                          sentObject={this.state.sentObject}
                                                           diningSessions={this.state.diningSessions}
                                                           diningSessionLinks={this.state.diningSessionLinks}
                                                           diningSessionAttributes={this.state.diningSessionAttributes}

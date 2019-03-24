@@ -50,6 +50,7 @@ export class MenuItemList extends React.Component {
                                           updatePageSize={this.props.updatePageSize}
                                           filterMenuItemList={this.props.filterMenuItemList}
                                           customerFilter={this.props.customerFilter}
+                                          selectedTableNumber={this.props.selectedTableNumber}
                                           tagName={this.props.tagName}/>);
     }
 }
@@ -321,6 +322,41 @@ class ManagerUpdateMenuItemDialog extends React.Component {
     }
 
 
+
+    //updateCustomerCart(menuItem){
+    //
+    //         let oldSentObject = this.state.sentObject;
+    //         let oldOrdersToBeCreated = [];
+    //         oldOrdersToBeCreated = oldSentObject.ordersToBeCreated;
+    //
+    //         let alreadyExists = false;
+    //
+    //         oldOrdersToBeCreated.forEach((oldOrderToBeCreated) => {
+    //            if(oldOrderToBeCreated.name === menuItem.entity.name){
+    //                console.log("Already exists.");
+    //                alreadyExists = true;
+    //            }
+    //         });
+    //
+    //         if(!alreadyExists){
+    //             let orderToBeCreated = {};
+    //             orderToBeCreated['quantity'] = 1;
+    //             orderToBeCreated['name'] = menuItem.entity.name;
+    //             orderToBeCreated['price'] = menuItem.entity.price;
+    //             orderToBeCreated['menuItemHref'] = menuItem.entity._links.self.href;
+    //
+    //             oldOrdersToBeCreated.push(orderToBeCreated);
+    //
+    //             this.setState({sentObject: {tableNum: this.state.selectedTableNumber, ordersToBeCreated: oldOrdersToBeCreated}});
+    //
+    //             setTimeout(() =>{
+    //                 console.log("Current Sent Object: ", this.state.sentObject);
+    //                 console.log("Order to be created: ", orderToBeCreated);
+    //             }, 3000)
+    //         }
+    //     }
+
+
     /**
      * render - Render a React element into the DOM in the supplied container and return a reference to the component.
      *
@@ -511,6 +547,7 @@ export class CustomerMenuItemList extends React.Component {
     render() {
         const menuItems = this.props.menuItems.map(menuItem =>
             <CustomerMenuItem key={menuItem.entity._links.self.href}
+                              selectedTableNumber={this.props.selectedTableNumber}
                               updateCustomerCart={this.props.updateCustomerCart}
                               menuItem={menuItem}
                               menuItems={this.props.menuItems}
@@ -546,7 +583,7 @@ export class CustomerMenuItem extends React.Component {
     handleMenuItemClick(e){
         e.preventDefault();
         console.log("Clicked Menu Item Click");
-        this.props.updateCustomerCart(this.props.menuItem);
+        this.props.updateCustomerCart(this.props.menuItem, this.props.selectedTableNumber);
     }
 
     /**
@@ -612,7 +649,7 @@ export class CustomerMenuItem extends React.Component {
                         <div className="dropdown-divider"/>
                     </div>
                     <div className="text">{this.props.menuItem.entity.description}</div>
-                    <div className="text">{this.props.menuItem.entity.price}</div>
+                    <div className="text">{"$ " + this.props.menuItem.entity.price.toFixed(2)}</div>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                         <button className="add-to-cart-button" title="Add to cart"  onClick={this.handleMenuItemClick}>
                             <FontAwesomeIcon icon={faPlus}/>
