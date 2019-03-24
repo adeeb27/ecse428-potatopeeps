@@ -8,7 +8,7 @@ const root = "/api"; // Root is a variable used to provide pathing to the uriLis
 
 /** ----- COMPONENT IMPORTS -----**/
 import {Login, SelectTask} from "./Login";
-import {Staff, StaffOrders, StaffRequests} from "./Staff";
+import {Staff, StaffOrders, StaffRequests, StaffLanding} from "./Staff";
 import {Manager} from "./Manager";
 import {Customer, CustomerMenu, CustomerLandingPage} from "./Customer";
 
@@ -530,6 +530,7 @@ export class App extends React.Component {
                                                                     onUpdate={this.onUpdate}
                                                                     onDelete={this.onDelete}
                                                                     onNavigate={this.onNavigate}
+                                                                    filterDiningSessionList={this.filterDiningSessionList}
                                                                     diningSessions={this.state.diningSessions}
                                                                     diningSessionLinks={this.state.diningSessionLinks}
                                                                     diningSessionAttributes={this.state.diningSessionAttributes}
@@ -573,6 +574,7 @@ export class App extends React.Component {
                                                    filterMenuItemList={this.filterMenuItemList}
                                                    {...props}/>)}/>
                                 <Route exact path={"/select-task"} component={SelectTask}/>
+                                <Route exact path={"/staff-landing"} component={StaffLanding}/>
                                 <Route exact path={"/staff-requests"} component={StaffRequests}/>
                                 <Route exact path={"/staff-orders"} component={StaffOrders}/>
 

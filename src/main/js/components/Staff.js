@@ -1,7 +1,5 @@
 /** ----- NPM PACKAGE IMPORTS -----**/
 import React from "react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faShoppingCart, faDollarSign, faUser, faBell} from "@fortawesome/free-solid-svg-icons";
 
 /** ----- COMPONENT IMPORTS -----**/
 
@@ -34,6 +32,7 @@ export class Staff extends React.Component {
                               orderAttributes={this.props.orderAttributes}
                               diningSessions={this.props.diningSessions}
                               diningSessionsAttributes={this.props.diningSessionAttributes}
+                              filterDiningSessionList={this.props.filterDiningSessionList}
                               selectedView={this.props.selectedView}/>
             </div>
         )
@@ -55,6 +54,7 @@ class StaffLanding extends React.Component {
             state: {onUpdate: this.props.onUpdate,
                     diningSessions: this.props.diningSessions,
                     diningSessionAttributes: this.props.diningSessionAttributes,
+                    filterDiningSessionList: this.props.filterDiningSessionList,
                     selectedView: this.props.selectedView}
         })
     }
@@ -65,9 +65,9 @@ class StaffLanding extends React.Component {
         this.props.history.push({
             pathname: '/staff-orders',
             state: {onUpdate: this.props.onUpdate,
-                    orders: this.props.orders,
-                    orderAttributes: this.props.orderAttributes,
-                    selectedView: this.props.selectedView}
+                orders: this.props.orders,
+                orderAttributes: this.props.orderAttributes,
+                selectedView: this.props.selectedView}
         })
     }
 
@@ -108,24 +108,38 @@ class StaffLanding extends React.Component {
  * to the Staff component above.
  */
 export class StaffRequests extends React.Component {
+
     constructor(props) {
         super(props);
-        this.handleCloseMenu = this.handleCloseMenu.bind(this);
+        // this.state = {clicked: false};
+        this.handleBackClick = this.handleBackClick.bind(this);
     }
 
-    handleCloseMenu(){
+
+    handleBackClick() {
         this.props.history.push({
-            pathname: '/staff'
+            pathname: '/staff-landing'
         });
     }
 
     render() {
+        const StaffBillRequestItems = this.props.location.state.filterDiningSessionList("br_status").map(bill_request =>
+            <StaffBillRequestItem key={bill_request.entity._links.self.href}
+                                  bill_request={bill_request}
+            />);
+
+
+        const StaffServiceRequestItems = this.props.location.state.filterDiningSessionList("sr_status").map(service_request =>
+            <StaffServiceRequestItem key={service_request.entity._links.self.href}
+                                     service_request={service_request}
+            />);
+
         return (
             <div>
                 <div id="wrapper">
                     <main className="main-wrapper">
                         <header className="detail full">
-                            <a className="back" onClick={this.handleCloseMenu} data-transition="slide-from-top" />
+                            <a className="back" onClick={this.handleBackClick} data-transition="slide-from-top" />
                             <section>
                                 <h1 className="category-title">Requests</h1>
                                 <h3 className="page-badge">Bill and more</h3>
@@ -133,91 +147,8 @@ export class StaffRequests extends React.Component {
                         </header>
                         <div className="content-wrap full-width">
                             <div className="gridViewContainer">
-                                <div className="gridViewItem">
-                                    <img className="itemImage" draggable="false" src="./img/4.jpg" />
-                                    <div className="overlay billReq">
-                                        <div className="text">Table 23</div>
-                                        <div className="text">Bill Request</div>
-                                        <div style={{display: 'flex', justifyContent: 'center'}}>
-                                            <button title="View Detail" className="view-detail-button">
-                                                <i className="view-order" style={{fontSize: '20px'}}>View Detail</i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="gridViewItem">
-                                    <img className="itemImage" draggable="false" src="./img/3.jpg" />
-                                    <div className="overlay serviceReq">
-                                        <div className="text">Table 15</div>
-                                        <div className="text">Service Request</div>
-                                        <div style={{display: 'flex', justifyContent: 'center'}}>
-                                            <button title="Answer" className="view-detail-button">
-                                                <i className="view-order" style={{fontSize: '20px'}}>Answer</i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="gridViewItem">
-                                    <img className="itemImage" draggable="false" src="./img/2.jpg" />
-                                    <div className="overlay answeringReq">
-                                        <div className="text">Table 23</div>
-                                        <div className="text">Service Request</div>
-                                        <div style={{display: 'flex', justifyContent: 'center'}}>
-                                            <button title="Clear request" className="view-detail-button">
-                                                <i className="view-order" style={{fontSize: '20px'}}>OK</i>
-                                            </button>
-                                        </div>
-                                        <div className="answerStatus">***Answering***</div>
-                                    </div>
-                                </div>
-                                <div className="gridViewItem">
-                                    <img className="itemImage" draggable="false" src="./img/5.jpg" />
-                                    <div className="overlay billReq">
-                                        <div className="text">Table 23</div>
-                                        <div className="text">Bill Request</div>
-                                        <div style={{display: 'flex', justifyContent: 'center'}}>
-                                            <button title="View Detail" className="view-detail-button">
-                                                <i className="view-order" style={{fontSize: '20px'}}>View Detail</i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="gridViewItem">
-                                    <img className="itemImage" draggable="false" src="./img/6.jpg" />
-                                    <div className="overlay billReq">
-                                        <div className="text">Table 23</div>
-                                        <div className="text">Bill Request</div>
-                                        <div style={{display: 'flex', justifyContent: 'center'}}>
-                                            <button title="View Detail" className="view-detail-button">
-                                                <i className="view-order" style={{fontSize: '20px'}}>View Detail</i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="gridViewItem">
-                                    <img className="itemImage" draggable="false" src="./img/4.jpg" />
-                                    <div className="overlay billReq">
-                                        <div className="text">Table 23</div>
-                                        <div className="text">Bill Request</div>
-                                        <div style={{display: 'flex', justifyContent: 'center'}}>
-                                            <button title="View Detail" className="view-detail-button">
-                                                <i className="view-order" style={{fontSize: '20px'}}>View Detail</i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="gridViewItem">
-                                    <img className="itemImage" draggable="false" src="./img/2.jpg" />
-                                    <div className="overlay billReq">
-                                        <div className="text">Table 23</div>
-                                        <div className="text">Bill Request</div>
-                                        <div style={{display: 'flex', justifyContent: 'center'}}>
-                                            <button title="View Detail" className="view-detail-button">
-                                                <i className="view-order" style={{fontSize: '20px'}}>View Detail</i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                {StaffBillRequestItems}
+                                {StaffServiceRequestItems}
                             </div>
                             <footer>
                                 <div className="signature">
@@ -228,12 +159,60 @@ export class StaffRequests extends React.Component {
                         </div>
                     </main>
                 </div>
-                <a href="#" id="back-to-top">
-                    <i className="icon staff-bg staff-icon-UpArrow" />
-                </a>
             </div>
-    );
+        );
     }
+}
+
+export class StaffBillRequestItem extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+
+    render() {
+        return (
+            <div className="gridViewItem">
+                <img className="itemImage" draggable="false" src="./img/2.jpg" />
+                <div className="overlay billReq">
+                    <div className="text">Table {this.props.bill_request.entity.tableNumber}</div>
+                    <div className="text">Bill Request</div>
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <button title="View Detail" className="view-detail-button">
+                            <i className="view-order" style={{fontSize: '20px'}}>Answer</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+}
+
+export class StaffServiceRequestItem extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+
+    render() {
+        return (
+            <div className="gridViewItem">
+                <img className="itemImage" draggable="false" src="./img/4.jpg" />
+                <div className="overlay serviceReq">
+                    <div className="text">Table {this.props.service_request.entity.tableNumber}</div>
+                    <div className="text">Service Request</div>
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <button title="View Detail" className="view-detail-button">
+                            <i className="view-order" style={{fontSize: '20px'}}>Answer</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+
+    }
+
 }
 
 
