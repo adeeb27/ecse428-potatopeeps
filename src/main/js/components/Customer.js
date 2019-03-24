@@ -54,6 +54,7 @@ export class Customer extends React.Component {
         const customerDS = this.props.filterDiningSessionList('ta_status');
         return(
         <TableNumberSelect
+            customerSelectTableNumber={this.props.customerSelectTableNumber}
             handleTableNumberSelect={this.handleTableNumberSelect}
             diningSessions={customerDS}
             diningSessionAttributes={this.props.diningSessionAttributes}
@@ -69,8 +70,7 @@ class TableNumberSelect extends React.Component{
         super(props);
         this.handleTableNumberSelect = this.handleTableNumberSelect.bind(this);
     }
-
-
+    
     handleTableNumberSelect(e) {
         e.preventDefault();
         const updatedDiningSession = {};
@@ -86,6 +86,8 @@ class TableNumberSelect extends React.Component{
         let oldDiningSession = this.props.diningSessions.find(function(session) {
             return session.entity.tableNumber === parseInt(selectedTableNumber, 10);
         });
+
+        this.props.customerSelectTableNumber(selectedTableNumber);
 
         this.setState({
         selectedTableNumber: selectedTableNumber

@@ -65,7 +65,9 @@ export class App extends React.Component {
             tagAttributes: [],
             pageSize: 10,
             selectedTableNumber: 1,
-            sentObject: {tableNum: 1, ordersToBeCreated: [],}
+            sentObject: {tableNum: 1, ordersToBeCreated: []},
+            billObject: {billTotal: 0, ordersCreated: [],
+            customerSelectedTableNumber: 0}
         };
         this.onCreate = this.onCreate.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
@@ -79,6 +81,7 @@ export class App extends React.Component {
         this.updateOrderQuantity = this.updateOrderQuantity.bind(this);
         this.removeCartItem = this.removeCartItem.bind(this);
         this.submitOrders = this.submitOrders.bind(this);
+        this.customerSelectTableNumber = this.customerSelectTableNumber.bind(this);
     }
 
 
@@ -236,10 +239,7 @@ export class App extends React.Component {
             case 'tableAssignmentStatus':
                 updatedDiningSession['tableAssignmentStatus'] = string;
                 break;
-
         }
-
-
     }
 
     /**
@@ -488,9 +488,7 @@ export class App extends React.Component {
         }
     }
 
-
-
-    updateCustomerCart(menuItem, selectedTableNumber){
+    updateCustomerCart(menuItem){
         let oldSentObject = this.state.sentObject;
         let oldOrdersToBeCreated = [];
         oldOrdersToBeCreated = oldSentObject.ordersToBeCreated;
@@ -499,7 +497,6 @@ export class App extends React.Component {
 
         oldOrdersToBeCreated.forEach((oldOrderToBeCreated) => {
             if(oldOrderToBeCreated.name === menuItem.entity.name){
-                console.log("Already exists.");
                 alreadyExists = true;
             }
         });
@@ -513,13 +510,12 @@ export class App extends React.Component {
             orderToBeCreated['menuItemHref'] = menuItem.entity._links.self.href;
             oldOrdersToBeCreated.push(orderToBeCreated);
 
-
             let cartTotal = 0;
             oldOrdersToBeCreated.forEach(function(oldOrder){
                 cartTotal += oldOrder.orderTotal;
             });
 
-            this.setState({sentObject: {tableNum: selectedTableNumber,
+            this.setState({sentObject: {tableNum: this.state.customerSelectedTableNumber,
                     cartTotal: cartTotal,
                     ordersToBeCreated: oldOrdersToBeCreated}});
         }
@@ -538,7 +534,7 @@ export class App extends React.Component {
             cartTotal += oldOrder.orderTotal;
         });
 
-        this.setState({sentObject: {tableNum: this.state.selectedTableNumber,
+        this.setState({sentObject: {tableNum: this.state.customerSelectedTableNumber,
                 cartTotal: cartTotal,
                 ordersToBeCreated: oldOrdersToBeCreated}});
     }
@@ -552,49 +548,54 @@ export class App extends React.Component {
         oldOrdersToBeCreated.splice(index, 1);
 
         this.setState({sentObject:
-                {tableNum: this.state.selectedTableNumber,
+                {tableNum: this.state.customerSelectedTableNumber,
                 cartTotal: newCartTotal, ordersToBeCreated: oldOrdersToBeCreated}});
     }
 
     submitOrders(e){
         e.preventDefault();
-        let selectedTableNum = this.state.sentObject.tableNum;
         let ordersToBeCreated = this.state.sentObject.ordersToBeCreated;
-
-        console.log("Selected Table Num: " + selectedTableNum);
-
-        console.log("Length of Dining Sessions: " + this.state.diningSessions.length);
         let diningSessionsLength = this.state.diningSessions.length;
         let diningSessionUrl = "";
 
-
         for(let i = 0; i < diningSessionsLength; i++){
-            console.log("Yeet: ", this.state.diningSessions[i]);
-            if(this.state.diningSessions[i].entity.tableNumber == this.state.selectedTableNumber)
+            if(this.state.diningSessions[i].entity.tableNumber === parseInt(this.state.customerSelectedTableNumber, 10))
                 diningSessionUrl = this.state.diningSessions[i].entity._links.self.href;
         }
 
+        let cartTotal = 0;
 
         ordersToBeCreated.forEach((order) => {
             let newOrder = {};
-
-            console.log("Dining Session URL: ", diningSessionUrl);
-
             newOrder['status'] = 'ORDERED';
             newOrder['price'] = order.orderTotal;
             newOrder['quantity'] = order.quantity;
             newOrder['menuItem'] = order.menuItemHref;
             newOrder['diningSession'] = diningSessionUrl;
+            cartTotal += order.orderTotal;
             this.onCreate(newOrder, "orders");
         });
 
 
-        console.log("State Selected Table Number: " + this.state.selectedTableNumber);
+        console.log("State Selected Table Number: " + this.state.customerSelectedTableNumber);
+        let thisStateSelectedTableNumber = parseInt(this.state.customerSelectedTableNumber, 10);
+        console.log("This State Selected Table Number: " + this.state.customerSelectedTableNumber);
+
+        let newBillTotal = this.state.billObject.billTotal + cartTotal;
+        let ordersCreated = this.state.billObject.ordersCreated.concat(ordersToBeCreated);
 
         setTimeout(() =>{
-            this.setState({sentObject: {tableNum: selectedTableNum, cartTotal: 0, ordersToBeCreated: []}});
+            this.setState({sentObject: {tableNum: thisStateSelectedTableNumber, cartTotal: 0, ordersToBeCreated: []}});
+            this.setState({billObject: {billTotal: newBillTotal, ordersCreated: ordersCreated}});
+            console.log("Emptied Sent Object: ", this.state.sentObject);
+            console.log("Bill Object: ", this.state.billObject);
         }, 1000)
-        console.log("Emptied Sent Object: ", this.state.sentObject);
+
+    }
+
+
+    customerSelectTableNumber(selectedTableNumber){
+        this.setState({customerSelectedTableNumber: selectedTableNumber});
     }
 
     /**
@@ -629,7 +630,7 @@ export class App extends React.Component {
                                                onUpdate={this.onUpdate}
                                                onDelete={this.onDelete}
                                                onNavigate={this.onNavigate}
-
+                                               customerSelectTableNumber={this.customerSelectTableNumber}
                                                filterDiningSessionList={this.filterDiningSessionList}
                                                diningSessions={this.state.diningSessions}
                                                diningSessionLinks={this.state.diningSessionLinks}
