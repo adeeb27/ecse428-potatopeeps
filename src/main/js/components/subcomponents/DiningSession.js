@@ -110,7 +110,7 @@ export class StaffDiningSession extends React.Component{
         console.log(this.props.diningSession);
         return (
             <div className="gridViewItem">               
-                    <img className="itemImage" draggable="false" src="./asset/3.jpg" />               
+                    <img className="itemImage" draggable="false" src="./img/3.jpg" />               
                     <div className="overlay">
                         <div className="text">Table {this.props.diningSession.entity.tableNumber}</div>
                         <div className="text">{this.props.diningSession.entity.price}</div>
