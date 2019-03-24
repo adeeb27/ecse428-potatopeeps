@@ -157,7 +157,7 @@ class StaffOrderList extends React.Component{
 
 }
 
-export class StaffOrder extends Order{
+export class StaffOrder extends React.Component{
     constructor(props){
         super(props);
         this.state = {

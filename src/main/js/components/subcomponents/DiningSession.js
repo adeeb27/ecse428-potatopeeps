@@ -54,19 +54,12 @@ export class StaffDiningSessionPage extends React.Component{
                 diningSession={session}
                 diningSessionAttributes={this.props.diningSessionAttributes}
                 history = {this.props.history}
-            />
-
-        )
-        // console.log("Sessions page:");
-        // console.log(this.props.diningSession);
+            />)
 
         //TODO review how to get number of diningSessions. Test whether this.props.diningSessions.size returns a number or undefined
-        //TODO refactor the gridViewContainer into a DiningSessionList component
         return  (
             <div>
                 <title>All Orders</title>
-                <p>bananafofana {sessions.size} test</p>
-                
                 {sessions}
                 
             </div>
@@ -84,7 +77,6 @@ export class StaffDiningSession extends React.Component{
 
     constructor(props){
         super(props);
-        this.handleClick = this.handleClick.bind(this);
         this.handleListOrders = this.handleListOrders.bind(this);
     }
 
@@ -124,22 +116,13 @@ export class StaffDiningSession extends React.Component{
                         <div className="text">{this.props.diningSession.entity.price}</div>
                         <div style={{display: 'flex', justifyContent: 'center'}}>
                             <button className="view-detail-button" title="View details">
-                                <i className="view-order" style={{fontSize: '20px'}} onClick={this.handleClick}>View</i>
+                                <i className="view-order" style={{fontSize: '20px'}} onClick={this.handleListOrders}>View</i>
                             </button>
                         </div>
                         
                     </div> 
             </div>
         )
-    }
-
-    handleClick(){
-        //TODO navigate to specific orders for diningSessions
-        // onclick={handleClick}
-        // console.log("in handle click");
-        
-        this.handleListOrders();
-        // console.log("after handleClose");
     }
 
     handleListOrders(){
@@ -149,10 +132,8 @@ export class StaffDiningSession extends React.Component{
             pathname: ('/orders/'),
             state: {diningSession : this.props.diningSession},
             diningSession : this.props.diningSession
-            }    // + this.props.diningSession.entity.tableNumber
-            //TODO: make use of tableNum via this.props.location.state.tableNum
+            } 
         );
         
-        // console.log("after history push");
     }
 }
