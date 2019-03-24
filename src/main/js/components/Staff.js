@@ -136,7 +136,7 @@ export class StaffRequests extends React.Component {
     handleBackClick(e) {
         e.preventDefault();
         this.props.history.push({
-            pathname: '/staff-landing'
+            pathname: '/staff'
         });
     }
 
@@ -153,7 +153,7 @@ export class StaffRequests extends React.Component {
             />);
 
         return (
-            <div>
+            <div className="page staff-request-page">
                 <div id="wrapper">
                     <main className="main-wrapper">
                         <header className="detail full">
