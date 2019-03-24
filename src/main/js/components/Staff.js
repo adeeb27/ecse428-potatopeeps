@@ -17,10 +17,17 @@ export class Staff extends React.Component {
     constructor(props) {
         super(props);
         this.state = {selectedView: 'Staff'};
+        this.reloader = this.reloader.bind(this);
+    }
+
+    reloader(){
+        this.props.loadResourceFromServer('diningSessions', this.state.pageSize);
+        this.props.loadResourceFromServer('orders', this.state.pageSize);
     }
 
     componentDidMount() {
-        this.props.loadResourceFromServer('diningSessions', this.state.pageSize)
+        this.props.loadResourceFromServer('diningSessions', this.state.pageSize);
+        setInterval(this.reloader, 30000);
     }
 
     render() {
@@ -72,6 +79,10 @@ export class StaffLanding extends React.Component {
     }
 
     render() {
+        let numBR = this.props.filterDiningSessionList("br_status").length;
+        let numSR = this.props.filterDiningSessionList("sr_status").length;
+        let numAllReq = numBR + numSR;
+        let numOR = this.props.orders.length;
         return (
             <div>
                 <title>Staff Landing Page</title>
@@ -86,7 +97,7 @@ export class StaffLanding extends React.Component {
                     <div className="staff-overlay">
                         <div className="staff-nav-btn-wrapper">
                             <div className="notification-box">
-                                <span className="staff-notification-count1">0</span>
+                                <span className="staff-notification-count1">{numAllReq}</span>
                                 <div className="staff-notification-bell">
                                     <span className="staff-bell-top"></span>
                                     <span className="staff-bell-middle"></span>
@@ -99,7 +110,7 @@ export class StaffLanding extends React.Component {
                         </div>
                         <div className="staff-nav-btn-wrapper">
                             <div className="notification-box">
-                                <span className="staff-notification-count2">0</span>
+                                <span className="staff-notification-count2">{numOR}</span>
                                 <div className="staff-notification-bell">
                                     <span className="staff-bell-top"></span>
                                     <span className="staff-bell-middle"></span>
