@@ -291,15 +291,16 @@ export class CustomerReviewBill extends React.Component {
 
 
     componentDidMount() {
-        this.requestMenuItemsFromOrder();
+        setTimeout(() => {
+            this.requestMenuItemsFromOrder();
+        }, 1000);
     }
 
     requestMenuItemsFromOrder() {
         let result = [];
         this.props.orders.forEach(order => {
             let menuItemLink = order.entity._links.menuItem.href;
-            let orderEntry = {name : 'An Error Occured', order:{}};
-            // let orderEntries = [{name : 'An Error Occured', order}]
+            let orderEntry = {name : 'Loading Item Name...', order:{}};
             fetch(menuItemLink, {
                 method: 'GET',
                 headers: {'Content-Type': 'application/json'}
@@ -308,7 +309,10 @@ export class CustomerReviewBill extends React.Component {
                     response => {
                         response.json().then((data) => {
                             let menuItemName = data.name;
-                            orderEntry['name'] = menuItemName;
+                            Promise.resolve(menuItemName).then(value => {
+                               orderEntry['name'] = menuItemName;
+                            });
+
                         });
                     }
                 )
@@ -323,7 +327,7 @@ export class CustomerReviewBill extends React.Component {
 
         setTimeout(() => {
             this.setState({arrayToMapInRender: result});
-        }, 5000);
+        }, 1000);
     }
 
     render () {
@@ -333,10 +337,10 @@ export class CustomerReviewBill extends React.Component {
             <tbody>
             <tr>
                 <td>   </td>
-                <td> {billItem.name}</td>
-                <td>{"$" + billItem.order.entity.price} </td>
-                <td> {billItem.order.entity.quantity}  </td>
-                <td> {"$" + billItem.order.entity.quantity * billItem.order.entity.price} </td>
+                <td key={billItem.order.entity._links.self.href + "-name"}> {billItem.name}</td>
+                <td key={billItem.order.entity._links.self.href + "-price"}>{"$" + billItem.order.entity.price} </td>
+                <td key={billItem.order.entity._links.self.href + "-quantity"}> {billItem.order.entity.quantity}  </td>
+                <td key={billItem.order.entity._links.self.href + "-full-price"}> {"$" + billItem.order.entity.quantity * billItem.order.entity.price} </td>
             </tr>
             </tbody>
 
@@ -368,7 +372,7 @@ export class CustomerReviewBill extends React.Component {
                                                 <th scope="col">Total</th>
                                             </tr>
                                             </thead>
-                                            {this.billItems}
+                                            {billItems}
 
                                         </table>
                                     </div>
