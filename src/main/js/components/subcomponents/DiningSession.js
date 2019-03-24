@@ -7,7 +7,12 @@ import React from "react";
 export class CustomerDiningSessionSelect extends React.Component {
     constructor(props) {
         super(props);
+
+
     }
+
+
+
 
     render() {
         const options = this.props.diningSessions.map(diningSession =>

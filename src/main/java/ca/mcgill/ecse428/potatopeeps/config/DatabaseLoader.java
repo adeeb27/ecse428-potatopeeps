@@ -3,6 +3,7 @@ package ca.mcgill.ecse428.potatopeeps.config;
 import ca.mcgill.ecse428.potatopeeps.diningsession.DiningSession;
 import ca.mcgill.ecse428.potatopeeps.diningsession.DiningSessionRepository;
 import ca.mcgill.ecse428.potatopeeps.menuitem.MenuItem;
+import ca.mcgill.ecse428.potatopeeps.order.*;
 import ca.mcgill.ecse428.potatopeeps.menuitem.MenuItemRepository;
 import ca.mcgill.ecse428.potatopeeps.order.OrderRepository;
 import ca.mcgill.ecse428.potatopeeps.tag.Tag;

@@ -792,6 +792,10 @@ select#soflow-color {
   justify-content: space-around;
 }
 
+.customer-cart-table-rows{
+  color: white !important;
+}
+
 
 /* --------------------------------------------
 
