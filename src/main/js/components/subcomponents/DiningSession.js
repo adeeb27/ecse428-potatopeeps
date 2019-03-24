@@ -54,6 +54,10 @@ export class StaffDiningSessionPage extends React.Component{
                 diningSession={session}
                 diningSessionAttributes={this.props.diningSessionAttributes}
                 history = {this.props.history}
+                onCreate={this.onCreate}
+                onUpdate={this.onUpdate}
+                onDelete={this.onDelete}
+                onNavigate={this.onNavigate}
             />)
 
         //TODO review how to get number of diningSessions. Test whether this.props.diningSessions.size returns a number or undefined
@@ -106,8 +110,8 @@ export class StaffDiningSession extends React.Component{
             });
    }
     render(){
-        console.log("Individual session:");
-        console.log(this.props.diningSession);
+        // console.log("Individual session:");
+        // console.log(this.props.diningSession);
         return (
             <div className="gridViewItem">               
                     <img className="itemImage" draggable="false" src="./img/3.jpg" />               

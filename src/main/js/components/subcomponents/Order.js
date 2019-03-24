@@ -73,8 +73,8 @@ export class DiningSessionOrders extends React.Component{
         );
     }
 
-    //this method dynamically loads the orders associated with the given
-    //diningSession and converts them into renderable components, namely StaffOrderList and StaffOrder
+    // this method dynamically loads the orders associated with the given
+    // diningSession and converts them into renderable components, namely StaffOrderList and StaffOrder
     requestOrders(){
         fetch(this.props.location.diningSession.entity._links.orders.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
            .then(
@@ -95,6 +95,7 @@ export class DiningSessionOrders extends React.Component{
                         );
                         console.log("In the render of Orders");
                         console.log(this.state);
+                        console.log(this.state.orders);
                         console.log("in render");
                    });
                }
@@ -103,6 +104,8 @@ export class DiningSessionOrders extends React.Component{
                console.log('Fetch Error :-S', err);
            });
    }
+
+
    componentDidMount(){
         this.requestOrders();
    }
@@ -112,14 +115,21 @@ export class DiningSessionOrders extends React.Component{
    }
 
    handleBackClick(){
-    this.props.history.goBack();
+    // this.props.history.goBack();
+    this.props.history.push
+        (
+            {
+                pathname: ('/staff/'),
+                props: this.props
+            } 
+        );
    }
 }
 
 class StaffOrderList extends React.Component{
     constructor(props){
         super(props);
-
+        
     }
 
     render(){
@@ -161,20 +171,22 @@ export class StaffOrder extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            price : 4.99,
             status: this.props.order.status,
             quantity: this.props.order.quantity,
             menuItem: {}
         };
+        this.requestMenuItem = this.requestMenuItem.bind(this);
     }
 
     render(){
         return (
             <tr>
                 <th scope="row">
-                    <img className="item-preview" src="../../../resources/static/img/4.jpg"/>>
+                    <img className="item-preview" style={{width : '65px', height : '65px'}} src="./img/4.jpg"/>
                 </th>
                 <td>{this.state.menuItem.name}</td>
-                <td>{this.props.price}</td>
+                <td>{this.state.menuItem.price}</td>
                 <td>
                     <div className="number-input">
                         <input readOnly className="quantity" min="0" name="quantity" value={this.state.quantity} type="number" disabled/>>
@@ -203,6 +215,43 @@ export class StaffOrder extends React.Component{
             }
             
         )
+    }
+
+    requestMenuItem(){
+        fetch(this.props.order._links.menuItem.href, {method: 'GET', headers: {'Content-Type': 'application/json'}})
+        .then(
+            response => {
+                if (!response.ok) {
+                    console.log('Looks like there was a problem. Status Code: ' +
+                        response.status);
+                    return;
+                }
+
+                // Examine the text in the response
+                response.json().then((data) => {
+                    console.log("Menu Item");
+                    console.log(data);
+                    this.setState(
+                            {
+                                price : 4.99,
+                                status: this.props.order.status,
+                                quantity: this.props.order.quantity,
+                                menuItem: data
+                            }                        
+                        );
+                        console.log("In the render of Orders");
+                        console.log(this.state);
+                        console.log("in render");
+                });
+            }
+        )
+        .catch(function(err) {
+            console.log('Fetch Error :-S', err);
+        });
+    }
+
+    componentDidMount(){
+        this.requestMenuItem();
     }
     
 }
