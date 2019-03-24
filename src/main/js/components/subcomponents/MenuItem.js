@@ -322,41 +322,6 @@ class ManagerUpdateMenuItemDialog extends React.Component {
     }
 
 
-
-    //updateCustomerCart(menuItem){
-    //
-    //         let oldSentObject = this.state.sentObject;
-    //         let oldOrdersToBeCreated = [];
-    //         oldOrdersToBeCreated = oldSentObject.ordersToBeCreated;
-    //
-    //         let alreadyExists = false;
-    //
-    //         oldOrdersToBeCreated.forEach((oldOrderToBeCreated) => {
-    //            if(oldOrderToBeCreated.name === menuItem.entity.name){
-    //                console.log("Already exists.");
-    //                alreadyExists = true;
-    //            }
-    //         });
-    //
-    //         if(!alreadyExists){
-    //             let orderToBeCreated = {};
-    //             orderToBeCreated['quantity'] = 1;
-    //             orderToBeCreated['name'] = menuItem.entity.name;
-    //             orderToBeCreated['price'] = menuItem.entity.price;
-    //             orderToBeCreated['menuItemHref'] = menuItem.entity._links.self.href;
-    //
-    //             oldOrdersToBeCreated.push(orderToBeCreated);
-    //
-    //             this.setState({sentObject: {tableNum: this.state.selectedTableNumber, ordersToBeCreated: oldOrdersToBeCreated}});
-    //
-    //             setTimeout(() =>{
-    //                 console.log("Current Sent Object: ", this.state.sentObject);
-    //                 console.log("Order to be created: ", orderToBeCreated);
-    //             }, 3000)
-    //         }
-    //     }
-
-
     /**
      * render - Render a React element into the DOM in the supplied container and return a reference to the component.
      *

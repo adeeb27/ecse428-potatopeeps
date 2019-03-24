@@ -719,28 +719,6 @@ export class App extends React.Component {
                                                           selectedView={'Customer'}
                                                           filterMenuItemList={this.filterMenuItemList}
                                                           {...props}/>)}/>
-
-                                <Route path={"/order"} render={(props) =>
-                                    (<Order loadResourceFromServer={this.loadResourceFromServer}
-                                                          onCreate={this.onCreate}
-                                                          onUpdate={this.onUpdate}
-                                                          onDelete={this.onDelete}
-                                                          onNavigate={this.onNavigate}
-                                                          diningSessions={this.state.diningSessions}
-                                                          diningSessionLinks={this.state.diningSessionLinks}
-                                                          diningSessionAttributes={this.state.diningSessionAttributes}
-                                                          orders={this.state.orders}
-                                                          orderLinks={this.state.orderLinks}
-                                                          orderAttributes={this.state.orderAttributes}
-                                                          menuItems={this.props.menuItems}
-                                                          menuItemTags={this.state.menuItemTags}
-                                                          tags={this.state.tags}
-                                                          updateCustomerCart={this.updateCustomerCart}
-                                                          updateOrderQuantity={this.updateOrderQuantity}
-                                                          sentObject={this.state.sentObject}
-                                                          selectedView={'Order'}
-                                                          filterMenuItemList={this.filterMenuItemList}
-                                                          {...props}/>)}/>
                                 <Route path={"/customer-view-cart"} render={(props) =>
                                     (<CustomerCartPage loadResourceFromServer={this.loadResourceFromServer}
                                                           onCreate={this.onCreate}
