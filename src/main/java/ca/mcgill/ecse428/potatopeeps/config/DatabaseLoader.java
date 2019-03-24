@@ -96,23 +96,6 @@ public class DatabaseLoader implements CommandLineRunner {
                     menuItemRepository.save(menuItem);
                 }
             }
-
-            //FILL ORDERS
-
-            Order[] orders = new Order[10];
-            orders[0] = new Order(menuItems[0].getPrice(), 1, menuItems[0], diningSessions[0]);
-            orders[1] = new Order(menuItems[3].getPrice(), 2, menuItems[3], diningSessions[0]);
-            orders[2] = new Order(menuItems[7].getPrice(), 1, menuItems[7], diningSessions[0]);
-            orders[3] = new Order(menuItems[13].getPrice(), 4, menuItems[13], diningSessions[0]);
-            orders[4] = new Order(menuItems[25].getPrice(), 1, menuItems[25], diningSessions[1]);
-            orders[5] = new Order(menuItems[19].getPrice(), 1, menuItems[19], diningSessions[1]);
-            orders[6] = new Order(menuItems[2].getPrice(), 1, menuItems[2], diningSessions[2]);
-            orders[7] = new Order(menuItems[15].getPrice(), 1, menuItems[15], diningSessions[3]);
-            orders[8] = new Order(menuItems[11].getPrice(), 1, menuItems[11], diningSessions[4]);
-            orders[9] = new Order(menuItems[9].getPrice(), 1, menuItems[9], diningSessions[4]);
-            for (Order order : orders) {
-                orderRepository.save(order);
-        }
     }
 
 }

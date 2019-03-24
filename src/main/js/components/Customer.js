@@ -147,7 +147,7 @@ export class CustomerLandingPage extends React.Component {
         e.preventDefault();
         const updatedDiningSession = {};
 
-        this.props.updateDiningSession(this.props.location.state.currentDiningSession, updatedDiningSession,'serviceRequestStatus','ACTIVE');
+        this.props.updateDiningSession(this.props.location.state.oldDiningSess, updatedDiningSession,'serviceRequestStatus','ACTIVE');
         this.props.onUpdate(this.props.location.state.oldDiningSess, updatedDiningSession, 'diningSessions');
 
         this.handleReviewBill = this.handleReviewBill.bind(this);

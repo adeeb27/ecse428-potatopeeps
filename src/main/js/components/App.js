@@ -227,7 +227,7 @@ export class App extends React.Component {
 
     updateDiningSession(diningSession, updatedDiningSession, option, string) {
 
-        updatedDiningSession['tableNumber'] = diningSession.tableNumber;
+        updatedDiningSession['tableNumber'] = diningSession.entity.tableNumber;
         switch (option) {
             case 'diningSessionStatus':
                 updatedDiningSession['diningSessionStatus'] = string;
