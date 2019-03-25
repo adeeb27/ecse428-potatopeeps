@@ -64,10 +64,10 @@ export class Manager extends React.Component {
                             <b>MANAGER VIEW</b>
                         </div>
                         <div className="col-1 text-right">
-                            <Button id="logout-btn" className="btn btn-danger" type="button">
+                            {/*<Button id="logout-btn" className="btn btn-danger" type="button">
                                 {"Logout"}
                                 <FontAwesomeIcon icon={faSignOutAlt}/>
-                            </Button>
+                            </Button>*/}
                         </div>
                     </div>
                     <hr/>
@@ -116,13 +116,6 @@ export class Manager extends React.Component {
                                                                  tags={this.props.tags}
                                                                  tagList={tagList}
                                                                  onCreate={this.props.onCreate}/>
-                                </div>
-
-                                <div className="row mt-3">
-                                    {/* Renders a ManagerCreateTagDialog component here */}
-                                    <ManagerCreateTagDialog
-                                        onCreate = {this.props.onCreate}
-                                        tagAttributes = {this.props.tagAttributes}/>
                                 </div>
                             </div>
 

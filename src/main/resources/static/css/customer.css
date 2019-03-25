@@ -459,8 +459,9 @@ Food Item
   height: 98%;
 }
 
+/* 56% */
 .gridViewItem:hover .add-to-cart-button {
-  top: 56%;
+  top: 75%; 
   transition: .5s ease;
 }
 
@@ -471,6 +472,15 @@ Food Item
 .add-to-cart-button:hover .fa-shopping-cart{
   color: #000;
   transition: .9s ease;
+}
+
+.price-text {
+  color: white;
+  display: inline;
+  font-size: 24px;
+  position: relative;
+  left: 20%;
+  text-align: center;
 }
 
 .overlay .text {
@@ -780,6 +790,10 @@ select#soflow-color {
 
 .button-container.orderDetail {
   justify-content: space-around;
+}
+
+.customer-cart-table-rows{
+  color: white !important;
 }
 
 
