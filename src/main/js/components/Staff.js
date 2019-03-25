@@ -27,7 +27,7 @@ export class Staff extends React.Component {
 
     componentDidMount() {
         this.props.loadResourceFromServer('diningSessions', this.state.pageSize);
-        setInterval(this.reloader, 30000);
+        setInterval(this.reloader, 15000);
     }
 
     render() {
@@ -144,12 +144,17 @@ export class StaffRequests extends React.Component {
         const StaffBillRequestItems = this.props.location.state.filterDiningSessionList("br_status").map(bill_request =>
             <StaffBillRequestItem key={bill_request.entity._links.self.href}
                                   bill_request={bill_request}
+                                  diningSessions={this.props.location.state.diningSessions}
+                                  onUpdate={this.props.location.state.onUpdate}
             />);
 
 
         const StaffServiceRequestItems = this.props.location.state.filterDiningSessionList("sr_status").map(service_request =>
             <StaffServiceRequestItem key={service_request.entity._links.self.href}
                                      service_request={service_request}
+                                     state={this.props.location.state}
+                                     diningSessions={this.props.location.state.diningSessions}
+                                     onUpdate={this.props.location.state.onUpdate}
             />);
 
         return (
@@ -210,8 +215,24 @@ export class StaffBillRequestItem extends React.Component {
 export class StaffServiceRequestItem extends React.Component {
     constructor(props) {
         super(props);
+
+        this.handleAnswerServiceRequest = this.handleAnswerServiceRequest.bind(this);
     }
 
+    handleAnswerServiceRequest(e, tableNum) {
+        // e.preventDefault();
+        const updatedDiningSession = {};
+
+        tableNum = this.props.service_request.entity.tableNumber;
+        updatedDiningSession['tableNumber'] = tableNum;
+        updatedDiningSession['serviceRequestStatus'] = 'INACTIVE';
+
+        let oldDiningSession = this.props.diningSessions.find(function(session) {
+            return session.entity.tableNumber === parseInt(tableNum, 10);
+        });
+
+        this.props.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
+    }
 
     render() {
         return (
@@ -222,7 +243,7 @@ export class StaffServiceRequestItem extends React.Component {
                     <div className="text">Service Request</div>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                         <button title="View Detail" className="view-detail-button">
-                            <i className="view-order" style={{fontSize: '20px'}}>Answer</i>
+                            <i className="view-order" style={{fontSize: '20px'}} onClick={this.handleAnswerServiceRequest}>Answer</i>
                         </button>
                     </div>
                 </div>
