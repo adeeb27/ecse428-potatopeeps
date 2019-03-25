@@ -751,6 +751,8 @@ export class App extends React.Component {
                                                                     orderAttributes={this.state.orderAttributes}
                                                                     menuItemTags={this.state.menuItemTags}
                                                                     selectedView={'Customer'}
+                                                                    updateCustomerCart={this.updateCustomerCart}
+                                                                    updateOrderQuantity={this.updateOrderQuantity}
                                                                     filterMenuItemList={this.filterMenuItemList}
                                                                     {...props}/>)}/>
                                 <Route path={"/CustomerLanding"} render={(props) =>
