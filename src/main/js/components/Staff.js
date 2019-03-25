@@ -150,6 +150,7 @@ export class StaffRequests extends React.Component {
         const StaffServiceRequestItems = this.props.location.state.filterDiningSessionList("sr_status").map(service_request =>
             <StaffServiceRequestItem key={service_request.entity._links.self.href}
                                      service_request={service_request}
+                                     state={this.props.location.state}
             />);
 
         return (
@@ -210,8 +211,33 @@ export class StaffBillRequestItem extends React.Component {
 export class StaffServiceRequestItem extends React.Component {
     constructor(props) {
         super(props);
+
+        this.handleAnswerServiceRequest = this.handleAnswerServiceRequest.bind(this);
     }
 
+    handleAnswerServiceRequest(e, tableNum) {
+        // e.preventDefault();
+        const updatedDiningSession = {};
+
+        console.log(this.props);
+        console.log(this.props.state);
+
+        tableNum = this.props.service_request.entity.tableNumber;
+        updatedDiningSession['tableNumber'] = tableNum;
+        updatedDiningSession['serviceRequestStatus'] = 'INACTIVE';
+
+        let oldDiningSession = this.props.state.diningSessions.find(function(session) {
+            return session.entity.tableNumber === parseInt(tableNum, 10);
+        });
+        // let oldDiningSession = this.props.service_request.entity;
+        console.log(oldDiningSession);
+
+        this.props.state.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
+        this.props.history.push({
+            pathname: '/staff-requests',
+            //Any states that are defined in the constructor(props) above need to be passed in here
+        });
+    }
 
     render() {
         return (
@@ -222,7 +248,7 @@ export class StaffServiceRequestItem extends React.Component {
                     <div className="text">Service Request</div>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                         <button title="View Detail" className="view-detail-button">
-                            <i className="view-order" style={{fontSize: '20px'}}>Answer</i>
+                            <i className="view-order" style={{fontSize: '20px'}} onClick={this.handleAnswerServiceRequest}>Answer</i>
                         </button>
                     </div>
                 </div>
