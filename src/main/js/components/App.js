@@ -68,7 +68,8 @@ export class App extends React.Component {
             billObject: {
                 billTotal: 0, ordersCreated: [],
                 customerSelectedTableNumber: 0
-            }
+            },
+            diningSession: {}
         };
         this.onCreate = this.onCreate.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
@@ -84,6 +85,7 @@ export class App extends React.Component {
         this.submitOrders = this.submitOrders.bind(this);
         this.customerSelectTableNumber = this.customerSelectTableNumber.bind(this);
         this.customerRequestsBill = this.customerRequestsBill.bind(this);
+        this.customerSetDiningSession = this.customerSetDiningSession.bind(this);
     }
 
 
@@ -658,6 +660,10 @@ export class App extends React.Component {
         this.setState({customerSelectedTableNumber: selectedTableNumber});
     }
 
+    customerSetDiningSession(diningSession){
+        this.setState({diningSession: diningSession})
+    }
+
     /**
      * render - Render a React element into the DOM in the supplied container and return a reference to the component
      *
@@ -690,6 +696,7 @@ export class App extends React.Component {
                                                onUpdate={this.onUpdate}
                                                onDelete={this.onDelete}
                                                onNavigate={this.onNavigate}
+                                               customerSetDiningSession={this.customerSetDiningSession}
                                                customerSelectTableNumber={this.customerSelectTableNumber}
                                                filterDiningSessionList={this.filterDiningSessionList}
                                                diningSessions={this.state.diningSessions}
@@ -760,6 +767,7 @@ export class App extends React.Component {
                                                           onCreate={this.onCreate}
                                                           onUpdate={this.onUpdate}
                                                           onDelete={this.onDelete}
+                                                          diningSession={this.state.diningSession}
                                                           updateDiningSession={this.updateDiningSession}
                                                           onNavigate={this.onNavigate}
                                                           diningSessions={this.state.diningSessions}
