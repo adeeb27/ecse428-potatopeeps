@@ -27,7 +27,7 @@ export class Staff extends React.Component {
 
     componentDidMount() {
         this.props.loadResourceFromServer('diningSessions', this.state.pageSize);
-        setInterval(this.reloader, 30000);
+        setInterval(this.reloader, 15000);
     }
 
     render() {
@@ -144,6 +144,8 @@ export class StaffRequests extends React.Component {
         const StaffBillRequestItems = this.props.location.state.filterDiningSessionList("br_status").map(bill_request =>
             <StaffBillRequestItem key={bill_request.entity._links.self.href}
                                   bill_request={bill_request}
+                                  diningSessions={this.props.location.state.diningSessions}
+                                  onUpdate={this.props.location.state.onUpdate}
             />);
 
 
@@ -151,6 +153,8 @@ export class StaffRequests extends React.Component {
             <StaffServiceRequestItem key={service_request.entity._links.self.href}
                                      service_request={service_request}
                                      state={this.props.location.state}
+                                     diningSessions={this.props.location.state.diningSessions}
+                                     onUpdate={this.props.location.state.onUpdate}
             />);
 
         return (
@@ -219,24 +223,17 @@ export class StaffServiceRequestItem extends React.Component {
         // e.preventDefault();
         const updatedDiningSession = {};
 
-        console.log(this.props);
-        console.log(this.props.state);
 
         tableNum = this.props.service_request.entity.tableNumber;
         updatedDiningSession['tableNumber'] = tableNum;
         updatedDiningSession['serviceRequestStatus'] = 'INACTIVE';
 
-        let oldDiningSession = this.props.state.diningSessions.find(function(session) {
+        let oldDiningSession = this.props.diningSessions.find(function(session) {
             return session.entity.tableNumber === parseInt(tableNum, 10);
         });
         // let oldDiningSession = this.props.service_request.entity;
-        console.log(oldDiningSession);
 
-        this.props.state.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
-        this.props.history.push({
-            pathname: '/staff-requests',
-            //Any states that are defined in the constructor(props) above need to be passed in here
-        });
+        this.props.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
     }
 
     render() {
