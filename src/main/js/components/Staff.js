@@ -219,9 +219,6 @@ export class StaffServiceRequestItem extends React.Component {
         // e.preventDefault();
         const updatedDiningSession = {};
 
-        console.log(this.props);
-        console.log(this.props.state);
-
         tableNum = this.props.service_request.entity.tableNumber;
         updatedDiningSession['tableNumber'] = tableNum;
         updatedDiningSession['serviceRequestStatus'] = 'INACTIVE';
@@ -229,14 +226,8 @@ export class StaffServiceRequestItem extends React.Component {
         let oldDiningSession = this.props.state.diningSessions.find(function(session) {
             return session.entity.tableNumber === parseInt(tableNum, 10);
         });
-        // let oldDiningSession = this.props.service_request.entity;
-        console.log(oldDiningSession);
 
         this.props.state.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
-        this.props.history.push({
-            pathname: '/staff-requests',
-            //Any states that are defined in the constructor(props) above need to be passed in here
-        });
     }
 
     render() {
