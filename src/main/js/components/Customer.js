@@ -332,7 +332,7 @@ export class CustomerReviewBill extends React.Component {
         const billItems = this.props.billObject.ordersCreated.map(billItem =>
 
             <tbody>
-            <tr>
+            <tr className="customer-cart-table-rows">
                 <td>   </td>
                 <td key={billItem.menuItemHref + "-name"}> {billItem.name}</td>
                 <td key={billItem.menuItemHref + "-price"}>{"$" + billItem.price.toFixed(2)} </td>
@@ -344,7 +344,7 @@ export class CustomerReviewBill extends React.Component {
         );
 
         return (
-                    <div>
+                    <div className="page bill-page">
                         <title>Customer Final Bill</title>
                         <div id="wrapper">
                             <main className="main-wrapper">
@@ -369,7 +369,7 @@ export class CustomerReviewBill extends React.Component {
                                             {billItems}
                                         </table>
                                     </div>
-                                    <div className="button-container orderDetail">
+                                    <div className="button-container orderDetail customer-cart-table-rows">
                                         <span className="cart-total name">Bill Total: </span>
                                         <span className="cart-total amount">{"$" + this.props.billObject.billTotal.toFixed(2)}</span>
                                     </div>
@@ -386,17 +386,9 @@ export class CustomerReviewBill extends React.Component {
                                         </div>
                                     </footer>
                                 </div>
-                            </main></div>
-                        <a href="#" id="back-to-top">
-                            <i className="icon bg icon-UpArrow" />
-                        </a>
-                        <ul id="slideshow">
-                            <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}} />
-                            <li style={{backgroundImage: 'url("./img/3.jpg")', display: 'block', zIndex: 0, animationDelay: '6s'}} />
-                            <li style={{backgroundImage: 'url("./img/6.jpg")', display: 'block', zIndex: 0, animationDelay: '12s'}} />
-                            <li style={{backgroundImage: 'url("./img/4.jpg")', display: 'block', zIndex: 0, animationDelay: '18s'}} />
-                            <li style={{backgroundImage: 'url("./img/2.jpg")', display: 'block', zIndex: 0, animationDelay: '24s'}} />
-                        </ul>
+                            </main>
+                        </div>
+
                     </div>
 
         );

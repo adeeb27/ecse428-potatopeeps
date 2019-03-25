@@ -678,12 +678,6 @@ export class App extends React.Component {
     render() {
         return (
             <div className="App">
-                <div className="nav">
-                    <NavLink exact to="/login">{"Login  "}</NavLink>
-                    <NavLink to="/staff">{"Staff  "}</NavLink>
-                    <NavLink to="/manager">{"Manager  "}</NavLink>
-                    <NavLink to="/customer">{"Customer  "}</NavLink>
-                </div>
 
                 <Route render={({location}) => (
                     <TransitionGroup>
