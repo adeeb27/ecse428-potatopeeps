@@ -33,7 +33,7 @@ import {Route} from "react-router-dom";
 /***
  *
  * Holds entire page view. Starting off with the Customer Landing page
- * @Author Adeeb Ibne Amjad, Dibbo Ritwik
+ * @Author Adeeb Ibne Amjad, Dibbo Ritwik, Evan Bruchet, Gabriel Negash
  *
  */
 
@@ -58,6 +58,7 @@ export class Customer extends React.Component {
         const customerDS = this.props.filterDiningSessionList('ta_status');
         return(
         <TableNumberSelect
+            customerSetDiningSession={this.props.customerSetDiningSession}
             customerSelectTableNumber={this.props.customerSelectTableNumber}
             handleTableNumberSelect={this.handleTableNumberSelect}
             diningSessions={customerDS}
@@ -91,6 +92,7 @@ class TableNumberSelect extends React.Component{
             return session.entity.tableNumber === parseInt(selectedTableNumber, 10);
         });
 
+        this.props.customerSetDiningSession(oldDiningSession);
         this.props.customerSelectTableNumber(selectedTableNumber);
 
         this.setState({
@@ -147,8 +149,8 @@ export class CustomerLandingPage extends React.Component {
         e.preventDefault();
         const updatedDiningSession = {};
 
-        this.props.updateDiningSession(this.props.location.state.oldDiningSess, updatedDiningSession,'serviceRequestStatus','ACTIVE');
-        this.props.onUpdate(this.props.location.state.oldDiningSess, updatedDiningSession, 'diningSessions');
+        this.props.updateDiningSession(this.props.diningSession, updatedDiningSession,'serviceRequestStatus','ACTIVE');
+        this.props.onUpdate(this.props.diningSession, updatedDiningSession, 'diningSessions');
 
         this.handleReviewBill = this.handleReviewBill.bind(this);
     }
@@ -202,7 +204,7 @@ export class CustomerLandingPage extends React.Component {
                    <section key={"customer-landing-section-" + tag.entity._links.self.href}>
                        <h1 key={"customer-landing-h1-" + tag.entity._links.self.href}>{tag.entity.name}</h1>
                        <div>
-                           <h5 className="badge-rounded" key={"customer-landing-h5-" + tag.entity._links.self.href}>{"View " + tag.entity.name + "s"}</h5>
+                           <h5 className="staff-badge-rounded" key={"customer-landing-h5-" + tag.entity._links.self.href}>{"View " + tag.entity.name + "s"}</h5>
 
                        </div>
                    </section>
@@ -214,9 +216,9 @@ export class CustomerLandingPage extends React.Component {
             <div>
                 <title>Welcome to PotatoPeeps Sushi</title>
                 <div id="wrapper">
-                    <main className="main-wrapper">
-                        <header className="frontpage">
-                            <a href="#" className="logo">
+                    <main className="staff-main-wrapper">
+                        <header className="staff-frontpage">
+                            <a href="#" className="staff-logo">
                                 <img src="./img/logo.png" alt="Home" />
                             </a>
                             <button className="landing-page-button"  onClick={this.handleClick} style={{zIndex: 1000}}>
@@ -232,7 +234,7 @@ export class CustomerLandingPage extends React.Component {
                                 View Your Cart
                             </button>
                         </header>
-                        <nav className="strokes">
+                        <nav className="staff-strokes">
                             <ul id="navigation">
                                 {tags}
                             </ul>
@@ -240,7 +242,7 @@ export class CustomerLandingPage extends React.Component {
                     </main>
                 </div>
                 <a href="#" id="back-to-top">
-                    <i className="icon bg icon-UpArrow" />
+                    <i className="icon staff-bg staff-icon-UpArrow" />
                 </a>
                 <ul id="slideshow">
                     <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}} />
@@ -330,7 +332,7 @@ export class CustomerReviewBill extends React.Component {
         const billItems = this.props.billObject.ordersCreated.map(billItem =>
 
             <tbody>
-            <tr>
+            <tr className="customer-cart-table-rows">
                 <td>   </td>
                 <td key={billItem.menuItemHref + "-name"}> {billItem.name}</td>
                 <td key={billItem.menuItemHref + "-price"}>{"$" + billItem.price.toFixed(2)} </td>
@@ -342,7 +344,7 @@ export class CustomerReviewBill extends React.Component {
         );
 
         return (
-                    <div>
+                    <div className="page bill-page">
                         <title>Customer Final Bill</title>
                         <div id="wrapper">
                             <main className="main-wrapper">
@@ -367,7 +369,7 @@ export class CustomerReviewBill extends React.Component {
                                             {billItems}
                                         </table>
                                     </div>
-                                    <div className="button-container orderDetail">
+                                    <div className="button-container orderDetail customer-cart-table-rows">
                                         <span className="cart-total name">Bill Total: </span>
                                         <span className="cart-total amount">{"$" + this.props.billObject.billTotal.toFixed(2)}</span>
                                     </div>
@@ -384,17 +386,9 @@ export class CustomerReviewBill extends React.Component {
                                         </div>
                                     </footer>
                                 </div>
-                            </main></div>
-                        <a href="#" id="back-to-top">
-                            <i className="icon bg icon-UpArrow" />
-                        </a>
-                        <ul id="slideshow">
-                            <li style={{backgroundImage: 'url("./img/5.jpg")', display: 'block', zIndex: 0}} />
-                            <li style={{backgroundImage: 'url("./img/3.jpg")', display: 'block', zIndex: 0, animationDelay: '6s'}} />
-                            <li style={{backgroundImage: 'url("./img/6.jpg")', display: 'block', zIndex: 0, animationDelay: '12s'}} />
-                            <li style={{backgroundImage: 'url("./img/4.jpg")', display: 'block', zIndex: 0, animationDelay: '18s'}} />
-                            <li style={{backgroundImage: 'url("./img/2.jpg")', display: 'block', zIndex: 0, animationDelay: '24s'}} />
-                        </ul>
+                            </main>
+                        </div>
+
                     </div>
 
         );
@@ -538,7 +532,7 @@ export class CustomerCartPage extends React.Component {
                         </div>
                     </main></div>
                 <a href="#" id="back-to-top">
-                    <i className="icon bg icon-UpArrow" />
+                    <i className="icon staff-bg staff-icon-UpArrow" />
                 </a>
             </div>
         );

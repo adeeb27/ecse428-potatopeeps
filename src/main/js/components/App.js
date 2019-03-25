@@ -9,7 +9,7 @@ const root = "/api"; // Root is a variable used to provide pathing to the uriLis
 
 /** ----- COMPONENT IMPORTS -----**/
 import {Login, SelectTask} from "./Login";
-import {Staff} from "./Staff";
+import {Staff, StaffOrders, StaffRequests, StaffLanding} from "./Staff";
 import {Manager} from "./Manager";
 import {Customer, CustomerMenu, CustomerLandingPage, CustomerCartPage, CustomerReviewBill} from "./Customer";
 
@@ -68,7 +68,8 @@ export class App extends React.Component {
             billObject: {
                 billTotal: 0, ordersCreated: [],
                 customerSelectedTableNumber: 0
-            }
+            },
+            diningSession: {}
         };
         this.onCreate = this.onCreate.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
@@ -84,6 +85,7 @@ export class App extends React.Component {
         this.submitOrders = this.submitOrders.bind(this);
         this.customerSelectTableNumber = this.customerSelectTableNumber.bind(this);
         this.customerRequestsBill = this.customerRequestsBill.bind(this);
+        this.customerSetDiningSession = this.customerSetDiningSession.bind(this);
     }
 
 
@@ -658,6 +660,10 @@ export class App extends React.Component {
         this.setState({customerSelectedTableNumber: selectedTableNumber});
     }
 
+    customerSetDiningSession(diningSession){
+        this.setState({diningSession: diningSession})
+    }
+
     /**
      * render - Render a React element into the DOM in the supplied container and return a reference to the component
      *
@@ -672,12 +678,6 @@ export class App extends React.Component {
     render() {
         return (
             <div className="App">
-                <div className="nav">
-                    <NavLink exact to="/login">{"Login  "}</NavLink>
-                    <NavLink to="/staff">{"Staff  "}</NavLink>
-                    <NavLink to="/manager">{"Manager  "}</NavLink>
-                    <NavLink to="/customer">{"Customer  "}</NavLink>
-                </div>
 
                 <Route render={({location}) => (
                     <TransitionGroup>
@@ -690,6 +690,7 @@ export class App extends React.Component {
                                                onUpdate={this.onUpdate}
                                                onDelete={this.onDelete}
                                                onNavigate={this.onNavigate}
+                                               customerSetDiningSession={this.customerSetDiningSession}
                                                customerSelectTableNumber={this.customerSelectTableNumber}
                                                filterDiningSessionList={this.filterDiningSessionList}
                                                diningSessions={this.state.diningSessions}
@@ -724,44 +725,43 @@ export class App extends React.Component {
                                               {...props}/>)}/>
                                 <Route path={"/staff"} render={(props) =>
                                     (<Staff loadResourceFromServer={this.loadResourceFromServer}
-                                            onCreate={this.onCreate}
-                                            onUpdate={this.onUpdate}
-                                            onDelete={this.onDelete}
-                                            onNavigate={this.onNavigate}
-                                            diningSessions={this.state.diningSessions}
-                                            diningSessionLinks={this.state.diningSessionLinks}
-                                            diningSessionAttributes={this.state.diningSessionAttributes}
-                                            orders={this.state.orders}
-                                            orderLinks={this.state.orderLinks}
-                                            orderAttributes={this.state.orderAttributes}
-                                            selectedView={'Staff'}
-                                            {...props}/>)}/>
+                                                                    onCreate={this.onCreate}
+                                                                    onUpdate={this.onUpdate}
+                                                                    onDelete={this.onDelete}
+                                                                    onNavigate={this.onNavigate}
+                                                                    filterDiningSessionList={this.filterDiningSessionList}
+                                                                    diningSessions={this.state.diningSessions}
+                                                                    diningSessionLinks={this.state.diningSessionLinks}
+                                                                    diningSessionAttributes={this.state.diningSessionAttributes}
+                                                                    orders={this.state.orders}
+                                                                    orderLinks={this.state.orderLinks}
+                                                                    orderAttributes={this.state.orderAttributes}
+                                                                    selectedView={'Staff'}
+                                                                    {...props}/>)}/>
                                 <Route path={"/customer-menu"} render={(props) =>
                                     (<CustomerMenu loadResourceFromServer={this.loadResourceFromServer}
-                                                   onCreate={this.onCreate}
-                                                   onUpdate={this.onUpdate}
-                                                   onDelete={this.onDelete}
-                                                   onNavigate={this.onNavigate}
-                                                   diningSessions={this.state.diningSessions}
-                                                   diningSessionLinks={this.state.diningSessionLinks}
-                                                   diningSessionAttributes={this.state.diningSessionAttributes}
-                                                   orders={this.state.orders}
-                                                   orderLinks={this.state.orderLinks}
-                                                   orderAttributes={this.state.orderAttributes}
-                                                   menuItems={this.state.menuItems}
-                                                   menuItemTags={this.state.menuItemTags}
-                                                   tags={this.state.tags}
-                                                   updateCustomerCart={this.updateCustomerCart}
-                                                   updateOrderQuantity={this.updateOrderQuantity}
-                                                   sentObject={this.state.sentObject}
-                                                   selectedView={'Customer'}
-                                                   filterMenuItemList={this.filterMenuItemList}
-                                                   {...props}/>)}/>
+                                                                    onCreate={this.onCreate}
+                                                                    onUpdate={this.onUpdate}
+                                                                    onDelete={this.onDelete}
+                                                                    onNavigate={this.onNavigate}
+                                                                    diningSessions={this.state.diningSessions}
+                                                                    diningSessionLinks={this.state.diningSessionLinks}
+                                                                    diningSessionAttributes={this.state.diningSessionAttributes}
+                                                                    orders={this.state.orders}
+                                                                    orderLinks={this.state.orderLinks}
+                                                                    orderAttributes={this.state.orderAttributes}
+                                                                    menuItemTags={this.state.menuItemTags}
+                                                                    selectedView={'Customer'}
+                                                                    updateCustomerCart={this.updateCustomerCart}
+                                                                    updateOrderQuantity={this.updateOrderQuantity}
+                                                                    filterMenuItemList={this.filterMenuItemList}
+                                                                    {...props}/>)}/>
                                 <Route path={"/CustomerLanding"} render={(props) =>
                                     (<CustomerLandingPage loadResourceFromServer={this.loadResourceFromServer}
                                                           onCreate={this.onCreate}
                                                           onUpdate={this.onUpdate}
                                                           onDelete={this.onDelete}
+                                                          diningSession={this.state.diningSession}
                                                           updateDiningSession={this.updateDiningSession}
                                                           onNavigate={this.onNavigate}
                                                           diningSessions={this.state.diningSessions}
@@ -779,6 +779,8 @@ export class App extends React.Component {
                                                           selectedView={'Customer'}
                                                           filterMenuItemList={this.filterMenuItemList}
                                                           {...props}/>)}/>
+
+
                                 <Route path={"/customer-review-bill"} render={(props) =>
                                     (<CustomerReviewBill loadResourceFromServer={this.loadResourceFromServer}
                                                          onCreate={this.onCreate}
@@ -827,6 +829,9 @@ export class App extends React.Component {
                                                        filterMenuItemList={this.filterMenuItemList}
                                                        {...props}/>)}/>
                                 <Route exact path={"/selectTask"} component={SelectTask}/>
+                                <Route exact path={"/staff-landing"} component={StaffLanding}/>
+                                <Route exact path={"/staff-requests"} component={StaffRequests}/>
+                                <Route exact path={"/staff-orders"} component={StaffOrders}/>
                             </Switch>
                         </CSSTransition>
                     </TransitionGroup>
