@@ -1,0 +1,40 @@
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+**/.idea/workspace.xml 
+**/.idea/tasks.xml
+**/.idea/usage.statistics.xml
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+/build/
+
+### React JS ###
+bower_components
+node_modules
+node
+built
+package-lock.json
+
+### MAC ##
+.DS_Store
+
+### VSCODE ###
+.vscode

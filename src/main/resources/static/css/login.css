@@ -1,0 +1,127 @@
+/*@import "https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";*/
+
+
+#login-box {
+	width: 660px;
+	height: 400px;
+	top: 50%;
+	left: 50%;
+	position: absolute;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	background-image: url(../img/Sushi.jpg);
+	background-size: 100%;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#login-content {
+	width: 350px;
+	height: 400px;
+	margin-left: auto;
+  	margin-right: auto;
+  	float: right;
+  	background-color: rgba(179, 230, 255, 0.5);
+}
+
+#login-form {
+	position: relative;
+  	top: 50%;
+  	transform: translateY(-50%);
+}
+
+#login-welcome-header {
+	margin: 0;
+	padding: 0 0 20px;
+	font-size: 35px;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+/*.input-group input {*/
+	/*height: 30px;*/
+	/*width: 50%;*/
+	/*padding: 5px 10px;*/
+	/*margin: 0 0 10px;*/
+	/*border: none;*/
+	/*outline: none;*/
+	/*background: none;*/
+	/*color: white;*/
+	/*font-size: 20px;*/
+	/*border-bottom: 1px solid rgb(0, 122, 153);*/
+	/*font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;*/
+/*}*/
+
+#login-page {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	background-image: url(../img/MountFuji.jpg) !important;
+	background-size: cover;
+	height: 100%;
+	background-repeat: no-repeat;
+}
+
+.login-page {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	background-image: url(../img/MountFuji.jpg) !important;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.login-input {
+	border: none !important;
+	background-color: transparent !important;
+	border-bottom: 1px solid black !important;
+}
+
+.login-input:focus{
+	outline: none !important;
+}
+
+/* ------------------------
+SELECT-TASK COMPONENT STYLING
+-------------------------- */
+
+.main-st {
+	height: 100%;
+	margin: 0;
+}
+
+#main-st {
+	height: 100%;
+	margin: 0;
+}
+
+.select-page {
+	height: 100%;
+	background: url("../img/background1.jpg") no-repeat center;
+	background-size: cover;
+	text-align: center;
+}
+
+.column-st {
+	background-color: #000;
+	opacity: 0.6;
+}
+
+.column-st:hover {
+	opacity: 0.3;
+	transition: opacity 0.5s ease-in-out;
+	cursor: pointer;
+}
+
+.top-drop {
+	top: 50%;
+}
+
+#select-task-header{
+	color: aliceblue;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif
+}
+
+#select-task-cancel{
+	color: white;
+}
+
+.select-task-columns{
+	font-size: 36px;
+	color: white;
+	font-weight: bold;
+}
