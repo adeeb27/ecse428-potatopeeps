@@ -223,7 +223,6 @@ export class StaffServiceRequestItem extends React.Component {
         // e.preventDefault();
         const updatedDiningSession = {};
 
-
         tableNum = this.props.service_request.entity.tableNumber;
         updatedDiningSession['tableNumber'] = tableNum;
         updatedDiningSession['serviceRequestStatus'] = 'INACTIVE';
@@ -231,7 +230,6 @@ export class StaffServiceRequestItem extends React.Component {
         let oldDiningSession = this.props.diningSessions.find(function(session) {
             return session.entity.tableNumber === parseInt(tableNum, 10);
         });
-        // let oldDiningSession = this.props.service_request.entity;
 
         this.props.onUpdate(oldDiningSession, updatedDiningSession, 'diningSessions');
     }
